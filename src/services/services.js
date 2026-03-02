@@ -16,18 +16,6 @@ export const loginUser = async (correo, contrasena) => {
   return await response.json();
 };
 
-export const crearPerfilAspirante = async (data) => {
-  const response = await fetch(`${API_URL}/crear-perfil-aspirante/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  return await response.json();
-};
-
 export const obtenerMiPerfil = async (usuarioId) => {
   const response = await fetch(`${API_URL}/mi-perfil/${usuarioId}/`);
   return await response.json();
@@ -45,6 +33,37 @@ export const registerUser = async (data) => {
   if (!response.ok) {
     const errorData = await response.json();
     throw errorData;
+  }
+
+  return await response.json();
+};
+
+// Agregar esta función al services.js existente
+export const crearPersona = async (data) => {
+  const response = await fetch(`${API_URL}/personas/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+
+  return await response.json();
+};
+
+export const crearPerfilAspirante = async (data) => {
+  const response = await fetch(`${API_URL}/crear-perfil-aspirante/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
   }
 
   return await response.json();
