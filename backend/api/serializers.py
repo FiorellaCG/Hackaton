@@ -1,14 +1,29 @@
 from rest_framework import serializers
+from django.contrib.auth.hashers import make_password
 from .models import (
     Usuario, Persona, AreaTrabajo, Carrera, Institucion,
     Empresa, Aspirante, Vacante, Postulacion, Curriculo,
     Practicante, Notificacion, Auditoria
 )
 
-class UsuarioSerializer(serializers.ModelSerializer):
+
+class RegistroSerializer(serializers.ModelSerializer):
+    contrasena = serializers.CharField(write_only=True, required=True)
+
     class Meta:
         model = Usuario
-        fields = '__all__'
+        fields = ['id', 'correo', 'telefono', 'contrasena', 'rol', 'activo']
+
+    def create(self, validated_data):
+        validated_data['contrasena_hash'] = make_password(validated_data.pop('contrasena'))
+        usuario = Usuario.objects.create(**validated_data)
+        return usuario
+    
+
+class LoginSerializer(serializers.Serializer):
+    correo = serializers.EmailField()
+    contrasena = serializers.CharField()
+    
 
 class PersonaSerializer(serializers.ModelSerializer):
     class Meta:
