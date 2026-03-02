@@ -1,11 +1,10 @@
 from django.db import models
-
 import uuid
 from django.db import models
 
 class Usuario(models.Model):
     ROL_CHOICES = [('admin', 'Admin'), ('empresa', 'Empresa'), ('aspirante', 'Aspirante')]
-    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     correo = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
     contrasena_hash = models.CharField(max_length=255)
@@ -22,7 +21,7 @@ class Usuario(models.Model):
 
 class Persona(models.Model):
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     cedula = models.CharField(max_length=20)
@@ -92,11 +91,27 @@ class Empresa(models.Model):
 
 class Aspirante(models.Model):
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    persona = models.OneToOneField(Persona, on_delete=models.CASCADE)
     carrera = models.ForeignKey(Carrera, on_delete=models.SET_NULL, null=True)
-    nivel_educativo = models.CharField(max_length=50)
-    estado_laboral = models.CharField(max_length=50)
+
+    NIVEL_EDUCATIVO_CHOICES = [
+        ('secundaria', 'Secundaria'),
+        ('tecnico', 'Técnico'),
+        ('universitario', 'Universitario'),
+        ('licenciatura', 'Licenciatura'),
+        ('maestria', 'Maestría'),
+    ]
+
+    ESTADO_LABORAL_CHOICES = [
+        ('buscando', 'Buscando empleo'),
+        ('empleado', 'Empleado'),
+        ('desempleado', 'Desempleado'),
+    ]
+
+    nivel_educativo = models.CharField(max_length=50, choices=NIVEL_EDUCATIVO_CHOICES)
+    estado_laboral = models.CharField(max_length=50, choices=ESTADO_LABORAL_CHOICES)
+
     sobre_mi = models.TextField(null=True, blank=True)
     embedding = models.JSONField(null=True, blank=True)
     creado_en = models.DateTimeField(auto_now_add=True)

@@ -1,113 +1,51 @@
-async function postData(endpoint, obj) {
-  try {
-    const peticion = await fetch(`http://127.0.0.1:8000/${endpoint}`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(obj)
-    });
-    const respuesta = await peticion.json();
-    console.log(respuesta);
-    return respuesta;
-  } catch (error) {
-    console.error(error);
-  }
-}
+const API_URL = "http://127.0.0.1:8000/api";
 
-async function getData(endpoint) {
-  try {
-    const response = await fetch(`http://127.0.0.1:8000/${endpoint}/`);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error en getData:', error);
-    return [];
-  }
-};
-
-
-async function putData(endpoint, obj) {
-  try {
-    const peticion = await fetch(`http://127.0.0.1:8000/${endpoint}`, {
-      method: 'PUT',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(obj)
-    });
-    const respuesta = await peticion.json();
-    console.log(respuesta);
-    return respuesta;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function deleteData(endpoint) {
-  try {
-    const peticion = await fetch(`http://127.0.0.1:8000/${endpoint}`, {
-      method: 'DELETE',
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    const respuesta = await peticion.json();
-    console.log(respuesta);
-    return respuesta;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function enviarRecurso(recurso, nuevoRecurso) {
-  try {
-    const respuesta = await fetch(`http://127.0.0.1:8000/${recurso}`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(nuevoRecurso)
-    });
-
-    const resultado = await respuesta.json();
-    console.log("Recurso guardado:", resultado);
-    return resultado;
-  } catch (error) {
-    console.error("Error al guardar el recurso:", error);
-  }
-}
-
-async function obtenerMentorias() {
-  try {
-    const respuesta = await fetch(`http://127.0.0.1:8000/mentorias/`, {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    const resultado = await respuesta.json();
-    console.log("Mentorías obtenidas:", resultado);
-    return resultado;
-  } catch (error) {
-    console.error("Error al obtener las mentorías:", error);
-  
-  }
-}
-
-const loginUsuario = async (username, password) => {
-  const response = await fetch("http://127.0.0.1:8000/usuarios/login/", {
+export const loginUser = async (correo, contrasena) => {
+  const response = await fetch(`${API_URL}/login/`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ username, password })
+    body: JSON.stringify({ correo, contrasena }),
   });
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error("Credenciales inválidas");
+  }
+
+  return await response.json();
 };
 
+export const crearPerfilAspirante = async (data) => {
+  const response = await fetch(`${API_URL}/crear-perfil-aspirante/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
+  return await response.json();
+};
 
+export const obtenerMiPerfil = async (usuarioId) => {
+  const response = await fetch(`${API_URL}/mi-perfil/${usuarioId}/`);
+  return await response.json();
+};
 
-export { postData, getData, putData, deleteData, enviarRecurso, obtenerMentorias, loginUsuario };
+export const registerUser = async (data) => {
+  const response = await fetch("http://127.0.0.1:8000/api/usuarios/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw errorData;
+  }
+
+  return await response.json();
+};
