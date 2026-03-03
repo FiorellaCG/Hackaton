@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import (
     Usuario, Persona, AreaTrabajo, Carrera, Institucion,
     Empresa, Aspirante, Vacante, Postulacion, Curriculo,
-    Practicante, Notificacion, Auditoria
+    Practicante, Notificacion, Auditoria, ProgramaFormacion
 )
 
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -33,6 +33,11 @@ class InstitucionSerializer(serializers.ModelSerializer):
 class EmpresaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empresa
+        fields = '__all__'
+
+class ProgramaFormacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProgramaFormacion
         fields = '__all__'
 
 class AspiranteSerializer(serializers.ModelSerializer):

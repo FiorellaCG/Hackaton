@@ -1,4 +1,3 @@
-import Navbar from "../../Components/PagPrincipal/Navbar/NavBar"
 import { useTranslation } from 'react-i18next';
 
 function Home() {
@@ -7,9 +6,7 @@ function Home() {
 
   return (
     <div>
-        
-        <Navbar />
-       
+      {/* Contenido de la página de inicio */}
     </div>
   )
 }

@@ -95,6 +95,7 @@ class Aspirante(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
     carrera = models.ForeignKey(Carrera, on_delete=models.SET_NULL, null=True)
+    institucion_origen = models.ForeignKey(Institucion, on_delete=models.SET_NULL, null=True, blank=True)
     nivel_educativo = models.CharField(max_length=50)
     estado_laboral = models.CharField(max_length=50)
     sobre_mi = models.TextField(null=True, blank=True)
@@ -105,9 +106,25 @@ class Aspirante(models.Model):
     class Meta:
         db_table = 'aspirantes'
 
+class ProgramaFormacion(models.Model):
+    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
+    institucion = models.ForeignKey(Institucion, on_delete=models.CASCADE)
+    carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=200)
+    descripcion = models.TextField(null=True, blank=True)
+    tipo_programa = models.CharField(max_length=100)
+    duracion_meses = models.SmallIntegerField(null=True, blank=True)
+    activo = models.BooleanField(default=True)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'programas_formacion'
+
 class Vacante(models.Model):
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
-    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, null=True, blank=True)
+    institucion = models.ForeignKey(Institucion, on_delete=models.CASCADE, null=True, blank=True)
     area_trabajo = models.ForeignKey(AreaTrabajo, on_delete=models.SET_NULL, null=True)
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField(null=True, blank=True)

@@ -79,9 +79,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hackaton_db',
         'USER': 'postgres',
-        'PASSWORD': '12345',
+        'PASSWORD': '2070603Uch',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5432',
     }
 }
 
