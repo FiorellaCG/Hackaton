@@ -1,10 +1,12 @@
 import { X, Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../services/services";
 
 export const LoginModal = ({ isOpen, onClose }) => {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
+<<<<<<< HEAD
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,12 +25,34 @@ export const LoginModal = ({ isOpen, onClose }) => {
       setError("Credenciales inválidas");
     } finally {
       setLoading(false);
+=======
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await loginUser(correo, contrasena);
+      localStorage.setItem("usuario", JSON.stringify(data));
+
+      // ✅ Redirige según el rol
+      if (data.rol === "aspirante") {
+        navigate("/mi-perfil");
+      } else if (data.rol === "empresa") {
+        navigate("/mi-perfil");
+      } else {
+        navigate("/");
+      }
+
+    } catch (error) {
+      alert("Credenciales inválidas");
+>>>>>>> a281648b8ba0205ba00765a9fd8598e8190e9df2
     }
   };
 
   if (!isOpen) return null;
 
   return (
+<<<<<<< HEAD
     <>
       <div className="modal-backdrop" onClick={onClose}></div>
       <div className="modal-container">
@@ -104,5 +128,27 @@ export const LoginModal = ({ isOpen, onClose }) => {
         </div>
       </div>
     </>
+=======
+    <div>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="Correo"
+          value={correo}
+          onChange={(e) => setCorreo(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={contrasena}
+          onChange={(e) => setContrasena(e.target.value)}
+          required
+        />
+        <button type="submit">Ingresar</button>
+      </form>
+    </div>
+>>>>>>> a281648b8ba0205ba00765a9fd8598e8190e9df2
   );
 };
