@@ -68,3 +68,33 @@ export const crearPerfilAspirante = async (data) => {
 
   return await response.json();
 };
+
+export const obtenerCarreras = async () => {
+  const response = await fetch(`${API_URL}/carreras/`);
+  if (!response.ok) {
+    throw new Error("Error al obtener las carreras");
+  }
+  return await response.json();
+};
+
+export const obtenerAreasTrabajo = async () => {
+  const response = await fetch(`${API_URL}/areas-trabajo/`);
+  if (!response.ok) {
+    throw new Error("Error al obtener áreas de trabajo");
+  }
+  return await response.json();
+};
+
+export const crearCarrera = async (data) => {
+  const response = await fetch(`${API_URL}/carreras/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+  return await response.json();
+};
