@@ -1,6 +1,6 @@
 from django.db import models
 import uuid
-from django.db import models
+
 
 class Usuario(models.Model):
     ROL_CHOICES = [('admin', 'Admin'), ('empresa', 'Empresa'), ('aspirante', 'Aspirante')]

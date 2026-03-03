@@ -1,3 +1,4 @@
+import DashboardAspirante from "@/src/Components/PagPrincipal/DashboardAspirante";
 import MiPerfil from "@/src/Components/PagPrincipal/MiPerfil/MiPerfil";
 import Navbar from "@/src/Components/PagPrincipal/Navbar/NavBar";
 
@@ -7,6 +8,7 @@ function MiPerfilPage() {
     <div>
         <Navbar />
         <MiPerfil />
+        <DashboardAspirante />
     </div>
   );
 }
