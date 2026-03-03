@@ -1,69 +1,61 @@
-import { X, Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { X, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../services/services";
+import "./Login.css";
 
-export const LoginModal = ({ isOpen, onClose }) => {
-  const [correo, setCorreo] = useState("");
-  const [contrasena, setContrasena] = useState("");
-<<<<<<< HEAD
+export default function LoginModal({ isOpen, onClose }) {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    correo: "",
+    contrasena: "",
+  });
+
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-
     try {
-      const data = await loginUser(correo, contrasena);
+      setLoading(true);
+      setError("");
+
+      const data = await loginUser(form.correo, form.contrasena);
+
       localStorage.setItem("usuario", JSON.stringify(data));
-      alert("Login exitoso");
+
+      // Redirige según el rol
+      navigate("/mi-perfil");
+
       onClose();
     } catch (err) {
-      setError("Credenciales inválidas");
+      setError("Correo o contraseña incorrectos");
     } finally {
       setLoading(false);
-=======
-  const navigate = useNavigate();
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const data = await loginUser(correo, contrasena);
-      localStorage.setItem("usuario", JSON.stringify(data));
-
-      // ✅ Redirige según el rol
-      if (data.rol === "aspirante") {
-        navigate("/mi-perfil");
-      } else if (data.rol === "empresa") {
-        navigate("/mi-perfil");
-      } else {
-        navigate("/");
-      }
-
-    } catch (error) {
-      alert("Credenciales inválidas");
->>>>>>> a281648b8ba0205ba00765a9fd8598e8190e9df2
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-<<<<<<< HEAD
     <>
       <div className="modal-backdrop" onClick={onClose}></div>
+
       <div className="modal-container">
-        <div className="login-modal">
+        <div className="login-modal modal-large">
           <div className="modal-header">
             <button className="close-button" onClick={onClose}>
-              <X />
+              <X className="icon-md" />
             </button>
             <div className="header-logo-section">
               <div className="header-logo-icon">
-                <span>🔒</span>
+                <span>📝</span>
               </div>
               <div>
                 <h2 className="modal-title">Iniciar Sesión</h2>
@@ -75,29 +67,27 @@ export const LoginModal = ({ isOpen, onClose }) => {
           <form onSubmit={handleLogin} className="modal-form">
             <div className="form-group">
               <label className="form-label">Correo</label>
-              <div className="input-wrapper">
-                <Mail className="input-icon" />
-                <input
-                  type="email"
-                  placeholder="Correo"
-                  value={correo}
-                  onChange={(e) => setCorreo(e.target.value)}
-                  className="form-input"
-                  required
-                />
-              </div>
+              <input
+                type="email"
+                name="correo"
+                value={form.correo}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Correo"
+                required
+              />
             </div>
 
             <div className="form-group">
               <label className="form-label">Contraseña</label>
               <div className="input-wrapper">
-                <Lock className="input-icon" />
                 <input
                   type={mostrarContrasena ? "text" : "password"}
-                  placeholder="Contraseña"
-                  value={contrasena}
-                  onChange={(e) => setContrasena(e.target.value)}
+                  name="contrasena"
+                  value={form.contrasena}
+                  onChange={handleChange}
                   className="form-input"
+                  placeholder="Contraseña"
                   required
                 />
                 <button
@@ -105,50 +95,38 @@ export const LoginModal = ({ isOpen, onClose }) => {
                   className="password-toggle"
                   onClick={() => setMostrarContrasena(!mostrarContrasena)}
                 >
-                  {mostrarContrasena ? <EyeOff /> : <Eye />}
+                  {mostrarContrasena ? <EyeOff className="icon-md" /> : <Eye className="icon-md" />}
                 </button>
               </div>
             </div>
 
             {error && <p className="error-message">{error}</p>}
 
-            <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? "Ingresando..." : "Ingresar"}
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={loading}
+            >
+              {loading ? "Ingresando..." : "Iniciar Sesión"}
             </button>
           </form>
 
           <div className="switch-auth">
             <p className="switch-text">
               ¿No tienes cuenta?{" "}
-              <button className="switch-link" onClick={() => alert("Redirigir a registro")}>
-                Regístrate
+              <button
+                className="switch-link"
+                onClick={() => {
+                  onClose();
+                  navigate("/register");
+                }}
+              >
+                Registrarse
               </button>
             </p>
           </div>
         </div>
       </div>
     </>
-=======
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Correo"
-          value={correo}
-          onChange={(e) => setCorreo(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={contrasena}
-          onChange={(e) => setContrasena(e.target.value)}
-          required
-        />
-        <button type="submit">Ingresar</button>
-      </form>
-    </div>
->>>>>>> a281648b8ba0205ba00765a9fd8598e8190e9df2
   );
-};
+}

@@ -254,3 +254,103 @@
 .switch-link:hover {
   opacity: 0.8;
 }
+/* ── Modal de Términos y Condiciones ── */
+.terms-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.terms-modal {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.terms-modal h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.terms-content {
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.terms-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.terms-actions .btn-accept,
+.terms-actions .btn-reject {
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.terms-actions .btn-accept {
+  background-color: #2e7d32;
+  color: #fff;
+}
+
+.terms-actions .btn-accept:hover {
+  background-color: #27672a;
+}
+
+.terms-actions .btn-reject {
+  background-color: #c62828;
+  color: #fff;
+}
+
+.terms-actions .btn-reject:hover {
+  background-color: #a71f1f;
+}
+
+/* Estado de aceptación en el formulario */
+.terms-status.accepted {
+  color: green;
+  font-weight: bold;
+}
+
+.terms-status.not-accepted {
+  color: red;
+  font-weight: bold;
+}
+
+/* Botón de ver términos dentro del formulario */
+.terms-link {
+  background: none;
+  border: none;
+  color: #1565c0;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.terms-link:hover {
+  color: #0d3c78;
+}
