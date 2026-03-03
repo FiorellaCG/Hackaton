@@ -106,6 +106,9 @@ class MiPerfilSerializer(serializers.Serializer):
     usuario = UsuarioSerializer()
     persona = PersonaSerializer()
     aspirante = AspiranteSerializer()
+    postulaciones = serializers.ListField(
+        child=serializers.DictField(), required=False
+    )
 
 class CrearPerfilAspiranteSerializer(serializers.Serializer):
     usuario_id = serializers.UUIDField()
