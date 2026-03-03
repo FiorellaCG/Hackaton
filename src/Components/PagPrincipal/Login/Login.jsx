@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { loginUser } from "../../../services/services";
 
 const Login = () => {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const navigate = useNavigate();
+  const { lang } = useParams();
+  const currentLang = lang || "es";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -13,13 +15,12 @@ const Login = () => {
       const data = await loginUser(correo, contrasena);
       localStorage.setItem("usuario", JSON.stringify(data));
 
-      // ✅ Redirige según el rol
       if (data.rol === "aspirante") {
-        navigate("/mi-perfil");
+        navigate(`/${currentLang}/mi-perfil`);
       } else if (data.rol === "empresa") {
-        navigate("/mi-perfil");
+        navigate(`/${currentLang}/mi-perfil`);
       } else {
-        navigate("/");
+        navigate(`/${currentLang}/jobs`);
       }
 
     } catch (error) {

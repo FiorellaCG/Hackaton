@@ -68,3 +68,20 @@ export const crearPerfilAspirante = async (data) => {
 
   return await response.json();
 };
+
+
+
+
+
+export const crearPerfilEmpresa = async (data) => {
+  const response = await fetch(`${API_URL}/empresas/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+  return await response.json();
+};
