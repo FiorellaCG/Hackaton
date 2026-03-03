@@ -54,10 +54,22 @@ class MiPerfilView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        postulaciones = Postulacion.objects.filter(aspirante=aspirante).select_related('vacante', 'vacante__empresa')
+        postulaciones_data = []
+        for p in postulaciones:
+            postulaciones_data.append({
+                "id": p.id,
+                "cargo": p.vacante.titulo,
+                "empresa": p.vacante.empresa.nombre,
+                "estado": p.estado,
+                "fecha": p.postulado_en.isoformat() if p.postulado_en else None
+            })
+
         serializer = MiPerfilSerializer({
             "usuario": usuario,
             "persona": persona,
-            "aspirante": aspirante
+            "aspirante": aspirante,
+            "postulaciones": postulaciones_data
         })
 
         return Response(serializer.data, status=status.HTTP_200_OK)

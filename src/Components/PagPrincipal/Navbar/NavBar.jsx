@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import  LoginModal  from "../../PagPrincipal/Login/Login";
+
+import { LoginModal } from "../Login/Login";
 import RegistroModal from "../../PagPrincipal/Login/Registrer";
 
 import "./Navbar.css";
@@ -10,9 +11,9 @@ const Navbar = () => {
   const { lang } = useParams();
   const currentLang = lang || "es";
 
-  const [usuario, setUsuario] = useState(null);
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
+  const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
     const user = localStorage.getItem("usuario");
@@ -27,6 +28,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("usuario");
+    localStorage.removeItem("token");
     setUsuario(null);
     navigate(`/${currentLang}/jobs`);
   };
@@ -34,6 +36,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="navbar">
+        {/* LEFT */}
         <div className="navbar-left">
           <div className="logo">GT</div>
           <div className="brand">
@@ -42,11 +45,15 @@ const Navbar = () => {
           </div>
         </div>
 
+        {/* LINKS */}
         <ul className="navbar-links">
           <li onClick={() => navigate(`/${currentLang}/jobs`)}>Empleos</li>
-          <li onClick={() => navigate(`/${currentLang}/internships`)}>Pasantías</li>
+          <li onClick={() => navigate(`/${currentLang}/internships`)}>
+            Pasantías
+          </li>
           <li>Empresas</li>
           <li>Estadísticas</li>
+
           {usuario && (
             <li onClick={() => navigate(`/${currentLang}/mi-perfil`)}>
               Mi Perfil
@@ -54,6 +61,7 @@ const Navbar = () => {
           )}
         </ul>
 
+        {/* RIGHT */}
         <div className="navbar-right">
           <select
             value={currentLang}
@@ -64,7 +72,7 @@ const Navbar = () => {
             <option value="en">EN</option>
           </select>
 
-          {!usuario && (
+          {!usuario ? (
             <>
               <button
                 className="login-btn"
@@ -80,9 +88,7 @@ const Navbar = () => {
                 Registrarse
               </button>
             </>
-          )}
-
-          {usuario && (
+          ) : (
             <button className="logout-btn" onClick={handleLogout}>
               Cerrar Sesión
             </button>
@@ -90,9 +96,20 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Modales */}
-      {loginOpen && <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} />}
-      {registerOpen && <RegistroModal isOpen={registerOpen} onClose={() => setRegisterOpen(false)} />}
+      {/* MODALES */}
+      {loginOpen && (
+        <LoginModal
+          isOpen={loginOpen}
+          onClose={() => setLoginOpen(false)}
+        />
+      )}
+
+      {registerOpen && (
+        <RegistroModal
+          isOpen={registerOpen}
+          onClose={() => setRegisterOpen(false)}
+        />
+      )}
     </>
   );
 };

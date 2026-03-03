@@ -50,7 +50,6 @@ class AreaTrabajo(models.Model):
 
 class Carrera(models.Model):
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
-    area = models.ForeignKey(AreaTrabajo, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=150)
 
     class Meta:
