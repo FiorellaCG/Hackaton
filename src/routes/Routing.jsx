@@ -6,9 +6,17 @@ import RegisterPage from '../Pages/Home/RegisterPage';
 import DashboardAspirante from '../Components/PagPrincipal/DashboardAspirante';
 
 
+
 function Routing() {
   return (
     <Routes>
+
+      <Route path='/' element={<Home />} />
+
+
+
+      {/* Agrega más rutas según tu app */}
+
       <Route path='/' element={<Home />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/register' element={<RegisterPage />} />
