@@ -112,6 +112,10 @@ class Aspirante(models.Model):
     estado_laboral = models.CharField(max_length=50, choices=ESTADO_LABORAL_CHOICES)
 
     sobre_mi = models.TextField(null=True, blank=True)
+    foto_url = models.ImageField(upload_to='perfiles/', null=True, blank=True)
+    habilidades_tecnicas = models.JSONField(null=True, blank=True, default=list) # [{icon: '', name: '', desc: ''}]
+    habilidades_blandas = models.JSONField(null=True, blank=True, default=list)
+    experiencia = models.JSONField(null=True, blank=True, default=list) # [{puesto: '', empresa: '', periodo: '', descripcion: ''}]
     embedding = models.JSONField(null=True, blank=True)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)

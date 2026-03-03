@@ -4,7 +4,7 @@ import Home from "../Pages/Home/Home";
 import MiPerfilPage from "../Pages/Home/MiPerfilPage";
 import LoginPage from "../Pages/Home/LoginPage";
 import RegisterPage from "../Pages/Home/RegisterPage";
-import DashboardAspirante from "../Components/PagPrincipal/DashboardAspirante";
+import DashboardAspirantePage from "../Pages/Home/DashboardAspirantePage";
 import FormCarrera from "../Components/PagPrincipal/FormCarrera";
 import VisualizarCarreras from "../Components/PagPrincipal/VisualizarCarreras";
 
@@ -27,7 +27,7 @@ function Routing() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/mi-perfil" element={<MiPerfilPage />} />
-      <Route path="/dashboard-aspirante" element={<DashboardAspirante />} />
+      <Route path="/dashboard-aspirante" element={<DashboardAspirantePage />} />
       <Route path="/nueva-carrera" element={<FormCarrera />} />
       <Route path="/carreras" element={<VisualizarCarreras />} />
 

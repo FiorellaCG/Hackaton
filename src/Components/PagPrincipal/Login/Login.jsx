@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../services/services";
 
-export const LoginModal = ({ isOpen, onClose }) => {
+export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
@@ -20,10 +20,11 @@ export const LoginModal = ({ isOpen, onClose }) => {
     try {
       const data = await loginUser(correo, contrasena);
       localStorage.setItem("usuario", JSON.stringify(data));
+      if (onLoginSuccess) onLoginSuccess(data);
 
       // Redirige según rol
       if (data.rol === "aspirante" || data.rol === "empresa") {
-        navigate("/mi-perfil");
+        navigate("/dashboard-aspirante");
       } else {
         navigate("/");
       }

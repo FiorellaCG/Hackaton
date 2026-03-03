@@ -65,14 +65,34 @@ class MiPerfilView(APIView):
                 "fecha": p.postulado_en.isoformat() if p.postulado_en else None
             })
 
-        serializer = MiPerfilSerializer({
-            "usuario": usuario,
-            "persona": persona,
-            "aspirante": aspirante,
+        # Aplanamos la respuesta para que sea más fácil de usar en el frontend
+        data = {
+            "usuario_id": usuario.id,
+            "persona_id": persona.id,
+            "aspirante_id": aspirante.id,
+            "nombre": persona.nombre,
+            "apellidos": persona.apellidos,
+            "cedula": persona.cedula,
+            "foto_url": request.build_absolute_uri(aspirante.foto_url.url) if aspirante.foto_url else None,
+            "sobre_mi": aspirante.sobre_mi,
+            "carrera": aspirante.carrera.nombre if aspirante.carrera else "Estudiante",
+            "carrera_id": aspirante.carrera.id if aspirante.carrera else None,
+            "nivel_educativo": aspirante.nivel_educativo,
+            "estado_laboral": aspirante.estado_laboral,
+            "telefono": persona.telefono,
+            "provincia": persona.provincia,
+            "canton": persona.canton,
+            "genero": persona.genero,
+            "nacionalidad": persona.nacionalidad,
+            "fecha_nacimiento": persona.fecha_nacimiento.isoformat() if persona.fecha_nacimiento else None,
+            "habilidades_tecnicas": aspirante.habilidades_tecnicas,
+            "habilidades_blandas": aspirante.habilidades_blandas,
+            "experiencia": aspirante.experiencia,
+            "practicante": hasattr(aspirante, 'practicante'),
             "postulaciones": postulaciones_data
-        })
+        }
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
 
 
 # =====================================================

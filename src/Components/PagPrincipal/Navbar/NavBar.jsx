@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { LoginModal } from "../Login/Login";
 import RegistroModal from "../../PagPrincipal/Login/Registrer";
@@ -30,7 +30,7 @@ const Navbar = () => {
     localStorage.removeItem("usuario");
     localStorage.removeItem("token");
     setUsuario(null);
-    navigate(`/${currentLang}/jobs`);
+    navigate("/");
   };
 
   return (
@@ -47,16 +47,14 @@ const Navbar = () => {
 
         {/* LINKS */}
         <ul className="navbar-links">
-          <li onClick={() => navigate(`/${currentLang}/jobs`)}>Empleos</li>
-          <li onClick={() => navigate(`/${currentLang}/internships`)}>
-            Pasantías
-          </li>
+          <li><Link to="/">Empleos</Link></li>
+          <li><Link to="/">Pasantías</Link></li>
           <li>Empresas</li>
           <li>Estadísticas</li>
 
           {usuario && (
-            <li onClick={() => navigate(`/${currentLang}/mi-perfil`)}>
-              Mi Perfil
+            <li>
+              <Link to="/dashboard-aspirante" className="active-link">Mi Perfil</Link>
             </li>
           )}
         </ul>
@@ -101,6 +99,7 @@ const Navbar = () => {
         <LoginModal
           isOpen={loginOpen}
           onClose={() => setLoginOpen(false)}
+          onLoginSuccess={(userData) => setUsuario(userData)}
         />
       )}
 
@@ -108,6 +107,7 @@ const Navbar = () => {
         <RegistroModal
           isOpen={registerOpen}
           onClose={() => setRegisterOpen(false)}
+          onRegisterSuccess={(userData) => setUsuario(userData)}
         />
       )}
     </>

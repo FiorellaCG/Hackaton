@@ -3,6 +3,7 @@ import { obtenerMiPerfil } from "../../../services/services";
 import FormAspirante from "./FormAspirante";
 import { User, Briefcase, MapPin, Phone, GraduationCap, Edit, CheckCircle2, ChevronRight, UploadCloud, FileText, Sparkles, Building2 } from "lucide-react";
 import FormEmpresa from "./FormEmpresa";
+import CVIAModal from "./CVIAModal";
 
 const MiPerfil = () => {
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
@@ -11,6 +12,15 @@ const MiPerfil = () => {
   const [perfil, setPerfil] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [mostrarForm, setMostrarForm] = useState(false);
+  const [mostrarCVIAModal, setMostrarCVIAModal] = useState(false);
+  const [skillInfo, setSkillInfo] = useState(null);
+
+  const iconsMap = { Code, Database, Cpu, Globe, Users, MessageSquare, Clock, Shield };
+
+  const renderSkillIcon = (iconName) => {
+    const IconComponent = iconsMap[iconName] || Star;
+    return <IconComponent className="w-4 h-4" />;
+  };
 
   useEffect(() => {
     const cargarPerfil = async () => {
@@ -143,20 +153,39 @@ const MiPerfil = () => {
                   <span className="flex items-center gap-1.5"><Briefcase className="w-3.5 h-3.5" /> Tecnología</span>
                 </div>
 
-                {/* Etiquetas/Badges inferiroes */}
+                {/* Etiquetas/Badges inferiroes - AHORA DINÁMICOS */}
                 <div className="flex flex-wrap gap-3">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 border border-slate-100">
-                    <User className="w-4 h-4 text-green-500" /> Género <span className="text-slate-400 capitalize">{perfil.genero}</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 border border-slate-100">
-                    <GraduationCap className="w-4 h-4 text-blue-500" /> Estudios <span className="text-slate-400 capitalize">{perfil.nivel_educativo}</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 border border-slate-100">
-                    <Briefcase className="w-4 h-4 text-orange-400" /> Técnico <span className="text-slate-400">Fullstack</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 border border-slate-100">
-                    <User className="w-4 h-4 text-rose-400" /> Idiomas <span className="text-slate-400">Liderazgo</span>
-                  </div>
+                  {perfil.habilidades_tecnicas?.map((skill, i) => (
+                    <div
+                      key={i}
+                      onClick={() => setSkillInfo(skillInfo === skill.name ? null : skill.name)}
+                      className="relative flex items-center gap-2 px-3 py-1.5 bg-green-50 rounded-lg text-xs font-semibold text-green-700 border border-green-100 cursor-pointer hover:bg-green-100 transition-colors"
+                    >
+                      {renderSkillIcon(skill.icon)} {skill.name}
+                      {skillInfo === skill.name && (
+                        <div className="absolute top-10 left-0 z-20 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-xl animate-in fade-in zoom-in-95">
+                          {skill.desc}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {perfil.habilidades_blandas?.map((skill, i) => (
+                    <div
+                      key={i}
+                      onClick={() => setSkillInfo(skillInfo === skill.name ? null : skill.name)}
+                      className="relative flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-lg text-xs font-semibold text-blue-700 border border-blue-100 cursor-pointer hover:bg-blue-100 transition-colors"
+                    >
+                      {renderSkillIcon(skill.icon)} {skill.name}
+                      {skillInfo === skill.name && (
+                        <div className="absolute top-10 left-0 z-20 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-xl animate-in fade-in zoom-in-95">
+                          {skill.desc}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {(!perfil.habilidades_tecnicas?.length && !perfil.habilidades_blandas?.length) && (
+                    <p className="text-xs text-slate-400 italic">No has agregado habilidades aún</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -227,7 +256,10 @@ const MiPerfil = () => {
                 <p className="text-xs text-slate-400">Máximo 5MB</p>
               </div>
 
-              <button className="w-full bg-white border border-green-200 text-green-700 font-bold py-2.5 px-4 rounded-xl transition-colors hover:bg-green-50 text-sm flex justify-center items-center gap-2">
+              <button
+                onClick={() => setMostrarCVIAModal(true)}
+                className="w-full bg-white border border-green-200 text-green-700 font-bold py-2.5 px-4 rounded-xl transition-colors hover:bg-green-50 text-sm flex justify-center items-center gap-2"
+              >
                 <Sparkles className="w-4 h-4" /> Crear CV Digital
               </button>
             </div>
@@ -257,10 +289,8 @@ const MiPerfil = () => {
             {/* TARJETA 5: Habilidades Sugeridas */}
             <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
               <h3 className="text-sm font-bold text-orange-500 mb-4 flex items-center gap-2">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                </svg>
-                Habilidades Sugeridas
+                <Star className="w-4 h-4" />
+                Habilidades Recomendadas
               </h3>
 
               <p className="text-xs text-slate-500 mb-4">Basado en las vacantes de ZFL, podrías aprender:</p>
@@ -278,6 +308,13 @@ const MiPerfil = () => {
           </div>
         </>
       )}
+
+      {/* MODAL IA CV GENERATOR */}
+      <CVIAModal
+        isOpen={mostrarCVIAModal}
+        onClose={() => setMostrarCVIAModal(false)}
+        perfil={perfil}
+      />
     </div>
   );
 };
