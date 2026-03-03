@@ -7,7 +7,8 @@ from .views import (
     AspiranteViewSet, VacanteViewSet, PostulacionViewSet,
     CurriculoViewSet, PracticanteViewSet,
     NotificacionViewSet, AuditoriaViewSet,
-    LoginView, CrearPerfilAspiranteView, MiPerfilView
+    LoginView, CrearPerfilAspiranteView, MiPerfilView,
+    UpdatePreferenciasView, CambiarPasswordView, EliminarCuentaView
 )
 
 router = DefaultRouter()
@@ -29,6 +30,11 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('crear-perfil-aspirante/', CrearPerfilAspiranteView.as_view(), name='crear-perfil-aspirante'),
     path('mi-perfil/<uuid:usuario_id>/', MiPerfilView.as_view(), name='mi-perfil'),
+    
+    # Ajustes
+    path('usuarios/<uuid:usuario_id>/preferencias/', UpdatePreferenciasView.as_view(), name='update-preferencias'),
+    path('usuarios/<uuid:usuario_id>/cambiar-password/', CambiarPasswordView.as_view(), name='cambiar-password'),
+    path('usuarios/<uuid:usuario_id>/eliminar-cuenta/', EliminarCuentaView.as_view(), name='eliminar-cuenta'),
 
     # Router automático
     path('', include(router.urls)),

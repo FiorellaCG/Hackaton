@@ -89,7 +89,8 @@ class MiPerfilView(APIView):
             "habilidades_blandas": aspirante.habilidades_blandas,
             "experiencia": aspirante.experiencia,
             "practicante": hasattr(aspirante, 'practicante'),
-            "postulaciones": postulaciones_data
+            "postulaciones": postulaciones_data,
+            "preferencias": usuario.preferencias
         }
 
         return Response(data, status=status.HTTP_200_OK)
@@ -114,6 +115,51 @@ class CrearPerfilAspiranteView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# =====================================================
+# CONFIGURACIÓN Y AJUSTES
+# =====================================================
+
+class UpdatePreferenciasView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, usuario_id):
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+            usuario.preferencias = request.data.get('preferencias', {})
+            usuario.save()
+            return Response({"mensaje": "Preferencias actualizadas"}, status=status.HTTP_200_OK)
+        except Usuario.DoesNotExist:
+            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+class CambiarPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, usuario_id):
+        from django.contrib.auth.hashers import make_password, check_password
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+            current_password = request.data.get('current_password')
+            new_password = request.data.get('new_password')
+
+            if not check_password(current_password, usuario.contrasena_hash):
+                return Response({"error": "La contraseña actual es incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
+
+            usuario.contrasena_hash = make_password(new_password)
+            usuario.save()
+            return Response({"mensaje": "Contraseña actualizada correctamente"}, status=status.HTTP_200_OK)
+        except Usuario.DoesNotExist:
+            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+class EliminarCuentaView(APIView):
+    permission_classes = [AllowAny]
+
+    def delete(self, request, usuario_id):
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+            usuario.delete()
+            return Response({"mensaje": "Cuenta eliminada correctamente"}, status=status.HTTP_200_OK)
+        except Usuario.DoesNotExist:
+            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
 # =====================================================
 # LOGIN

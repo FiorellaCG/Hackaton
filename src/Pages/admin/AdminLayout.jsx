@@ -1,30 +1,109 @@
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import { LayoutDashboard, Users, Building2, Briefcase, FileText, Settings, LogOut, Globe } from 'lucide-react';
+import logoImg from '../../assents/Logo.png';
 
 const AdminLayout = () => {
+    const location = useLocation();
+    const { t, i18n } = useTranslation();
+
+    const navItems = [
+        { path: '/admin', label: t('admin.reports'), icon: LayoutDashboard },
+        { path: '/admin/users', label: t('admin.users'), icon: Users },
+        { path: '/admin/users/create-company', label: t('admin.create_company'), icon: Building2 },
+        { path: '/admin/content/vacantes', label: t('admin.vacancies'), icon: Briefcase },
+        { path: '/admin/reports', label: t('admin.analytics'), icon: FileText },
+    ];
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+        localStorage.setItem("language", lng);
+    };
+
     return (
-        <div className="admin-layout" style={{ display: 'flex', minHeight: '100vh' }}>
+        <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
             {/* Sidebar */}
-            <aside style={{ width: '250px', backgroundColor: '#f4f4f4', padding: '20px', borderRight: '1px solid #ddd' }}>
-                <h2>Admin Panel</h2>
-                <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <Link to="/admin/users" style={{ textDecoration: 'none', color: '#333', padding: '10px', backgroundColor: '#fff', borderRadius: '4px' }}>
-                        Users Management
+            <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed inset-y-0 z-50 transition-colors">
+                <div className="p-8">
+                    <Link to="/" className="flex flex-col items-center gap-5 no-underline group text-center">
+                        <div className="relative bg-[#1a8641] p-6 rounded-[2.5rem] shadow-2xl shadow-green-900/40 transition-all duration-500 group-hover:scale-105 group-hover:rotate-3">
+                            <img src={logoImg} alt="Logo" className="w-20 h-20 object-contain" />
+                            <div className="absolute -inset-4 bg-green-500/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                        <div>
+                            <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter m-0 uppercase leading-none">AdminPanel</h2>
+                            <p className="text-xs font-black text-green-600 dark:text-green-400 uppercase tracking-widest mt-2 opacity-80">Control System</p>
+                        </div>
                     </Link>
-                    <Link to="/admin/users/create-company" style={{ textDecoration: 'none', color: '#333', padding: '10px', backgroundColor: '#fff', borderRadius: '4px' }}>
-                        Create Company
-                    </Link>
-                    {/* Future links can be added here */}
+                </div>
+
+                <nav className="flex-1 px-4 space-y-2 mt-4">
+                    {navItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = location.pathname === item.path;
+                        return (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${isActive
+                                    ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 shadow-sm border border-green-100 dark:border-green-800/50'
+                                    : 'text-slate-500 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-800 dark:hover:text-slate-200 border border-transparent'
+                                    }`}
+                            >
+                                <Icon size={18} />
+                                {item.label}
+                            </Link>
+                        );
+                    })}
                 </nav>
+
+                <div className="p-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                    {/* Language Toggler in Admin */}
+                    <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-4">
+                        <button
+                            onClick={() => changeLanguage('es')}
+                            className={`flex-1 py-1.5 rounded-lg text-[10px] font-black transition-all ${i18n.language.startsWith('es') ? 'bg-white dark:bg-slate-700 text-green-600 shadow-sm' : 'text-slate-400'}`}
+                        >
+                            ES
+                        </button>
+                        <button
+                            onClick={() => changeLanguage('en')}
+                            className={`flex-1 py-1.5 rounded-lg text-[10px] font-black transition-all ${i18n.language.startsWith('en') ? 'bg-white dark:bg-slate-700 text-green-600 shadow-sm' : 'text-slate-400'}`}
+                        >
+                            EN
+                        </button>
+                    </div>
+
+                    <button className="flex items-center gap-4 px-4 py-3.5 w-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-all font-black text-xs uppercase tracking-widest">
+                        <LogOut size={18} />
+                        {t('admin.logout')}
+                    </button>
+                </div>
             </aside>
 
             {/* Main Content Area */}
-            <main style={{ flex: 1, padding: '20px', backgroundColor: '#F9FAFB' }}>
-                <header style={{ marginBottom: '20px' }}>
-                    <h1>Admin Dashboard</h1>
+            <main className="flex-1 ml-64 min-h-screen flex flex-col">
+                <header className="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 flex items-center justify-between px-10 sticky top-0 z-40 transition-colors">
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <h1 className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-[0.2em] m-0">{t('admin.dashboard')}</h1>
+                    </div>
+
+                    <div className="flex items-center gap-5">
+                        <div className="hidden md:flex flex-col items-end">
+                            <span className="text-xs font-black text-slate-800 dark:text-white leading-none">Admin User</span>
+                            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-1">Super Admin</span>
+                        </div>
+                        <div className="group relative">
+                            <div className="w-11 h-11 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-black text-lg shadow-xl shadow-slate-200 dark:shadow-none transition-transform hover:scale-105 cursor-pointer border-2 border-transparent hover:border-green-500">
+                                A
+                            </div>
+                        </div>
+                    </div>
                 </header>
-                {/* Sub-routes will be rendered here */}
-                <div className="admin-content" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+                <div className="p-10 flex-1">
                     <Outlet />
                 </div>
             </main>

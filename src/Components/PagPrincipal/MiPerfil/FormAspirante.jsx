@@ -7,9 +7,9 @@ import {
   Code, Database, Globe, Layers, MessageSquare, Users, Brain, Clock, Shield
 } from "lucide-react";
 
-const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
+const FormAspirante = ({ usuarioId, onSuccess, currentData, initialStep = 1 }) => {
   const navigate = useNavigate();
-  const [paso, setPaso] = useState(1);
+  const [paso, setPaso] = useState(initialStep);
   const [cargando, setCargando] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [tooltipActive, setTooltipActive] = useState(null);
@@ -117,7 +117,7 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-2xl p-6 sm:p-10">
+    <div className="w-full bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-10 transition-colors duration-300">
       {/* Indicador de Pasos */}
       <div className="mb-10">
         <div className="flex items-center justify-between mb-2">
@@ -128,9 +128,9 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
             {paso === 1 ? "Información Básica" : paso === 2 ? "Perfil Profesional" : "Habilidades"}
           </p>
         </div>
-        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
           <div
-            className="h-full bg-green-600 rounded-full transition-all duration-500 ease-out"
+            className="h-full bg-green-600 rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(34,197,94,0.3)]"
             style={{ width: paso === 1 ? "33%" : paso === 2 ? "66%" : "100%" }}
           ></div>
         </div>
@@ -150,36 +150,36 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
 
         {paso === 1 && (
           <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-            <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100">
-              <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
-                <User className="text-green-600 w-6 h-6" />
+            <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                <User className="text-green-600 dark:text-green-400 w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-slate-800">Datos Personales</h3>
-                <p className="text-slate-500 text-sm">Ingresa tu información de contacto</p>
+                <h3 className="text-2xl font-bold text-slate-800 dark:text-white">Datos Personales</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">Ingresa tu información de contacto</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Nombres</label>
-                <input required name="nombre" value={form.nombre} onChange={handleChange} placeholder="Ej. Ana María" className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nombres</label>
+                <input required name="nombre" value={form.nombre} onChange={handleChange} placeholder="Ej. Ana María" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 dark:bg-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Apellidos</label>
-                <input required name="apellidos" value={form.apellidos} onChange={handleChange} placeholder="Ej. García Pérez" className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Apellidos</label>
+                <input required name="apellidos" value={form.apellidos} onChange={handleChange} placeholder="Ej. García Pérez" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 dark:bg-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800" />
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <label className="text-sm font-semibold text-slate-700">Foto de Perfil</label>
-                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 hover:border-green-500 transition-all group relative">
-                  <div className="w-20 h-20 rounded-2xl bg-white shadow-sm flex-shrink-0 overflow-hidden border-2 border-white">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Foto de Perfil</label>
+                <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-green-500 transition-all group relative">
+                  <div className="w-20 h-20 rounded-2xl bg-white dark:bg-slate-800 shadow-sm flex-shrink-0 overflow-hidden border-2 border-white dark:border-slate-700">
                     {form.foto_url ? (
                       <img
                         src={form.foto_url instanceof File ? URL.createObjectURL(form.foto_url) : form.foto_url}
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <User className="w-full h-full p-4 text-slate-200" />
+                      <User className="w-full h-full p-4 text-slate-200 dark:text-slate-700" />
                     )}
                   </div>
                   <div className="flex-1">
@@ -196,34 +196,34 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Cédula</label>
-                <input required name="cedula" value={form.cedula} onChange={handleChange} placeholder="0-0000-0000" className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Cédula</label>
+                <input required name="cedula" value={form.cedula} onChange={handleChange} placeholder="0-0000-0000" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 dark:bg-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Fecha de Nacimiento</label>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Fecha de Nacimiento</label>
                 <input required type="date" name="fecha_nacimiento" value={form.fecha_nacimiento} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white text-slate-700" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Provincia</label>
-                <input required name="provincia" value={form.provincia} onChange={handleChange} placeholder="Ej. Cartago" className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Provincia</label>
+                <input required name="provincia" value={form.provincia} onChange={handleChange} placeholder="Ej. Cartago" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 dark:bg-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Cantón</label>
-                <input required name="canton" value={form.canton} onChange={handleChange} placeholder="Ej. La Unión" className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Cantón</label>
+                <input required name="canton" value={form.canton} onChange={handleChange} placeholder="Ej. La Unión" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 dark:bg-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Teléfono</label>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Teléfono</label>
                 <div className="flex">
                   <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-slate-500 font-semibold text-sm">+506</span>
                   <input required name="telefono" value={form.telefono} onChange={handleChange} placeholder="8888 8888" className="w-full px-4 py-3 rounded-r-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white" />
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Teléfono Alterno (Opcional)</label>
-                <input name="telefono_alterno" value={form.telefono_alterno} onChange={handleChange} placeholder="8888 8888" className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Teléfono Alterno (Opcional)</label>
+                <input name="telefono_alterno" value={form.telefono_alterno} onChange={handleChange} placeholder="8888 8888" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 dark:bg-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Género</label>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Género</label>
                 <select required name="genero" value={form.genero} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white text-slate-700 appearance-none">
                   <option value="" disabled>Selecciona tu género</option>
                   <option value="Femenino">Femenino</option>
@@ -232,8 +232,8 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Nacionalidad</label>
-                <input required name="nacionalidad" value={form.nacionalidad} onChange={handleChange} placeholder="Ej. Costarricense" className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nacionalidad</label>
+                <input required name="nacionalidad" value={form.nacionalidad} onChange={handleChange} placeholder="Ej. Costarricense" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 dark:bg-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800" />
               </div>
             </div>
 
@@ -260,13 +260,13 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Carrera / Especialidad</label>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Carrera / Especialidad</label>
                 <select required name="carrera_id" value={form.carrera_id} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white text-slate-700">
                   <option value="ea9e54af-9a82-45d0-9d32-32feaa2d5eb5">Ingeniería en Sistemas de Información</option>
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Nivel Educativo Actual</label>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nivel Educativo Actual</label>
                 <select required name="nivel_educativo" value={form.nivel_educativo} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white text-slate-700">
                   <option value="secundaria">Secundaria / Bachillerato</option>
                   <option value="tecnico">Técnico Superior</option>
@@ -276,7 +276,7 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
                 </select>
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <label className="text-sm font-semibold text-slate-700">Sobre mí (Breve descripción de tu perfil)</label>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Sobre mí (Breve descripción de tu perfil)</label>
                 <textarea
                   required
                   name="sobre_mi"
@@ -290,7 +290,7 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData }) => {
 
               <div className="sm:col-span-2">
                 <div className="flex items-center justify-between mb-4">
-                  <label className="text-sm font-semibold text-slate-700">Experiencia Laboral</label>
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Experiencia Laboral</label>
                   <button
                     type="button"
                     onClick={() => setForm({ ...form, experiencia: [...form.experiencia, { id: Date.now(), puesto: '', empresa: '', periodo: '', descripcion: '' }] })}

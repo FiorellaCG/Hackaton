@@ -118,3 +118,30 @@ export const crearPerfilEmpresa = async (data) => {
   }
   return await response.json();
 };
+
+export const actualizarPreferencias = async (usuarioId, preferencias) => {
+  const response = await fetch(`${API_URL}/usuarios/${usuarioId}/preferencias/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ preferencias }),
+  });
+  return await response.json();
+};
+
+export const cambiarPassword = async (usuarioId, currentPassword, newPassword) => {
+  const response = await fetch(`${API_URL}/usuarios/${usuarioId}/cambiar-password/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw data;
+  return data;
+};
+
+export const eliminarCuenta = async (usuarioId) => {
+  const response = await fetch(`${API_URL}/usuarios/${usuarioId}/eliminar-cuenta/`, {
+    method: "DELETE",
+  });
+  return await response.json();
+};

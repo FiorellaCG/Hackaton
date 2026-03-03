@@ -5,6 +5,8 @@ import MiPerfilPage from "../Pages/Home/MiPerfilPage";
 import LoginPage from "../Pages/Home/LoginPage";
 import RegisterPage from "../Pages/Home/RegisterPage";
 import DashboardAspirantePage from "../Pages/Home/DashboardAspirantePage";
+import AjustesPage from "../Pages/Home/AjustesPage";
+import JobsPage from "../Pages/Home/JobsPage";
 import FormCarrera from "../Components/PagPrincipal/FormCarrera";
 import VisualizarCarreras from "../Components/PagPrincipal/VisualizarCarreras";
 
@@ -28,8 +30,11 @@ function Routing() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/mi-perfil" element={<MiPerfilPage />} />
       <Route path="/dashboard-aspirante" element={<DashboardAspirantePage />} />
-      <Route path="/nueva-carrera" element={<FormCarrera />} />
-      <Route path="/carreras" element={<VisualizarCarreras />} />
+      <Route path="/ajustes" element={<AjustesPage />} />
+      <Route path="/empleos" element={<JobsPage tipo="empleo" />} />
+      <Route path="/pasantias" element={<JobsPage tipo="pasantia" />} />
+
+
 
       {/* ADMIN ROUTES CON NESTING */}
       <Route path="/admin" element={<AdminLayout />}>

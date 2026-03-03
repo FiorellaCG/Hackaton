@@ -15,6 +15,7 @@ class Usuario(models.Model):
     fecha_consentimiento = models.DateTimeField(null=True, blank=True)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
+    preferencias = models.JSONField(default=dict, blank=True)
 
     class Meta:
         db_table = 'usuarios'

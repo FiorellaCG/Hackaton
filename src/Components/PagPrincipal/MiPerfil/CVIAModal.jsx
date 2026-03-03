@@ -59,17 +59,17 @@ const CVIAModal = ({ isOpen, onClose, perfil }) => {
                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden relative"
+                className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden relative transition-colors"
             >
                 {/* Header */}
-                <div className="flex justify-between items-center p-6 border-b border-slate-100">
+                <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-800">
                     <div className="flex items-center gap-3">
-                        <div className="bg-green-100 p-2 rounded-xl text-green-600">
+                        <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-xl text-green-600 dark:text-green-400">
                             <Sparkles className="w-5 h-5" />
                         </div>
-                        <h2 className="text-xl font-bold text-slate-800">Generador de CV con IA</h2>
+                        <h2 className="text-xl font-bold text-slate-800 dark:text-white">Generador de CV con IA</h2>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                    <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
                         <X className="w-5 h-5 text-slate-400" />
                     </button>
                 </div>
@@ -80,7 +80,7 @@ const CVIAModal = ({ isOpen, onClose, perfil }) => {
                     {step === 1 && (
                         <div className="flex flex-col items-center justify-center py-10 space-y-6">
                             <div className="relative w-32 h-32 flex items-center justify-center">
-                                <div className="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
+                                <div className="absolute inset-0 border-4 border-slate-100 dark:border-slate-800 rounded-full"></div>
                                 <div
                                     className="absolute inset-0 border-4 border-green-500 rounded-full transition-all duration-300"
                                     style={{
@@ -88,11 +88,11 @@ const CVIAModal = ({ isOpen, onClose, perfil }) => {
                                         maskImage: `conic-gradient(black ${progress}%, transparent 0)`
                                     }}
                                 ></div>
-                                <Wand2 className="w-10 h-10 text-green-600 animate-pulse" />
+                                <Wand2 className="w-10 h-10 text-green-600 dark:text-green-400 animate-pulse" />
                             </div>
                             <div className="text-center">
-                                <h3 className="text-lg font-bold text-slate-800 mb-1">{currentAnalisis}</h3>
-                                <p className="text-sm text-slate-500">Estamos utilizando IA para estructurar tu mejor perfil</p>
+                                <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">{currentAnalisis}</h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Estamos utilizando IA para estructurar tu mejor perfil</p>
                             </div>
                         </div>
                     )}
@@ -101,8 +101,8 @@ const CVIAModal = ({ isOpen, onClose, perfil }) => {
                     {step === 2 && (
                         <div className="space-y-8">
                             <div className="text-center max-w-md mx-auto">
-                                <h3 className="text-2xl font-bold text-slate-800 mb-2">¡Perfil Analizado!</h3>
-                                <p className="text-slate-500">La IA ha identificado tus fortalezas. Selecciona un estilo para tu currículum.</p>
+                                <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">¡Perfil Analizado!</h3>
+                                <p className="text-slate-500 dark:text-slate-400 font-medium">La IA ha identificado tus fortalezas. Selecciona un estilo para tu currículum.</p>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -114,11 +114,11 @@ const CVIAModal = ({ isOpen, onClose, perfil }) => {
                                     <button
                                         key={tpl.id}
                                         onClick={handleGenerate}
-                                        className="p-6 border border-slate-200 rounded-3xl hover:border-green-500 hover:ring-4 hover:ring-green-50 transition-all text-left group"
+                                        className="p-6 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-3xl hover:border-green-500 dark:hover:border-green-600 hover:ring-4 hover:ring-green-50 dark:hover:ring-green-900/10 transition-all text-left group"
                                     >
                                         <div className={`w-12 h-16 ${tpl.color} rounded-lg mb-4 opacity-20 group-hover:opacity-40 transition-opacity`}></div>
-                                        <h4 className="font-bold text-slate-800 mb-1">{tpl.name}</h4>
-                                        <p className="text-xs text-slate-500">{tpl.desc}</p>
+                                        <h4 className="font-bold text-slate-800 dark:text-white mb-1">{tpl.name}</h4>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{tpl.desc}</p>
                                     </button>
                                 ))}
                             </div>
@@ -129,7 +129,7 @@ const CVIAModal = ({ isOpen, onClose, perfil }) => {
                     {step === 3 && (
                         <div className="flex flex-col items-center justify-center py-20">
                             <Loader2 className="w-12 h-12 text-green-600 animate-spin mb-4" />
-                            <h3 className="text-xl font-bold text-slate-800">Generando documento final...</h3>
+                            <h3 className="text-xl font-bold text-slate-800 dark:text-white">Generando documento final...</h3>
                         </div>
                     )}
 
@@ -138,7 +138,7 @@ const CVIAModal = ({ isOpen, onClose, perfil }) => {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full items-start">
 
                             {/* Fake Document Preview */}
-                            <div className="bg-slate-100 rounded-2xl p-4 shadow-inner">
+                            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 shadow-inner">
                                 <div className="bg-white aspect-[1/1.41] shadow-2xl rounded p-8 flex flex-col space-y-4 text-[8px]">
                                     <div className="flex justify-between items-start border-b border-slate-100 pb-4">
                                         <div>
@@ -191,19 +191,19 @@ const CVIAModal = ({ isOpen, onClose, perfil }) => {
 
                             {/* Actions Box */}
                             <div className="space-y-6">
-                                <div className="bg-green-50 p-6 rounded-3xl border border-green-100">
-                                    <div className="flex items-center gap-2 text-green-700 mb-2">
-                                        <CheckCircle className="w-5 h-5" />
+                                <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-3xl border border-green-100 dark:border-green-900/40">
+                                    <div className="flex items-center gap-2 text-green-700 dark:text-green-400 mb-2">
+                                        <CheckCircle className="w-5 h-5 text-green-500" />
                                         <span className="font-bold">¡CV Generado con éxito!</span>
                                     </div>
-                                    <p className="text-sm text-green-600">Hemos optimizado tu perfil para que sea un 85% más visible ante reclutadores de zona franca.</p>
+                                    <p className="text-sm text-green-600 dark:text-green-400/80 font-medium">Hemos optimizado tu perfil para que sea un 85% más visible ante reclutadores de zona franca.</p>
                                 </div>
 
                                 <div className="space-y-3">
-                                    <button className="w-full bg-[#1a8641] hover:bg-green-700 text-white font-bold py-4 rounded-2xl transition-colors shadow-lg flex items-center justify-center gap-3">
+                                    <button className="w-full bg-[#1a8641] dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-green-900/20 flex items-center justify-center gap-3">
                                         <Download className="w-5 h-5" /> Descargar PDF Terminado
                                     </button>
-                                    <button className="w-full bg-white border border-slate-200 text-slate-700 font-bold py-4 rounded-2xl transition-colors hover:bg-slate-50 flex items-center justify-center gap-3">
+                                    <button className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold py-4 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-center gap-3">
                                         <FileText className="w-5 h-5" /> Guardar en mi perfil
                                     </button>
                                 </div>

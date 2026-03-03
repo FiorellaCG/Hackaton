@@ -1,13 +1,26 @@
 import React from 'react';
+import { BarChart, PieChart, LineChart } from "lucide-react";
 
 const ChartsSection = ({ title, type }) => {
-    return (
-        <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', height: '300px', display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ margin: '0 0 15px 0', fontSize: '16px', color: '#333' }}>{title} ({type} chart)</h3>
+    const getIcon = () => {
+        if (type === 'bar') return <BarChart className="w-5 h-5 text-indigo-500" />;
+        if (type === 'pie') return <PieChart className="w-5 h-5 text-emerald-500" />;
+        return <LineChart className="w-5 h-5 text-rose-500" />;
+    };
 
-            {/* Placeholder for real charts (recharts, chart.js, etc.) when authorized */}
-            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px dashed #ccc' }}>
-                <span style={{ color: '#aaa', fontStyle: 'italic' }}>[ {type.toUpperCase()} Chart Visualization Area ]</span>
+    return (
+        <div className="flex flex-col h-[300px]">
+            <div className="flex items-center gap-2 mb-4">
+                {getIcon()}
+                <h3 className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-wider">{title}</h3>
+            </div>
+
+            {/* Placeholder for real charts */}
+            <div className="flex-1 flex flex-col justify-center items-center bg-slate-50 dark:bg-slate-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 transition-colors">
+                <span className="text-slate-400 dark:text-slate-500 font-bold italic text-sm mb-2 opacity-50 uppercase tracking-tighter">
+                    {type} chart visualization
+                </span>
+                <p className="text-[10px] text-slate-300 dark:text-slate-600 font-black uppercase">GreenTalent Analytics Engine</p>
             </div>
         </div>
     );

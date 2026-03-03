@@ -1,93 +1,147 @@
-import { Search, MapPin, Sparkles, Briefcase } from "lucide-react";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, MapPin, TrendingUp, Users, Briefcase, Sparkles, GraduationCap } from 'lucide-react';
+import { useTranslation } from "react-i18next";
 
-const Hero = () => {
+const Hero = ({ onSearch }) => {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const [searchValue, setSearchValue] = useState("");
+    const [activeCategory, setActiveCategory] = useState("todos");
+
+    const handleSearchChange = (e) => {
+        const val = e.target.value;
+        setSearchValue(val);
+        // Instant search while typing (if enabled by parent)
+        if (onSearch) onSearch(val, activeCategory);
+    };
+
+    const handleCategoryChange = (cat) => {
+        setActiveCategory(cat);
+        if (onSearch) onSearch(searchValue, cat);
+    };
+
+    const handleSearchClick = () => {
+        if (onSearch) {
+            onSearch(searchValue, activeCategory);
+        } else {
+            // Navigate to specific page with query parameter
+            let route = activeCategory === 'pasantías' ? '/pasantias' : '/empleos';
+            navigate(`${route}?q=${encodeURIComponent(searchValue)}`);
+        }
+    };
+
+    const stats = [
+        { label: t('hero.stats.vacancies'), value: '120+', icon: Briefcase, color: 'text-indigo-600', bg: 'bg-indigo-50 dark:bg-indigo-900/30' },
+        { label: t('hero.stats.companies'), value: '45+', icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/30' },
+        { label: t('hero.stats.hired'), value: '850+', icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-900/30' },
+    ];
+
     return (
-        <section className="relative w-full pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-white flex flex-col items-center justify-center overflow-hidden">
-            {/* Background dotted pattern */}
-            <div
-                className="absolute inset-0 z-0 opacity-40 pointer-events-none"
-                style={{
-                    backgroundImage: 'radial-gradient(circle, #cbd5e1 1px, transparent 1px)',
-                    backgroundSize: '24px 24px'
-                }}
-            />
+        <section className="relative w-full pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-[var(--bg-main)] flex flex-col items-center justify-center overflow-hidden transition-colors duration-300">
+            {/* Background elements */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-green-100/40 dark:bg-green-900/10 rounded-full blur-[100px]"></div>
+                <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-blue-100/40 dark:bg-blue-900/10 rounded-full blur-[100px]"></div>
+            </div>
 
-            <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center">
-                {/* Title & Subtitle */}
-                <div className="text-center mb-10 max-w-3xl">
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-4">
-                        Conecta tu talento con las <br className="hidden sm:block" />
-                        <span className="text-[#1a8641]">mejores oportunidades</span>
+            <div className="max-w-4xl w-full text-center space-y-12">
+                <div className="space-y-4">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-800 dark:text-white tracking-tight leading-[1.1]">
+                        {t('hero.title')}
                     </h1>
-                    <p className="text-base sm:text-lg text-slate-500 font-medium">
-                        La plataforma de empleo inteligente de la Zona Franca La Lima
+                    <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">
+                        {t('hero.subtitle')}
                     </p>
                 </div>
 
-                {/* Search Bar - Main Container */}
-                <div className="w-full max-w-4xl bg-white rounded-full shadow-lg border border-slate-100 p-2 flex flex-col sm:flex-row items-center gap-2 mb-8">
-                    {/* Keyword Input */}
-                    <div className="flex-1 flex items-center px-4 w-full h-12 bg-slate-50 rounded-full sm:rounded-l-full sm:rounded-r-none border-none">
-                        <Search className="w-5 h-5 text-slate-400 mr-2 flex-shrink-0" />
-                        <input
-                            type="text"
-                            placeholder="Título del puesto, empresa, o palabra clave..."
-                            className="bg-transparent border-none outline-none w-full text-slate-600 placeholder-slate-400 font-medium text-sm"
-                        />
+                {/* Search Bar Container with Tabs */}
+                <div className="relative max-w-3xl mx-auto w-full group">
+                    {/* Tabs */}
+                    <div className="flex justify-start gap-4 mb-3 ml-2">
+                        {[
+                            { id: 'todos', label: 'Todos', icon: Search },
+                            { id: 'empleos', label: 'Empleos', icon: Briefcase },
+                            { id: 'pasantías', label: 'Pasantías', icon: GraduationCap }
+                        ].map((cat) => (
+                            <button
+                                key={cat.id}
+                                type="button"
+                                onClick={() => handleCategoryChange(cat.id)}
+                                className={`px-6 py-2.5 rounded-t-2xl font-black text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all duration-300 border-b-2 ${activeCategory === cat.id
+                                    ? 'bg-white dark:bg-slate-900 text-[#1a8641] dark:text-green-500 border-[#1a8641] dark:border-green-500 shadow-[-10px_-10px_20px_rgba(0,0,0,0.02)]'
+                                    : 'text-slate-400 dark:text-slate-600 border-transparent hover:text-slate-600 dark:hover:text-slate-400'
+                                    }`}
+                            >
+                                <cat.icon size={14} />
+                                {cat.label}
+                            </button>
+                        ))}
                     </div>
 
-                    {/* Location Input */}
-                    <div className="flex-1 flex items-center px-4 w-full h-12 bg-slate-50 rounded-full sm:rounded-none border-none sm:border-l sm:border-slate-200">
-                        <MapPin className="w-5 h-5 text-slate-400 mr-2 flex-shrink-0" />
-                        <input
-                            type="text"
-                            placeholder="La Lima, Costa Rica"
-                            defaultValue="La Lima, Costa Rica"
-                            className="bg-transparent border-none outline-none w-full text-slate-600 placeholder-slate-400 font-medium text-sm"
-                        />
+                    <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+                    <div className="relative flex flex-col md:flex-row items-center bg-white dark:bg-slate-900 rounded-3xl rounded-tl-none p-3 shadow-2xl border border-slate-100 dark:border-slate-800">
+                        <div className="flex-1 flex items-center px-6 w-full border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-700 py-4 md:py-0">
+                            <Search className="w-5 h-5 text-slate-400 mr-4 shrink-0" />
+                            <input
+                                type="text"
+                                placeholder={
+                                    activeCategory === 'empleos' ? '¿Qué cargo buscas?' :
+                                        activeCategory === 'pasantías' ? 'Dinos tu carrera...' :
+                                            t('hero.search_placeholder')
+                                }
+                                value={searchValue}
+                                onChange={handleSearchChange}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSearchClick()}
+                                className="w-full bg-transparent outline-none text-slate-700 dark:text-slate-200 font-semibold placeholder:text-slate-400"
+                            />
+                        </div>
+                        <div className="flex-[0.5] flex items-center px-6 w-full py-4 md:py-0">
+                            <MapPin className="w-5 h-5 text-slate-400 mr-4 shrink-0" />
+                            <span className="text-slate-700 dark:text-slate-200 font-black text-xs uppercase tracking-widest">Zona Franca La Lima</span>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleSearchClick}
+                            className="w-full md:w-auto px-10 py-5 bg-[#1a8641] dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl transition-all transform active:scale-95 flex items-center justify-center gap-3 group/btn"
+                        >
+                            <Sparkles className="w-4 h-4 text-green-300 group-hover:animate-pulse" />
+                            {t('hero.search_button')}
+                        </button>
                     </div>
-
-                    {/* Search Button */}
-                    <button className="w-full sm:w-auto px-6 h-12 bg-[#1a8641] hover:bg-green-700 transition-colors rounded-full text-white font-semibold flex justify-center items-center gap-2 flex-shrink-0 shadow-md">
-                        <Sparkles className="w-5 h-5" />
-                        <span>Buscar con IA</span>
-                    </button>
+                    {/* IA Recommendation Badge */}
+                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black px-4 py-1.5 rounded-full border border-slate-800 dark:border-slate-200 flex items-center gap-2 shadow-xl opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                        <Sparkles size={12} className="text-green-400 dark:text-green-600" />
+                        SMART MATCH ACTIVO: 124 NUEVAS VACANTES HOY
+                    </div>
                 </div>
 
-                {/* Tags */}
-                <div className="flex flex-wrap justify-center gap-3 mb-16">
-                    <span className="px-5 py-2 bg-white border border-slate-200 rounded-full text-sm font-semibold text-slate-700 flex items-center gap-2 hover:border-green-600 hover:text-green-700 cursor-pointer shadow-sm transition-all duration-300">
-                        <Briefcase className="w-4 h-4" /> Tiempo Completo
+                {/* Popular Tags */}
+                <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-bold">
+                    <span className="text-slate-400 dark:text-slate-600 uppercase tracking-widest text-xs">
+                        {t('hero.popular')}
                     </span>
-                    <span className="px-5 py-2 bg-white border border-slate-200 rounded-full text-sm font-semibold text-slate-700 hover:border-green-600 hover:text-green-700 cursor-pointer shadow-sm transition-all duration-300">
-                        Remoto
-                    </span>
-                    <span className="px-5 py-2 bg-white border border-slate-200 rounded-full text-sm font-semibold text-slate-700 hover:border-green-600 hover:text-green-700 cursor-pointer shadow-sm transition-all duration-300">
-                        Pasantías
-                    </span>
-                    <span className="px-5 py-2 bg-white border border-slate-200 rounded-full text-sm font-semibold text-slate-700 hover:border-green-600 hover:text-green-700 cursor-pointer shadow-sm transition-all duration-300">
-                        Entrada
-                    </span>
+                    {['Desarrollo', 'Logística', 'Ingeniería', 'Administración'].map((tag) => (
+                        <span key={tag} className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-600 transition-colors cursor-pointer capitalize">
+                            {tag}
+                        </span>
+                    ))}
                 </div>
 
-                {/* Stats */}
-                <div className="flex flex-wrap justify-center sm:justify-between w-full max-w-3xl gap-8 px-4">
-                    <div className="flex flex-col items-center">
-                        <span className="text-3xl font-extrabold text-[#1a8641] mb-1">2,500+</span>
-                        <span className="text-sm font-medium text-slate-500">Ofertas Activas</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <span className="text-3xl font-extrabold text-[#1a8641] mb-1">150+</span>
-                        <span className="text-sm font-medium text-slate-500">Empresas</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <span className="text-3xl font-extrabold text-[#1a8641] mb-1">10,000+</span>
-                        <span className="text-sm font-medium text-slate-500">Candidatos</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <span className="text-3xl font-extrabold text-[#1a8641] mb-1">95%</span>
-                        <span className="text-sm font-medium text-slate-500">Tasa de Éxito</span>
-                    </div>
+                {/* Stats Section */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-10 border-t border-slate-100 dark:border-slate-800/50">
+                    {stats.map((stat, idx) => {
+                        const Icon = stat.icon;
+                        return (
+                            <div key={idx} className="flex flex-col items-center p-4">
+                                <div className={`${stat.bg} ${stat.color} p-4 rounded-2xl mb-3`}>
+                                    <Icon className="w-8 h-8" />
+                                </div>
+                                <span className="text-2xl font-black text-slate-800 dark:text-white leading-none mb-1">{stat.value}</span>
+                                <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{stat.label}</span>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

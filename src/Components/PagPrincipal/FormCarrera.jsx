@@ -49,7 +49,7 @@ const FormCarrera = () => {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-md mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100"
+            className="w-full max-w-md mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-800 transition-colors duration-300"
         >
             <div className="bg-gradient-to-r from-indigo-600 to-blue-600 p-6 text-white">
                 <div className="flex items-center gap-3 mb-2">
@@ -66,7 +66,7 @@ const FormCarrera = () => {
                     <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
-                        className={`mb-6 p-4 rounded-xl flex items-start gap-3 ${status.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+                        className={`mb-6 p-4 rounded-xl flex items-start gap-3 ${status.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border border-green-200 dark:border-green-800/30' : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 border border-red-200 dark:border-red-900/30'
                             }`}
                     >
                         {status.type === 'success' ? <CheckCircle2 className="shrink-0 mt-0.5 text-green-500" size={18} /> : <AlertCircle className="shrink-0 mt-0.5 text-red-500" size={18} />}
@@ -76,7 +76,7 @@ const FormCarrera = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                             Nombre de la Carrera
                         </label>
                         <div className="relative">
@@ -90,7 +90,7 @@ const FormCarrera = () => {
                                 value={formData.nombre}
                                 onChange={handleChange}
                                 placeholder="Ej: Ingeniería en Sistemas"
-                                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-slate-700"
+                                className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-slate-700 dark:text-slate-200"
                             />
                         </div>
                     </div>
@@ -98,7 +98,7 @@ const FormCarrera = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                        className="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
                     >
                         {loading ? (
                             <>

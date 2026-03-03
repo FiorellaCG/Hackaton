@@ -1,0 +1,104 @@
+{
+    "navbar": {
+        "jobs": "Empleos",
+        "internships": "Pasantías",
+        "companies": "Empresas",
+        "statistics": "Estadísticas",
+        "my_profile": "Mi Perfil",
+        "login": "Iniciar Sesión",
+        "register": "Registrarse",
+        "logout": "Cerrar Sesión"
+    },
+    "hero": {
+        "title": "Encuentra tu próximo paso en la Zona Franca La Lima",
+        "subtitle": "Conectamos el talento local con las empresas más innovadoras de Cartago.",
+        "search_placeholder": "Título del empleo o habilidad...",
+        "search_button": "Buscar",
+        "popular": "Popular:",
+        "stats": {
+            "vacancies": "Vacantes Activas",
+            "companies": "Empresas",
+            "hired": "Contratados"
+        }
+    },
+    "featured_jobs": {
+        "title": "Empleos Destacados",
+        "subtitle": "Descubre las oportunidades más recientes y de mayor demanda.",
+        "view_all": "Ver todas las ofertas",
+        "salary_per_month": "/ mes"
+    },
+    "footer": {
+        "description": "Conectamos el mejor talento con las empresas líderes en la Zona Franca La Lima, impulsando el crecimiento profesional.",
+        "candidates": "Para Candidatos",
+        "companies": "Para Empresas",
+        "contact": "Contacto",
+        "rights": "Todos los derechos reservados."
+    },
+    "dashboard": {
+        "title": "Mi Panel de Control",
+        "edit_profile": "Editar Perfil",
+        "experience": "Experiencia Laboral",
+        "postulations": "Mis Postulaciones",
+        "contact_details": "Detalles de Contacto",
+        "ia_cv": "Gestión de CV IA",
+        "ia_matches": "Matches IA",
+        "no_postulations": "No hay postulaciones activas",
+        "add": "+ Agregar",
+        "analyze_now": "Analizar Perfil ahora",
+        "gender": "Género",
+        "phone": "Teléfono",
+        "location": "Ubicación",
+        "education": "Nivel Estudios"
+    },
+    "admin": {
+        "dashboard": "Panel de Administración",
+        "reports": "Reportes",
+        "users": "Usuarios",
+        "create_company": "Crear Empresa",
+        "vacancies": "Vacantes",
+        "analytics": "Analíticas",
+        "logout": "Cerrar Sesión",
+        "settings": "Ajustes"
+    },
+    "settings": {
+        "title": "Configuración",
+        "subtitle": "Gestiona tu seguridad y preferencias de GreenTalent",
+        "security": "Seguridad de la Cuenta",
+        "update_password": "Actualizar Contraseña",
+        "current_password": "Contraseña actual",
+        "new_password": "Nueva contraseña",
+        "confirm_password": "Confirmar nueva contraseña",
+        "save_password": "Guardar Nueva Contraseña",
+        "notifications": "Notificaciones y Alertas",
+        "ia_alerts": "Alertas de Empleo IA",
+        "ia_alerts_desc": "Recibe correos cuando el SmartMatch encuentre una vacante perfecta.",
+        "direct_messages": "Mensajes Directos",
+        "direct_messages_desc": "Notificar cuando una empresa contacte contigo directamente.",
+        "interface": "Interfaz y Región",
+        "dark_mode": "Modo Oscuro",
+        "dark_mode_desc": "Activa una apariencia visual más relajante para tus ojos.",
+        "system_language": "Idioma del Sistema",
+        "change_language": "Cambiar a Inglés",
+        "danger_zone": "Zona de Peligro",
+        "delete_account": "Borrar mi Cuenta",
+        "delete_account_desc": "Una vez borrada la cuenta, no es posible recuperar la información.",
+        "data_protected": "Tus datos están encriptados y protegidos"
+    },
+    "auth": {
+        "login_title": "Iniciar Sesión",
+        "login_subtitle": "Accede a tu cuenta de GreenTalent",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "login_button": "Ingresar",
+        "logging_in": "Ingresando...",
+        "no_account": "¿No tienes cuenta?",
+        "register_link": "Regístrate aquí",
+        "register_title": "Crear Cuenta",
+        "register_subtitle": "Únete a la mayor red de talento en La Lima",
+        "register_button": "Registrarse",
+        "registering": "Registrando...",
+        "already_account": "¿Ya tienes cuenta?",
+        "login_link": "Inicia sesión",
+        "invalid_creds": "Credenciales inválidas"
+    }
+}
