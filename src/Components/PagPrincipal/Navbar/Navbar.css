@@ -45,8 +45,19 @@
   cursor: pointer;
 }
 
-.navbar-links li:hover {
+.navbar-links li a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.navbar-links li:hover, .navbar-links li a:hover {
   color: #1f7a3e;
+}
+
+.active-link {
+  color: #1a8641;
+  font-weight: 700;
 }
 
 /* Right */

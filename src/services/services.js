@@ -55,11 +55,17 @@ export const crearPersona = async (data) => {
 };
 
 export const crearPerfilAspirante = async (data) => {
-  const response = await fetch(`${API_URL}/crear-perfil-aspirante/`, {
+  const isFormData = data instanceof FormData;
+  const options = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+    body: isFormData ? data : JSON.stringify(data),
+  };
+
+  if (!isFormData) {
+    options.headers = { "Content-Type": "application/json" };
+  }
+
+  const response = await fetch(`${API_URL}/crear-perfil-aspirante/`, options);
 
   if (!response.ok) {
     const err = await response.json();

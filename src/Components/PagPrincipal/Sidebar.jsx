@@ -1,3 +1,4 @@
+import { useNavigate, useLocation } from "react-router-dom";
 import {
     LayoutDashboard,
     Zap,
@@ -12,6 +13,8 @@ import {
 } from "lucide-react";
 
 const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // Suponemos info del usuario extraída por ahora
     const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
@@ -50,9 +53,12 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
 
                 {/* Nav Items */}
                 <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto w-full">
-                    <a href="#" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 rounded-xl hover:bg-slate-50 transition-colors w-full">
-                        <LayoutDashboard className="w-5 h-5" /> Dashboard
-                    </a>
+                    <div
+                        onClick={() => navigate("/dashboard-aspirante")}
+                        className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl cursor-pointer transition-colors w-full ${location.pathname === "/dashboard-aspirante" ? "bg-slate-900 text-white font-bold shadow-md" : "text-slate-500 hover:bg-slate-50"}`}
+                    >
+                        <LayoutDashboard className="w-5 h-5 font-bold" /> Dashboard
+                    </div>
                     <a href="#" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 rounded-xl hover:bg-slate-50 transition-colors w-full">
                         <Zap className="w-5 h-5" /> TalentMatch
                         <span className="ml-auto w-2 h-2 rounded-full bg-green-500"></span>
@@ -73,10 +79,13 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
                         <Bot className="w-5 h-5" /> Asistente IA
                     </a>
 
-                    {/* Activo: Mi Perfil */}
-                    <a href="/mi-perfil" className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-white bg-slate-900 rounded-xl shadow-md w-full mt-2">
-                        <User className="w-5 h-5 text-green-400" /> Mi Perfil
-                    </a>
+                    {/* Mi Perfil */}
+                    <div
+                        onClick={() => navigate("/mi-perfil")}
+                        className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl cursor-pointer transition-colors w-full mt-2 ${location.pathname === "/mi-perfil" ? "bg-slate-900 text-white font-bold shadow-md" : "text-slate-500 hover:bg-slate-50"}`}
+                    >
+                        <User className={`w-5 h-5 ${location.pathname === "/mi-perfil" ? "text-green-400" : ""}`} /> Mi Perfil
+                    </div>
                 </nav>
 
                 {/* Bottom user section */}

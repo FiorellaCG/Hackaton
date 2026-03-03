@@ -133,6 +133,10 @@ class CrearPerfilAspiranteSerializer(serializers.Serializer):
         choices=Aspirante.ESTADO_LABORAL_CHOICES
     )
     sobre_mi = serializers.CharField(required=False, allow_blank=True)
+    foto_url = serializers.ImageField(required=False, allow_null=True)
+    habilidades_tecnicas = serializers.JSONField(required=False, default=list)
+    habilidades_blandas = serializers.JSONField(required=False, default=list)
+    experiencia = serializers.JSONField(required=False, default=list)
 
     def validate(self, data):
         try:
@@ -145,47 +149,41 @@ class CrearPerfilAspiranteSerializer(serializers.Serializer):
                 "El usuario no tiene rol aspirante"
             )
 
-        if hasattr(usuario, 'persona'):
-            raise serializers.ValidationError(
-                "El usuario ya tiene una persona creada"
-            )
-
-        if Aspirante.objects.filter(usuario=usuario).exists():
-            raise serializers.ValidationError(
-                "El usuario ya tiene perfil de aspirante"
-            )
-
-        try:
-            Carrera.objects.get(id=data['carrera_id'])
-        except Carrera.DoesNotExist:
-            raise serializers.ValidationError("Carrera no existe")
-
+        # Permitimos actualizaciones, así que no lanzamos error si ya existe
         return data
 
     def create(self, validated_data):
         usuario = Usuario.objects.get(id=validated_data['usuario_id'])
         carrera = Carrera.objects.get(id=validated_data['carrera_id'])
 
-        persona = Persona.objects.create(
+        persona, _ = Persona.objects.update_or_create(
             usuario=usuario,
-            nombre=validated_data['nombre'],
-            apellidos=validated_data['apellidos'],
-            cedula=validated_data['cedula'],
-            genero=validated_data['genero'],
-            nacionalidad=validated_data['nacionalidad'],
-            telefono=validated_data['telefono'],
-            provincia=validated_data['provincia'],
-            canton=validated_data['canton'],
-            fecha_nacimiento=validated_data.get('fecha_nacimiento')
+            defaults={
+                'nombre': validated_data['nombre'],
+                'apellidos': validated_data['apellidos'],
+                'cedula': validated_data['cedula'],
+                'genero': validated_data['genero'],
+                'nacionalidad': validated_data['nacionalidad'],
+                'telefono': validated_data['telefono'],
+                'provincia': validated_data['provincia'],
+                'canton': validated_data['canton'],
+                'fecha_nacimiento': validated_data.get('fecha_nacimiento')
+            }
         )
 
-        aspirante = Aspirante.objects.create(
+        aspirante, _ = Aspirante.objects.update_or_create(
             usuario=usuario,
-            persona=persona,
-            carrera=carrera,
-            nivel_educativo=validated_data['nivel_educativo'],
-            estado_laboral=validated_data['estado_laboral'],
-            sobre_mi=validated_data.get('sobre_mi', '')
+            defaults={
+                'persona': persona,
+                'carrera': carrera,
+                'nivel_educativo': validated_data['nivel_educativo'],
+                'estado_laboral': validated_data['estado_laboral'],
+                'sobre_mi': validated_data.get('sobre_mi', ''),
+                'foto_url': validated_data.get('foto_url', ''),
+                'habilidades_tecnicas': validated_data.get('habilidades_tecnicas', []),
+                'habilidades_blandas': validated_data.get('habilidades_blandas', []),
+                'experiencia': validated_data.get('experiencia', [])
+            }
         )
 
         return aspirante
