@@ -17,7 +17,7 @@ import ProgramasManagement from "../Pages/admin/ProgramasManagement";
 import PracticasManagement from "../Pages/admin/PracticasManagement";
 import ReportsDashboard from "../Pages/admin/ReportsDashboard";
 
-//import CreateCompanyInstitutionForm from "../Components/admin/CreateCompanyInstitutionForm";
+import CreateCompanyInstitutionForm from "../Components/Admin/CreateCompanyInstitutionForm";
 
 function Routing() {
   return (

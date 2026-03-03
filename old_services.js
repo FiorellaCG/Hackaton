@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/api";
+﻿const API_URL = "http://127.0.0.1:8000/api";
 
 export const loginUser = async (correo, contrasena) => {
   const response = await fetch(`${API_URL}/login/`, {
@@ -10,7 +10,7 @@ export const loginUser = async (correo, contrasena) => {
   });
 
   if (!response.ok) {
-    throw new Error("Credenciales inválidas");
+    throw new Error("Credenciales inv├ílidas");
   }
 
   return await response.json();
@@ -38,7 +38,7 @@ export const registerUser = async (data) => {
   return await response.json();
 };
 
-// Agregar esta función al services.js existente
+// Agregar esta funci├│n al services.js existente
 export const crearPersona = async (data) => {
   const response = await fetch(`${API_URL}/personas/`, {
     method: "POST",
@@ -80,27 +80,13 @@ export const obtenerCarreras = async () => {
 export const obtenerAreasTrabajo = async () => {
   const response = await fetch(`${API_URL}/areas-trabajo/`);
   if (!response.ok) {
-    throw new Error("Error al obtener áreas de trabajo");
+    throw new Error("Error al obtener ├íreas de trabajo");
   }
   return await response.json();
 };
 
 export const crearCarrera = async (data) => {
   const response = await fetch(`${API_URL}/carreras/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    const err = await response.json();
-    throw err;
-  }
-  return await response.json();
-};
-
-export const crearPerfilEmpresa = async (data) => {
-  const response = await fetch(`${API_URL}/crear-perfil-empresa/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
