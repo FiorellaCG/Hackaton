@@ -1,6 +1,6 @@
-
-import Login from "../../PagPrincipal/Login/Login";
+import { LoginModal } from "../Login/Login";
 import  RegistroModal from '../../PagPrincipal/Login/Registrer'
+
 import "./Navbar.css";
 
 import React, { useState } from "react";
@@ -58,7 +58,7 @@ const Navbar = () => {
       </nav>
 
       {/* Modales */}
-      {loginOpen && <Login isOpen={loginOpen} onClose={() => setLoginOpen(false)} />}
+      {loginOpen && <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} />}
       {registerOpen && <RegistroModal isOpen={registerOpen} onClose={() => setRegisterOpen(false)} />}
     </>
   );

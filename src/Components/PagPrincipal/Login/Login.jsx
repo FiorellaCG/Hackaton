@@ -1,91 +1,108 @@
-// LoginModal.jsx
-import { useState } from "react";
-import { loginUsuario } from "../../../services/Usuario";
 import { X, Eye, EyeOff, Mail, Lock } from "lucide-react";
-import "./Login.css";
+import { useState } from "react";
+import { loginUser } from "../../../services/services";
 
-export default function LoginModal({ isOpen, onClose }) {
-  const [formData, setFormData] = useState({ correo: "", contrasena: "" });
-  const [backendError, setBackendError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+export const LoginModal = ({ isOpen, onClose }) => {
+  const [correo, setCorreo] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setBackendError("");
+    setLoading(true);
+    setError("");
 
     try {
-      const res = await loginUsuario(formData);
-      if (res.success) {
-        localStorage.setItem("usuario_id", res.usuario_id);
-        localStorage.setItem("rol", res.rol);
-        onClose(); // cierra el modal
-      }
+      const data = await loginUser(correo, contrasena);
+      localStorage.setItem("usuario", JSON.stringify(data));
+      alert("Login exitoso");
+      onClose();
     } catch (err) {
-      setBackendError(err.error || "Error del servidor");
+      setError("Credenciales inválidas");
+    } finally {
+      setLoading(false);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+    <>
+      <div className="modal-backdrop" onClick={onClose}></div>
+      <div className="modal-container">
         <div className="login-modal">
           <div className="modal-header">
-            <button onClick={onClose} className="close-button">
-              <X className="icon-sm" />
+            <button className="close-button" onClick={onClose}>
+              <X />
             </button>
-            <h2>Iniciar Sesión</h2>
+            <div className="header-logo-section">
+              <div className="header-logo-icon">
+                <span>🔒</span>
+              </div>
+              <div>
+                <h2 className="modal-title">Iniciar Sesión</h2>
+                <p className="modal-subtitle">Accede a tu cuenta</p>
+              </div>
+            </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="modal-form">
-            {backendError && <p className="error-message">{backendError}</p>}
-
+          <form onSubmit={handleLogin} className="modal-form">
             <div className="form-group">
-              <label>Correo Electrónico</label>
+              <label className="form-label">Correo</label>
               <div className="input-wrapper">
                 <Mail className="input-icon" />
                 <input
                   type="email"
-                  placeholder="tu@email.com"
-                  value={formData.correo}
-                  onChange={(e) =>
-                    setFormData({ ...formData, correo: e.target.value })
-                  }
+                  placeholder="Correo"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                  className="form-input"
                   required
                 />
               </div>
             </div>
 
             <div className="form-group">
-              <label>Contraseña</label>
+              <label className="form-label">Contraseña</label>
               <div className="input-wrapper">
                 <Lock className="input-icon" />
                 <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••"
-                  value={formData.contrasena}
-                  onChange={(e) =>
-                    setFormData({ ...formData, contrasena: e.target.value })
-                  }
+                  type={mostrarContrasena ? "text" : "password"}
+                  placeholder="Contraseña"
+                  value={contrasena}
+                  onChange={(e) => setContrasena(e.target.value)}
+                  className="form-input"
                   required
                 />
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setMostrarContrasena(!mostrarContrasena)}
                 >
-                  {showPassword ? <EyeOff className="icon-sm" /> : <Eye className="icon-sm" />}
+                  {mostrarContrasena ? <EyeOff /> : <Eye />}
                 </button>
               </div>
             </div>
 
-            <button type="submit" className="submit-button">
-              Iniciar Sesión
+            {error && <p className="error-message">{error}</p>}
+
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading ? "Ingresando..." : "Ingresar"}
             </button>
           </form>
+
+          <div className="switch-auth">
+            <p className="switch-text">
+              ¿No tienes cuenta?{" "}
+              <button className="switch-link" onClick={() => alert("Redirigir a registro")}>
+                Regístrate
+              </button>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
-}
+};

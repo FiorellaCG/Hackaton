@@ -1,7 +1,7 @@
 import { X, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { registerUser } from "../../../services/services";
-import "./Login.css"
+
 
 export default function RegisterModal({ isOpen, onClose }) {
   const [form, setForm] = useState({
