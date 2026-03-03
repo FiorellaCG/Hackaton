@@ -17,7 +17,7 @@ import ProgramasManagement from "../Pages/admin/ProgramasManagement";
 import PracticasManagement from "../Pages/admin/PracticasManagement";
 import ReportsDashboard from "../Pages/admin/ReportsDashboard";
 
-import CreateCompanyInstitutionForm from "../Components/Admin/CreateCompanyInstitutionForm";
+//import CreateCompanyInstitutionForm from "../Components/Admin/CreateCompanyInstitutionForm";
 
 function Routing() {
   return (
@@ -38,7 +38,7 @@ function Routing() {
 
         {/* Users */}
         <Route path="users" element={<UsersManagement />} />
-        <Route path="users/create-company" element={<CreateCompanyInstitutionForm />} />
+    <Route path="users/create-company" element={<CreateCompanyInstitutionForm />} />
 
         {/* Content */}
         <Route path="content" element={<ContentManagement />} />
