@@ -1,0 +1,356 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+}
+
+.modal-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.login-modal {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  max-width: 28rem;
+  width: 100%;
+}
+
+.modal-header {
+  position: relative;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background-color: #f3f4f6;
+}
+
+.header-logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.header-logo-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background-color: #15803D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-logo-icon span {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+.modal-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.modal-form {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.user-type-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.user-type-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 2px solid #e5e7eb;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.user-type-button:hover {
+  border-color: #d1d5db;
+}
+
+.user-type-button.active {
+  border-color: #15803D;
+  background-color: rgba(21, 128, 61, 0.05);
+}
+
+.user-type-button span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.icon-sm {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.icon-md {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-bottom: 0.1rem;
+}
+
+.icon-inactive {
+  color: #9ca3af;
+}
+
+.icon-active {
+  color: #15803D;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #9ca3af;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  background-color: #F1F5F9;
+  border-radius: 0.5rem;
+  border: none;
+  outline: none;
+  transition: all 0.2s;
+}
+
+
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: #6b7280;
+}
+
+.error-message {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+}
+
+.forgot-password-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.forgot-password-link {
+  font-size: 0.875rem;
+  color: #15803D;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.forgot-password-link:hover {
+  opacity: 0.8;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #15803D;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-button:hover {
+  background-color: rgba(21, 128, 61, 0.9);
+}
+
+.switch-auth {
+  text-align: center;
+}
+
+.switch-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.switch-link {
+  font-size: 0.875rem;
+  color: #15803D;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.switch-link:hover {
+  opacity: 0.8;
+}
+/* ── Modal de Términos y Condiciones ── */
+.terms-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.terms-modal {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.terms-modal h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.terms-content {
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.terms-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.terms-actions .btn-accept,
+.terms-actions .btn-reject {
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.terms-actions .btn-accept {
+  background-color: #2e7d32;
+  color: #fff;
+}
+
+.terms-actions .btn-accept:hover {
+  background-color: #27672a;
+}
+
+.terms-actions .btn-reject {
+  background-color: #c62828;
+  color: #fff;
+}
+
+.terms-actions .btn-reject:hover {
+  background-color: #a71f1f;
+}
+
+/* Estado de aceptación en el formulario */
+.terms-status.accepted {
+  color: green;
+  font-weight: bold;
+}
+
+.terms-status.not-accepted {
+  color: red;
+  font-weight: bold;
+}
+
+/* Botón de ver términos dentro del formulario */
+.terms-link {
+  background: none;
+  border: none;
+  color: #1565c0;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.terms-link:hover {
+  color: #0d3c78;
+}
