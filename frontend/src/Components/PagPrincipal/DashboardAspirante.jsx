@@ -376,16 +376,16 @@ const DashboardAspirante = () => {
                                 <Sparkles size={120} />
                             </div>
                             <h3 className="flex items-center gap-2 font-black uppercase tracking-wider text-sm mb-4 text-green-400 relative z-10">
-                                <Bot size={18} /> {t('dashboard.ia_cv')}
+                                <Bot size={18} /> Herramientas de IA
                             </h3>
-                            <p className="text-slate-400 text-xs mb-8 leading-relaxed font-medium relative z-10">Optimiza tu perfil con inteligencia artificial y genera un currículo profesional en segundos.</p>
+                            <p className="text-slate-400 text-xs mb-8 leading-relaxed font-medium relative z-10">Optimiza tu perfil con inteligencia artificial o prepárate con nuestro simulador de entrevistas.</p>
 
                             <div className="space-y-3 relative z-10">
                                 <button
-                                    onClick={() => setMostrarCVIAModal(true)}
+                                    onClick={(e) => { e.preventDefault(); navigate('/entrevista-ia'); }}
                                     className="w-full py-4 bg-green-600 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 hover:bg-green-500 transition-all shadow-lg shadow-green-950/40 uppercase tracking-widest"
                                 >
-                                    <Bot className="w-5 h-5" /> Generar con IA
+                                    <Bot className="w-5 h-5" /> Simulador Entrevistas
                                 </button>
                                 <label className="w-full py-4 bg-white/10 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 hover:bg-white/20 transition-all border border-white/10 cursor-pointer uppercase tracking-widest">
                                     <UploadCloud className="w-5 h-5" /> Subir PDF

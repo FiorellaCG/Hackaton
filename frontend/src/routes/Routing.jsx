@@ -7,6 +7,7 @@ import RegisterPage from "../Pages/Home/RegisterPage";
 import DashboardAspirantePage from "../Pages/Home/DashboardAspirantePage";
 import AjustesPage from "../Pages/Home/AjustesPage";
 import JobsPage from "../Pages/Home/JobsPage";
+import EntrevistaIA from "../Components/PagPrincipal/Home/EntrevistaIA/EntrevistaIA";
 import FormCarrera from "../Components/PagPrincipal/FormCarrera";
 import VisualizarCarreras from "../Components/PagPrincipal/VisualizarCarreras";
 
@@ -19,7 +20,7 @@ import ProgramasManagement from "../Pages/admin/ProgramasManagement";
 import PracticasManagement from "../Pages/admin/PracticasManagement";
 import ReportsDashboard from "../Pages/admin/ReportsDashboard";
 
-//import CreateCompanyInstitutionForm from "../Components/Admin/CreateCompanyInstitutionForm";
+import CreateCompanyInstitutionForm from "../Components/Admin/CreateCompanyInstitutionForm";
 
 function Routing() {
   return (
@@ -33,7 +34,7 @@ function Routing() {
       <Route path="/ajustes" element={<AjustesPage />} />
       <Route path="/empleos" element={<JobsPage tipo="empleo" />} />
       <Route path="/pasantias" element={<JobsPage tipo="pasantia" />} />
-
+      <Route path="/entrevista-ia" element={<EntrevistaIA />} />
 
 
       {/* ADMIN ROUTES CON NESTING */}
@@ -43,7 +44,7 @@ function Routing() {
 
         {/* Users */}
         <Route path="users" element={<UsersManagement />} />
-    <Route path="users/create-company" element={<CreateCompanyInstitutionForm />} />
+        <Route path="users/create-company" element={<CreateCompanyInstitutionForm />} />
 
         {/* Content */}
         <Route path="content" element={<ContentManagement />} />

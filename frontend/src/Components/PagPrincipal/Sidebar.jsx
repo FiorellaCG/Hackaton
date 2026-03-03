@@ -44,7 +44,7 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         { path: "#", icon: Zap, label: "TalentMatch", badge: true },
         { path: "#", icon: Briefcase, label: "Vacantes" },
         { path: "#", icon: GraduationCap, label: "Pasantías" },
-        { path: "#", icon: Video, label: "Entrevistas IA" },
+        { path: "/entrevista-ia", icon: Video, label: "Entrevistas IA" },
         { path: "#", icon: BarChart3, label: "Estadísticas" },
         { path: "#", icon: Bot, label: "Asistente IA" },
     ];

@@ -1,0 +1,42 @@
+/* EntrevistaIA.css */
+.entrevista-container {
+    height: 100vh;
+    height: 100dvh;
+    /* Para móviles */
+    overflow: hidden;
+}
+
+/* Animaciones personalizadas si las necesitamos */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-enter {
+    animation: fade-in 0.3s ease-out forwards;
+}
+
+/* Scrollbar para el chat */
+main::-webkit-scrollbar {
+    width: 6px;
+}
+
+main::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+main::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 20px;
+}
+
+.dark main::-webkit-scrollbar-thumb {
+    background-color: #334155;
+}

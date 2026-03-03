@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,7 +66,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -98,15 +98,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hackaton_db',
         'USER': 'postgres',
-<<<<<<< HEAD
-        'PASSWORD': '2070603Uch',
-        'HOST': 'localhost',
-        'PORT': '5432',
-=======
         'PASSWORD': '1234',
         'HOST': 'localhost',
-        'PORT': '5006',
->>>>>>> f2f4e2fda1f86f7da54160838979ff075513c1af
+        'PORT': '5432',
     }
 }
 
