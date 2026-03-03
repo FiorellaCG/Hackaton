@@ -1,113 +1,147 @@
-async function postData(endpoint, obj) {
-  try {
-    const peticion = await fetch(`http://127.0.0.1:8000/${endpoint}`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(obj)
-    });
-    const respuesta = await peticion.json();
-    console.log(respuesta);
-    return respuesta;
-  } catch (error) {
-    console.error(error);
-  }
-}
+const API_URL = "http://127.0.0.1:8000/api";
 
-async function getData(endpoint) {
-  try {
-    const response = await fetch(`http://127.0.0.1:8000/${endpoint}/`);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error en getData:', error);
-    return [];
-  }
-};
-
-
-async function putData(endpoint, obj) {
-  try {
-    const peticion = await fetch(`http://127.0.0.1:8000/${endpoint}`, {
-      method: 'PUT',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(obj)
-    });
-    const respuesta = await peticion.json();
-    console.log(respuesta);
-    return respuesta;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function deleteData(endpoint) {
-  try {
-    const peticion = await fetch(`http://127.0.0.1:8000/${endpoint}`, {
-      method: 'DELETE',
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    const respuesta = await peticion.json();
-    console.log(respuesta);
-    return respuesta;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function enviarRecurso(recurso, nuevoRecurso) {
-  try {
-    const respuesta = await fetch(`http://127.0.0.1:8000/${recurso}`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(nuevoRecurso)
-    });
-
-    const resultado = await respuesta.json();
-    console.log("Recurso guardado:", resultado);
-    return resultado;
-  } catch (error) {
-    console.error("Error al guardar el recurso:", error);
-  }
-}
-
-async function obtenerMentorias() {
-  try {
-    const respuesta = await fetch(`http://127.0.0.1:8000/mentorias/`, {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    const resultado = await respuesta.json();
-    console.log("Mentorías obtenidas:", resultado);
-    return resultado;
-  } catch (error) {
-    console.error("Error al obtener las mentorías:", error);
-  
-  }
-}
-
-const loginUsuario = async (username, password) => {
-  const response = await fetch("http://127.0.0.1:8000/usuarios/login/", {
+export const loginUser = async (correo, contrasena) => {
+  const response = await fetch(`${API_URL}/login/`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ username, password })
+    body: JSON.stringify({ correo, contrasena }),
   });
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error("Credenciales inválidas");
+  }
+
+  return await response.json();
 };
 
+export const obtenerMiPerfil = async (usuarioId) => {
+  const response = await fetch(`${API_URL}/mi-perfil/${usuarioId}/`);
+  return await response.json();
+};
 
+export const registerUser = async (data) => {
+  const response = await fetch("http://127.0.0.1:8000/api/usuarios/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw errorData;
+  }
 
-export { postData, getData, putData, deleteData, enviarRecurso, obtenerMentorias, loginUsuario };
+  return await response.json();
+};
+
+// Agregar esta función al services.js existente
+export const crearPersona = async (data) => {
+  const response = await fetch(`${API_URL}/personas/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+
+  return await response.json();
+};
+
+export const crearPerfilAspirante = async (data) => {
+  const isFormData = data instanceof FormData;
+  const options = {
+    method: "POST",
+    body: isFormData ? data : JSON.stringify(data),
+  };
+
+  if (!isFormData) {
+    options.headers = { "Content-Type": "application/json" };
+  }
+
+  const response = await fetch(`${API_URL}/crear-perfil-aspirante/`, options);
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+
+  return await response.json();
+};
+
+export const obtenerCarreras = async () => {
+  const response = await fetch(`${API_URL}/carreras/`);
+  if (!response.ok) {
+    throw new Error("Error al obtener las carreras");
+  }
+  return await response.json();
+};
+
+export const obtenerAreasTrabajo = async () => {
+  const response = await fetch(`${API_URL}/areas-trabajo/`);
+  if (!response.ok) {
+    throw new Error("Error al obtener áreas de trabajo");
+  }
+  return await response.json();
+};
+
+export const crearCarrera = async (data) => {
+  const response = await fetch(`${API_URL}/carreras/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+  return await response.json();
+};
+
+export const crearPerfilEmpresa = async (data) => {
+  const response = await fetch(`${API_URL}/crear-perfil-empresa/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+  return await response.json();
+};
+
+export const actualizarPreferencias = async (usuarioId, preferencias) => {
+  const response = await fetch(`${API_URL}/usuarios/${usuarioId}/preferencias/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ preferencias }),
+  });
+  return await response.json();
+};
+
+export const cambiarPassword = async (usuarioId, currentPassword, newPassword) => {
+  const response = await fetch(`${API_URL}/usuarios/${usuarioId}/cambiar-password/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw data;
+  return data;
+};
+
+export const eliminarCuenta = async (usuarioId) => {
+  const response = await fetch(`${API_URL}/usuarios/${usuarioId}/eliminar-cuenta/`, {
+    method: "DELETE",
+  });
+  return await response.json();
+};

@@ -7,3 +7,5 @@
 3. Run the app:
    `npm run dev`
 4. npm install i18next react-i18next i18next-http-backend
+5. npm install axios
+6. npm install lucide-react

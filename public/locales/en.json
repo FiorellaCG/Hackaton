@@ -1,0 +1,104 @@
+{
+    "navbar": {
+        "jobs": "Jobs",
+        "internships": "Internships",
+        "companies": "Companies",
+        "statistics": "Statistics",
+        "my_profile": "My Profile",
+        "login": "Login",
+        "register": "Sign Up",
+        "logout": "Logout"
+    },
+    "hero": {
+        "title": "Find your next step at La Lima Free Zone",
+        "subtitle": "Connecting local talent with Cartago's most innovative companies.",
+        "search_placeholder": "Job title or skill...",
+        "search_button": "Search",
+        "popular": "Popular:",
+        "stats": {
+            "vacancies": "Active Vacancies",
+            "companies": "Companies",
+            "hired": "Hired"
+        }
+    },
+    "featured_jobs": {
+        "title": "Featured Jobs",
+        "subtitle": "Discover the latest and most in-demand opportunities.",
+        "view_all": "View all offers",
+        "salary_per_month": "/ month"
+    },
+    "footer": {
+        "description": "We connect the best talent with leading companies in La Lima Free Zone, boosting professional growth.",
+        "candidates": "For Candidates",
+        "companies": "For Companies",
+        "contact": "Contact",
+        "rights": "All rights reserved."
+    },
+    "dashboard": {
+        "title": "My Dashboard",
+        "edit_profile": "Edit Profile",
+        "experience": "Work Experience",
+        "postulations": "My Postulations",
+        "contact_details": "Contact Details",
+        "ia_cv": "AI CV Management",
+        "ia_matches": "AI Matches",
+        "no_postulations": "No active postulations",
+        "add": "+ Add",
+        "analyze_now": "Analyze Profile now",
+        "gender": "Gender",
+        "phone": "Phone",
+        "location": "Location",
+        "education": "Education Level"
+    },
+    "admin": {
+        "dashboard": "Admin Panel",
+        "reports": "Reports",
+        "users": "Users",
+        "create_company": "Create Company",
+        "vacancies": "Vacancies",
+        "analytics": "Analytics",
+        "logout": "Logout",
+        "settings": "Settings"
+    },
+    "settings": {
+        "title": "Settings",
+        "subtitle": "Manage your security and GreenTalent preferences",
+        "security": "Account Security",
+        "update_password": "Update Password",
+        "current_password": "Current password",
+        "new_password": "New password",
+        "confirm_password": "Confirm new password",
+        "save_password": "Save New Password",
+        "notifications": "Notifications and Alerts",
+        "ia_alerts": "AI Job Alerts",
+        "ia_alerts_desc": "Receive emails when SmartMatch finds a perfect vacancy.",
+        "direct_messages": "Direct Messages",
+        "direct_messages_desc": "Notify when a company contacts you directly.",
+        "interface": "Interface and Region",
+        "dark_mode": "Dark Mode",
+        "dark_mode_desc": "Activate a more relaxing visual appearance for your eyes.",
+        "system_language": "System Language",
+        "change_language": "Switch to Spanish",
+        "danger_zone": "Danger Zone",
+        "delete_account": "Delete my Account",
+        "delete_account_desc": "Once the account is deleted, it is not possible to recover information.",
+        "data_protected": "Your data is encrypted and protected"
+    },
+    "auth": {
+        "login_title": "Login",
+        "login_subtitle": "Access your GreenTalent account",
+        "email": "Email address",
+        "password": "Password",
+        "login_button": "Login",
+        "logging_in": "Logging in...",
+        "no_account": "Don't have an account?",
+        "register_link": "Register here",
+        "register_title": "Create Account",
+        "register_subtitle": "Join the largest talent network in La Lima",
+        "register_button": "Register",
+        "registering": "Registering...",
+        "already_account": "Already have an account?",
+        "login_link": "Login here",
+        "invalid_creds": "Invalid credentials"
+    }
+}

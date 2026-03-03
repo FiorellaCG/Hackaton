@@ -1,23 +1,42 @@
+# api/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views
+from .views import (
+    UsuarioViewSet, PersonaViewSet, AreaTrabajoViewSet,
+    CarreraViewSet, InstitucionViewSet, EmpresaViewSet,
+    ProgramaFormacionViewSet, AspiranteViewSet, VacanteViewSet,
+    PostulacionViewSet, CurriculoViewSet, PracticanteViewSet,
+    NotificacionViewSet, AuditoriaViewSet,
+    LoginView, CrearPerfilAspiranteView, MiPerfilView,
+    UpdatePreferenciasView, CambiarPasswordView, EliminarCuentaView
+)
 
 router = DefaultRouter()
-router.register(r'usuarios', views.UsuarioViewSet)
-router.register(r'personas', views.PersonaViewSet)
-router.register(r'areas-trabajo', views.AreaTrabajoViewSet)
-router.register(r'carreras', views.CarreraViewSet)
-router.register(r'instituciones', views.InstitucionViewSet)
-router.register(r'programas-formacion', views.ProgramaFormacionViewSet)
-router.register(r'empresas', views.EmpresaViewSet)
-router.register(r'aspirantes', views.AspiranteViewSet)
-router.register(r'vacantes', views.VacanteViewSet)
-router.register(r'postulaciones', views.PostulacionViewSet)
-router.register(r'curriculos', views.CurriculoViewSet)
-router.register(r'practicantes', views.PracticanteViewSet)
-router.register(r'notificaciones', views.NotificacionViewSet)
-router.register(r'auditoria', views.AuditoriaViewSet)
+router.register(r'usuarios', UsuarioViewSet)
+router.register(r'personas', PersonaViewSet)
+router.register(r'areas-trabajo', AreaTrabajoViewSet)
+router.register(r'carreras', CarreraViewSet)
+router.register(r'instituciones', InstitucionViewSet)
+router.register(r'programas-formacion', ProgramaFormacionViewSet)
+router.register(r'empresas', EmpresaViewSet)
+router.register(r'aspirantes', AspiranteViewSet)
+router.register(r'vacantes', VacanteViewSet)
+router.register(r'postulaciones', PostulacionViewSet)
+router.register(r'curriculos', CurriculoViewSet)
+router.register(r'practicantes', PracticanteViewSet)
+router.register(r'notificaciones', NotificacionViewSet)
+router.register(r'auditoria', AuditoriaViewSet)
 
 urlpatterns = [
+    path('login/', LoginView.as_view(), name='login'),
+    path('crear-perfil-aspirante/', CrearPerfilAspiranteView.as_view(), name='crear-perfil-aspirante'),
+    path('mi-perfil/<uuid:usuario_id>/', MiPerfilView.as_view(), name='mi-perfil'),
+    
+    # Ajustes
+    path('usuarios/<uuid:usuario_id>/preferencias/', UpdatePreferenciasView.as_view(), name='update-preferencias'),
+    path('usuarios/<uuid:usuario_id>/cambiar-password/', CambiarPasswordView.as_view(), name='cambiar-password'),
+    path('usuarios/<uuid:usuario_id>/eliminar-cuenta/', EliminarCuentaView.as_view(), name='eliminar-cuenta'),
+
+    # Router automático
     path('', include(router.urls)),
 ]

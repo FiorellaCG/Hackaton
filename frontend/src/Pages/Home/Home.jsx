@@ -1,14 +1,44 @@
+<<<<<<< HEAD:frontend/src/Pages/Home/Home.jsx
+=======
+import { useState } from "react";
+import FormCarrera from "@/src/Components/PagPrincipal/FormCarrera";
+import VisualizarCarreras from "@/src/Components/PagPrincipal/VisualizarCarreras";
+import Navbar from "../../Components/PagPrincipal/Navbar/NavBar";
+>>>>>>> f2f4e2fda1f86f7da54160838979ff075513c1af:src/Pages/Home/Home.jsx
 import { useTranslation } from 'react-i18next';
 
-function Home() {
+import Hero from "../../Components/PagPrincipal/Home/Hero";
+import FeaturedJobs from "../../Components/PagPrincipal/Home/FeaturedJobs";
+import Footer from "../../Components/PagPrincipal/Home/Footer";
+import FloatingAI from "../../Components/PagPrincipal/Home/FloatingAI";
+import { allJobs } from "../../data/mockJobs";
 
+function Home() {
   const { t } = useTranslation();
 
+  // Show a mix of featured jobs on the home page
+  const featuredPreview = allJobs.slice(0, 3);
+
   return (
+<<<<<<< HEAD:frontend/src/Pages/Home/Home.jsx
     <div>
       {/* Contenido de la página de inicio */}
+=======
+    <div className="flex flex-col min-h-screen bg-[var(--bg-main)] transition-colors duration-300">
+      <Navbar />
+      <main className="flex-grow">
+        <Hero />
+        <FeaturedJobs jobs={featuredPreview} />
+      </main>
+      <Footer />
+      <FloatingAI />
+>>>>>>> f2f4e2fda1f86f7da54160838979ff075513c1af:src/Pages/Home/Home.jsx
     </div>
-  )
+  );
 }
 
+<<<<<<< HEAD:frontend/src/Pages/Home/Home.jsx
 export default Home
+=======
+export default Home;
+>>>>>>> f2f4e2fda1f86f7da54160838979ff075513c1af:src/Pages/Home/Home.jsx
