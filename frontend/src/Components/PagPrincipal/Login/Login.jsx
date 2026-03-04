@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { loginUser } from "../../../services/services";
 import "./Login.css";
 
-export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
+export const LoginModal = ({ isOpen, onClose, onLoginSuccess, onSwitchToRegister }) => {
   const { t } = useTranslation();
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -48,10 +48,10 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
         onClick={onClose}
       ></div>
 
-      <div className="relative w-full max-w-md bg-[var(--bg-card)] rounded-[2.5rem] shadow-2xl overflow-hidden border border-[var(--border-color)] transition-all transform scale-100">
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-green-600"></div>
+      <div className="relative w-full max-w-[26rem] max-h-[90vh] bg-[var(--bg-card)] rounded-[2.5rem] shadow-2xl overflow-hidden border border-[var(--border-color)] transition-all transform scale-100 flex flex-col">
+        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-green-600 shrink-0"></div>
 
-        <div className="p-8 sm:p-10">
+        <div className="p-8 sm:p-10 overflow-y-auto">
           <div className="flex justify-between items-center mb-8">
             <div className="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600 dark:text-green-400 shadow-inner">
               <ShieldCheck size={28} />
@@ -139,8 +139,9 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
             <p className="text-xs font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest">
               {t('auth.no_account')}{" "}
               <button
+                type="button"
                 className="text-green-600 dark:text-green-400 font-extrabold hover:underline ml-1"
-                onClick={() => navigate("/registro")}
+                onClick={onSwitchToRegister}
               >
                 {t('auth.register_link')}
               </button>

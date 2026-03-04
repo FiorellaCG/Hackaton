@@ -60,9 +60,9 @@ const Hero = ({ onSearch }) => {
                     {/* Tabs */}
                     <div className="flex justify-start gap-4 mb-3 ml-2">
                         {[
-                            { id: 'todos', label: 'Todos', icon: Search },
-                            { id: 'empleos', label: 'Empleos', icon: Briefcase },
-                            { id: 'pasantías', label: 'Pasantías', icon: GraduationCap }
+                            { id: 'todos', label: t('hero.categories.all'), icon: Search },
+                            { id: 'empleos', label: t('hero.categories.jobs'), icon: Briefcase },
+                            { id: 'pasantías', label: t('hero.categories.internships'), icon: GraduationCap }
                         ].map((cat) => (
                             <button
                                 key={cat.id}
@@ -86,8 +86,8 @@ const Hero = ({ onSearch }) => {
                             <input
                                 type="text"
                                 placeholder={
-                                    activeCategory === 'empleos' ? '¿Qué cargo buscas?' :
-                                        activeCategory === 'pasantías' ? 'Dinos tu carrera...' :
+                                    activeCategory === 'empleos' ? t('hero.search_jobs_placeholder') :
+                                        activeCategory === 'pasantías' ? t('hero.search_internships_placeholder') :
                                             t('hero.search_placeholder')
                                 }
                                 value={searchValue}
@@ -98,7 +98,7 @@ const Hero = ({ onSearch }) => {
                         </div>
                         <div className="flex-[0.5] flex items-center px-6 w-full py-4 md:py-0">
                             <MapPin className="w-5 h-5 text-slate-400 mr-4 shrink-0" />
-                            <span className="text-slate-700 dark:text-slate-200 font-black text-xs uppercase tracking-widest">Zona Franca La Lima</span>
+                            <span className="text-slate-700 dark:text-slate-200 font-black text-xs uppercase tracking-widest">{t('brand.location') || 'Zona Franca La Lima'}</span>
                         </div>
                         <button
                             type="button"
@@ -112,7 +112,7 @@ const Hero = ({ onSearch }) => {
                     {/* IA Recommendation Badge */}
                     <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black px-4 py-1.5 rounded-full border border-slate-800 dark:border-slate-200 flex items-center gap-2 shadow-xl opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
                         <Sparkles size={12} className="text-green-400 dark:text-green-600" />
-                        SMART MATCH ACTIVO: 124 NUEVAS VACANTES HOY
+                        {t('hero.smart_match', { count: 124 })}
                     </div>
                 </div>
 
@@ -121,8 +121,8 @@ const Hero = ({ onSearch }) => {
                     <span className="text-slate-400 dark:text-slate-600 uppercase tracking-widest text-xs">
                         {t('hero.popular')}
                     </span>
-                    {['Desarrollo', 'Logística', 'Ingeniería', 'Administración'].map((tag) => (
-                        <span key={tag} className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-600 transition-colors cursor-pointer capitalize">
+                    {Object.entries(t('hero.popular_tags', { returnObjects: true })).map(([key, tag]) => (
+                        <span key={key} className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-600 transition-colors cursor-pointer capitalize">
                             {tag}
                         </span>
                     ))}

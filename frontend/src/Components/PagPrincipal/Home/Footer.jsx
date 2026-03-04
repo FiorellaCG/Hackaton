@@ -16,8 +16,8 @@ const Footer = () => {
                             <div className="absolute -inset-2 bg-green-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black text-white leading-none tracking-tighter uppercase m-0">GreenTalent</h2>
-                            <span className="text-[11px] text-slate-500 font-black uppercase tracking-[0.2em] mt-1.5 block">ZFL La Lima</span>
+                            <h2 className="text-2xl font-black text-white leading-none tracking-tighter uppercase m-0">{t('brand.name')}</h2>
+                            <span className="text-[11px] text-slate-500 font-black uppercase tracking-[0.2em] mt-1.5 block">{t('brand.location')}</span>
                         </div>
                     </div>
                     <p className="text-sm text-slate-400 mt-2 max-w-xs leading-relaxed font-medium">
@@ -35,10 +35,10 @@ const Footer = () => {
                 <div>
                     <h3 className="text-white font-black mb-6 text-sm uppercase tracking-widest">{t('footer.candidates')}</h3>
                     <ul className="space-y-4 text-sm font-bold">
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">Buscar Empleos</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">Pasantías</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">Crear Perfil</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">Consejos de CV</a></li>
+                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.search_jobs')}</a></li>
+                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.internships')}</a></li>
+                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.create_profile')}</a></li>
+                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.cv_tips')}</a></li>
                     </ul>
                 </div>
 
@@ -46,10 +46,10 @@ const Footer = () => {
                 <div>
                     <h3 className="text-white font-black mb-6 text-sm uppercase tracking-widest">{t('footer.companies')}</h3>
                     <ul className="space-y-4 text-sm font-bold">
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">Publicar Empleo</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">Buscar Candidatos</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">Planes y Precios</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">Sobre Nosotros</a></li>
+                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.post_job')}</a></li>
+                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.find_candidates')}</a></li>
+                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.plans_pricing')}</a></li>
+                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.about_us')}</a></li>
                     </ul>
                 </div>
 
@@ -61,7 +61,7 @@ const Footer = () => {
                             <div className="p-2 bg-slate-800 rounded-lg">
                                 <MapPin className="w-4 h-4 text-green-500" />
                             </div>
-                            <span className="text-slate-400">Zona Franca La Lima, Cartago, Costa Rica</span>
+                            <span className="text-slate-400">{t('brand.location')}, Cartago, Costa Rica</span>
                         </li>
                         <li className="flex items-center gap-4">
                             <div className="p-2 bg-slate-800 rounded-lg">
@@ -85,9 +85,9 @@ const Footer = () => {
                 </p>
 
                 <div className="flex items-center gap-6">
-                    <span className="text-xs font-bold text-slate-600 hover:text-slate-400 cursor-pointer transition-colors uppercase tracking-tight">Privacidad</span>
-                    <span className="text-xs font-bold text-slate-600 hover:text-slate-400 cursor-pointer transition-colors uppercase tracking-tight">Términos</span>
-                    <span className="text-xs font-bold text-slate-600 hover:text-slate-400 cursor-pointer transition-colors uppercase tracking-tight">Cookies</span>
+                    <span className="text-xs font-bold text-slate-600 hover:text-slate-400 cursor-pointer transition-colors uppercase tracking-tight">{t('footer.privacy')}</span>
+                    <span className="text-xs font-bold text-slate-600 hover:text-slate-400 cursor-pointer transition-colors uppercase tracking-tight">{t('footer.terms')}</span>
+                    <span className="text-xs font-bold text-slate-600 hover:text-slate-400 cursor-pointer transition-colors uppercase tracking-tight">{t('footer.cookies')}</span>
                 </div>
             </div>
         </footer>

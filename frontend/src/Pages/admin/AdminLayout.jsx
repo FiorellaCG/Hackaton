@@ -32,8 +32,8 @@ const AdminLayout = () => {
                             <div className="absolute -inset-4 bg-green-500/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
                         <div>
-                            <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter m-0 uppercase leading-none">AdminPanel</h2>
-                            <p className="text-xs font-black text-green-600 dark:text-green-400 uppercase tracking-widest mt-2 opacity-80">Control System</p>
+                            <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter m-0 uppercase leading-none">{t('admin.panel_title') || 'AdminPanel'}</h2>
+                            <p className="text-xs font-black text-green-600 dark:text-green-400 uppercase tracking-widest mt-2 opacity-80">{t('admin.control_system') || 'Control System'}</p>
                         </div>
                     </Link>
                 </div>
@@ -92,8 +92,8 @@ const AdminLayout = () => {
 
                     <div className="flex items-center gap-5">
                         <div className="hidden md:flex flex-col items-end">
-                            <span className="text-xs font-black text-slate-800 dark:text-white leading-none">Admin User</span>
-                            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-1">Super Admin</span>
+                            <span className="text-xs font-black text-slate-800 dark:text-white leading-none">{t('admin.admin_user') || 'Admin User'}</span>
+                            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-1">{t('admin.super_admin') || 'Super Admin'}</span>
                         </div>
                         <div className="group relative">
                             <div className="w-11 h-11 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-black text-lg shadow-xl shadow-slate-200 dark:shadow-none transition-transform hover:scale-105 cursor-pointer border-2 border-transparent hover:border-green-500">

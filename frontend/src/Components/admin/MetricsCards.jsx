@@ -1,12 +1,14 @@
 import React from 'react';
+import { useTranslation } from "react-i18next";
 import { Users, Building2, Briefcase, AlertTriangle } from "lucide-react";
 
-const MetricsCards = () => {
+const MetricsCards = ({ stats }) => {
+    const { t } = useTranslation();
     const metrics = [
-        { id: 1, title: 'Total Registered Students', value: '0', color: 'indigo', icon: Users },
-        { id: 2, title: 'Active Companies', value: '0', color: 'emerald', icon: Building2 },
-        { id: 3, title: 'Pending Vacancies', value: '0', color: 'amber', icon: Briefcase },
-        { id: 4, title: 'System Alerts / Errors', value: '0', color: 'rose', icon: AlertTriangle }
+        { id: 1, title: t('admin.total_students'), value: stats?.total_estudiantes || '0', color: 'indigo', icon: Users },
+        { id: 2, title: t('admin.active_companies'), value: stats?.total_empresas || '0', color: 'emerald', icon: Building2 },
+        { id: 3, title: t('admin.pending_vacancies'), value: stats?.total_vacantes || '0', color: 'amber', icon: Briefcase },
+        { id: 4, title: t('admin.system_alerts'), value: '0', color: 'rose', icon: AlertTriangle }
     ];
 
     const getColorClasses = (color) => {

@@ -80,19 +80,31 @@ const DashboardAspirante = () => {
 
     const handleBecomePracticante = (e) => {
         e.preventDefault();
-        if (window.confirm('¿Estás seguro que deseas activar tu perfil como Practicante?')) {
+        if (window.confirm(t('dashboard.confirm_practicante_alert'))) {
             // Lógica para actualizar perfil
             setIsModalOnboardingOpen(false);
-            window.alert('¡Tu perfil ahora es Practicante!');
+            window.alert(t('dashboard.success_practicante'));
         }
     };
 
     const getBadgeClass = (estado) => {
         switch (estado) {
-            case 'En revisión': return 'badge badge-yellow';
-            case 'Entrevista': return 'badge badge-green';
-            case 'Rechazado': return 'badge badge-red';
+            case 'En revisión':
+            case 'In review': return 'badge badge-yellow';
+            case 'Entrevista':
+            case 'Interview': return 'badge badge-green';
+            case 'Rechazado':
+            case 'Rejected': return 'badge badge-red';
             default: return 'badge badge-blue';
+        }
+    };
+
+    const translateStatus = (estado) => {
+        switch (estado) {
+            case 'En revisión': return t('dashboard.status.review');
+            case 'Entrevista': return t('dashboard.status.interview');
+            case 'Rechazado': return t('dashboard.status.rejected');
+            default: return estado || t('dashboard.status.default');
         }
     };
 
@@ -107,13 +119,13 @@ const DashboardAspirante = () => {
             <div className="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-6">
                 <User size={40} className="text-green-600 dark:text-green-400" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">¡Bienvenido a GreenTalent!</h2>
-            <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-sm">Parece que aún no has completado tu perfil profesional. Hazlo ahora para que las empresas puedan encontrarte.</p>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">{t('dashboard.welcome', { brand: t('brand.name') })}</h2>
+            <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-sm">{t('dashboard.incomplete_profile')}</p>
             <button
                 onClick={() => setMostrarForm(true)}
                 className="px-8 py-4 bg-green-600 text-white font-bold rounded-2xl hover:bg-green-700 shadow-xl shadow-green-100 dark:shadow-none transition-all transform hover:scale-105"
             >
-                Completar mi Perfil
+                {t('dashboard.complete_profile')}
             </button>
 
             <AnimatePresence>
@@ -163,16 +175,16 @@ const DashboardAspirante = () => {
                         className="dashboard-card bg-gradient-to-r from-green-50 to-white dark:from-green-900/20 dark:to-[var(--bg-card)] border-l-4 border-l-green-500 shadow-sm"
                     >
                         <h3 className="text-green-800 dark:text-green-400 font-bold mb-2 flex items-center gap-2">
-                            <Rocket size={18} className="text-green-600 dark:text-green-400" /> ¿Buscas tu primera experiencia?
+                            <Rocket size={18} className="text-green-600 dark:text-green-400" /> {t('dashboard.practicante_promo_title')}
                         </h3>
                         <p className="profile-description text-green-700/70 dark:text-green-400/60 mb-4">
-                            Activa tu perfil de Practicante para acceder a oportunidades académicas exclusivas.
+                            {t('dashboard.practicante_promo_desc')}
                         </p>
                         <button
                             className="dashboard-btn !bg-green-600 !text-white hover:!bg-green-700 dark:hover:!bg-green-500 shadow-md font-bold"
                             onClick={() => setIsModalOnboardingOpen(true)}
                         >
-                            Convertirme en Practicante
+                            {t('dashboard.become_practicante')}
                         </button>
                     </motion.div>
                 )}
@@ -200,7 +212,7 @@ const DashboardAspirante = () => {
                                     </h1>
                                     <div className="flex flex-wrap items-center gap-3 mt-2">
                                         <span className="profile-career bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-lg text-sm font-bold flex items-center gap-1.5 border border-green-200 dark:border-green-800/50">
-                                            <GraduationCap className="w-4 h-4" /> {perfil.carrera || "Estudiante"}
+                                            <GraduationCap className="w-4 h-4" /> {perfil.carrera || t('dashboard.student')}
                                         </span>
                                         <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[11px] font-black rounded-lg uppercase tracking-wider border border-slate-200 dark:border-slate-700">
                                             {perfil.estado_laboral}
@@ -221,7 +233,7 @@ const DashboardAspirante = () => {
                             </div>
 
                             <p className="profile-description mt-6 text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-3xl border-l-2 border-slate-100 dark:border-slate-800 pl-4">
-                                {perfil.sobre_mi || "Sin descripción profesional."}
+                                {perfil.sobre_mi || t('dashboard.no_description')}
                             </p>
 
                             <div className="flex flex-wrap gap-2 mt-6">
@@ -291,7 +303,7 @@ const DashboardAspirante = () => {
                                 </div>
                             ) : (
                                 <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border-2 border-dashed border-slate-100 dark:border-slate-800">
-                                    <p className="text-xs text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">No has agregado experiencia laboral.</p>
+                                    <p className="text-xs text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">{t('dashboard.no_experience')}</p>
                                 </div>
                             )}
                         </div>
@@ -316,7 +328,7 @@ const DashboardAspirante = () => {
                                         <div className="flex justify-between items-start mb-3">
                                             <strong className="text-base font-black text-slate-800 dark:text-slate-200 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors leading-tight uppercase tracking-tight">{post.cargo}</strong>
                                             <span className={getBadgeClass(post.estado)}>
-                                                {post.estado}
+                                                {translateStatus(post.estado)}
                                             </span>
                                         </div>
                                         <div className="flex justify-between items-center text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase border-t border-slate-50 dark:border-slate-800 pt-3 tracking-widest">
@@ -378,7 +390,7 @@ const DashboardAspirante = () => {
                             <h3 className="flex items-center gap-2 font-black uppercase tracking-wider text-sm mb-4 text-green-400 relative z-10">
                                 <Bot size={18} /> {t('dashboard.ia_cv')}
                             </h3>
-                            <p className="text-slate-400 text-xs mb-8 leading-relaxed font-medium relative z-10">Optimiza tu perfil con inteligencia artificial y genera un currículo profesional en segundos.</p>
+                            <p className="text-slate-400 text-xs mb-8 leading-relaxed font-medium relative z-10">{t('dashboard.ia_cv_desc')}</p>
 
                             <div className="space-y-3 relative z-10">
                                 <button
@@ -435,7 +447,7 @@ const DashboardAspirante = () => {
                                                 </div>
                                             </div>
                                             <button className="w-full py-3 bg-[var(--bg-card)] text-slate-700 dark:text-slate-300 border border-[var(--border-color)] hover:bg-green-600 hover:text-white dark:hover:bg-green-600 dark:hover:text-white hover:border-green-600 font-black rounded-xl text-[10px] transition-all tracking-widest uppercase shadow-sm">
-                                                Aplicar Ahora
+                                                {t('dashboard.apply_now')}
                                             </button>
                                         </motion.div>
                                     ))}
@@ -470,14 +482,14 @@ const DashboardAspirante = () => {
 
                             <div className="mb-8">
                                 <h2 className="text-2xl font-black text-slate-800 dark:text-white mb-2 flex items-center gap-3 uppercase tracking-tight">
-                                    <Rocket className="text-green-600" /> Activar Pasantía
+                                    <Rocket className="text-green-600" /> {t('dashboard.activate_internship')}
                                 </h2>
-                                <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Completa estos datos para que las empresas vean tu perfil académico.</p>
+                                <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">{t('dashboard.internship_desc')}</p>
                             </div>
 
                             <form onSubmit={handleBecomePracticante} className="space-y-5">
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1 tracking-widest">Institución / Universidad</label>
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1 tracking-widest">{t('dashboard.institution')}</label>
                                     <input
                                         required
                                         name="nombre_programa"
@@ -490,7 +502,7 @@ const DashboardAspirante = () => {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1 tracking-widest">Nivel</label>
+                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1 tracking-widest">{t('dashboard.level')}</label>
                                         <input
                                             required
                                             name="nivel_academico"
@@ -501,7 +513,7 @@ const DashboardAspirante = () => {
                                         />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1 tracking-widest">Horas Totales</label>
+                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1 tracking-widest">{t('dashboard.total_hours')}</label>
                                         <input
                                             required
                                             type="number"
@@ -515,7 +527,7 @@ const DashboardAspirante = () => {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1 tracking-widest">Periodo Sugerido</label>
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase ml-1 tracking-widest">{t('dashboard.suggested_period')}</label>
                                     <input
                                         required
                                         name="periodo_practica"
@@ -527,7 +539,7 @@ const DashboardAspirante = () => {
                                 </div>
 
                                 <button type="submit" className="w-full py-5 bg-green-600 text-white font-black rounded-2xl hover:bg-green-700 shadow-xl shadow-green-900/20 transition-all transform hover:scale-[1.02] active:scale-95 mt-6 uppercase tracking-widest text-sm">
-                                    Confirmar y Activar
+                                    {t('dashboard.confirm_activate')}
                                 </button>
                             </form>
                         </motion.div>

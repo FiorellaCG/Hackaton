@@ -9,6 +9,7 @@ import AjustesPage from "../Pages/Home/AjustesPage";
 import JobsPage from "../Pages/Home/JobsPage";
 import FormCarrera from "../Components/PagPrincipal/FormCarrera";
 import VisualizarCarreras from "../Components/PagPrincipal/VisualizarCarreras";
+import TalentMatchPage from "../Pages/Home/TalentMatchPage";
 
 // ADMIN
 import AdminLayout from "../Pages/admin/AdminLayout";
@@ -19,7 +20,7 @@ import ProgramasManagement from "../Pages/admin/ProgramasManagement";
 import PracticasManagement from "../Pages/admin/PracticasManagement";
 import ReportsDashboard from "../Pages/admin/ReportsDashboard";
 
-//import CreateCompanyInstitutionForm from "../Components/Admin/CreateCompanyInstitutionForm";
+import CreateCompanyInstitutionForm from "../Components/admin/CreateCompanyInstitutionForm";
 
 function Routing() {
   return (
@@ -33,6 +34,7 @@ function Routing() {
       <Route path="/ajustes" element={<AjustesPage />} />
       <Route path="/empleos" element={<JobsPage tipo="empleo" />} />
       <Route path="/pasantias" element={<JobsPage tipo="pasantia" />} />
+      <Route path="/talent-match" element={<TalentMatchPage />} />
 
 
 
@@ -43,7 +45,7 @@ function Routing() {
 
         {/* Users */}
         <Route path="users" element={<UsersManagement />} />
-    <Route path="users/create-company" element={<CreateCompanyInstitutionForm />} />
+        <Route path="users/create-company" element={<CreateCompanyInstitutionForm />} />
 
         {/* Content */}
         <Route path="content" element={<ContentManagement />} />

@@ -40,13 +40,13 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
     };
 
     const navLinks = [
-        { path: "/", icon: LayoutDashboard, label: "Dashboard" },
-        { path: "#", icon: Zap, label: "TalentMatch", badge: true },
-        { path: "#", icon: Briefcase, label: "Vacantes" },
-        { path: "#", icon: GraduationCap, label: "Pasantías" },
-        { path: "#", icon: Video, label: "Entrevistas IA" },
-        { path: "#", icon: BarChart3, label: "Estadísticas" },
-        { path: "#", icon: Bot, label: "Asistente IA" },
+        { path: "/", icon: LayoutDashboard, label: t('navbar.dashboard') || "Dashboard" },
+        { path: "/talent-match", icon: Zap, label: t('talent_match.title'), badge: true },
+        { path: "#", icon: Briefcase, label: t('navbar.jobs') },
+        { path: "#", icon: GraduationCap, label: t('navbar.internships') },
+        { path: "#", icon: Video, label: t('navbar.interviews') || "Entrevistas IA" },
+        { path: "#", icon: BarChart3, label: t('navbar.statistics') },
+        { path: "#", icon: Bot, label: t('navbar.ai_assistant') || "Asistente IA" },
     ];
 
     return (
@@ -78,8 +78,8 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
                             <div className="absolute -inset-3 bg-green-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black text-slate-800 dark:text-white leading-none tracking-tighter m-0 uppercase">GreenTalent</h2>
-                            <span className="text-[11px] text-green-600 dark:text-green-400 font-black tracking-[0.2em] uppercase mt-1 block">ZFL La Lima</span>
+                            <h2 className="text-2xl font-black text-slate-800 dark:text-white leading-none tracking-tighter m-0 uppercase">{t('brand.name') || 'GreenTalent'}</h2>
+                            <span className="text-[11px] text-green-600 dark:text-green-400 font-black tracking-[0.2em] uppercase mt-1 block">{t('brand.location') || 'ZFL La Lima'}</span>
                         </div>
                     </Link>
                 </div>

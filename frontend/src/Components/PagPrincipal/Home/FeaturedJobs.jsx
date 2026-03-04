@@ -28,8 +28,8 @@ const FeaturedJobs = ({ jobs = [] }) => {
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider ${job.type === 'Pasantía'
-                                                    ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800'
-                                                    : 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800'
+                                                ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800'
+                                                : 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800'
                                                 }`}>
                                                 {job.type}
                                             </span>
@@ -71,7 +71,7 @@ const FeaturedJobs = ({ jobs = [] }) => {
 
                             <div className="pt-5 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center mt-auto">
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none mb-1">Presupuesto</span>
+                                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none mb-1">{t('featured_jobs.budget')}</span>
                                     <span className="font-black text-slate-800 dark:text-slate-200">{job.salary} <span className="text-[10px] text-slate-400 font-bold">{t('featured_jobs.salary_per_month')}</span></span>
                                 </div>
                                 <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 group-hover:bg-green-500 group-hover:text-white transition-all">

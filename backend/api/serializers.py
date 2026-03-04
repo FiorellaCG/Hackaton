@@ -9,6 +9,7 @@ from .models import (
 
 class UsuarioSerializer(serializers.ModelSerializer):
     contrasena = serializers.CharField(write_only=True, required=True)
+    nombre_completo = serializers.SerializerMethodField()
 
     class Meta:
         model = Usuario
@@ -19,9 +20,17 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'contrasena',
             'rol',
             'activo',
-            'consentimiento'
+            'consentimiento',
+            'nombre_completo'
         ]
         read_only_fields = ['id']
+
+    def get_nombre_completo(self, obj):
+        try:
+            persona = obj.persona
+            return f"{persona.nombre} {persona.apellidos}"
+        except:
+            return "Sin perfil"
 
     def create(self, validated_data):
         password = validated_data.pop('contrasena')
@@ -62,6 +71,8 @@ class EmpresaSerializer(serializers.ModelSerializer):
 
 
 class ProgramaFormacionSerializer(serializers.ModelSerializer):
+    nombre_institucion = serializers.ReadOnlyField(source='institucion.nombre')
+
     class Meta:
         model = ProgramaFormacion
         fields = '__all__'
@@ -74,6 +85,8 @@ class AspiranteSerializer(serializers.ModelSerializer):
 
 
 class VacanteSerializer(serializers.ModelSerializer):
+    nombre_empresa = serializers.ReadOnlyField(source='empresa.nombre')
+    
     class Meta:
         model = Vacante
         fields = '__all__'

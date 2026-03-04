@@ -1,25 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import FiltersBar from '../../Components/admin/FiltersBar';
+import { useTranslation } from "react-i18next";
+import { obtenerVacantesAdmin } from '../../services/services';
 
 const VacantesManagement = () => {
+    const { t } = useTranslation();
     const [vacantes, setVacantes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // API Call to fetch vacantes
-        setVacantes([]);
+        fetchVacantes();
     }, []);
 
-    const handleToggleStatus = (id, currentStatus) => {
-        console.log(`Toggling status for vacante ${id} to ${!currentStatus}`);
-        // Backend integration goes here
+    const fetchVacantes = async () => {
+        setLoading(true);
+        try {
+            const data = await obtenerVacantesAdmin();
+            const normalizedVacantes = data.map(v => ({
+                id: v.id,
+                title: v.titulo,
+                company: v.nombre_empresa || 'Empresa Directa',
+                date: new Date(v.creado_en).toLocaleDateString(),
+                isActive: v.activa
+            }));
+            setVacantes(normalizedVacantes);
+        } catch (error) {
+            console.error('Error fetching vacantes:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleToggleStatus = async (id, currentStatus) => {
+        try {
+            await fetch(`http://127.0.0.1:8000/api/vacantes/${id}/`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ activa: !currentStatus })
+            });
+            await fetchVacantes();
+        } catch (error) {
+            alert('Error al actualizar vacante');
+        }
     };
 
     return (
         <div style={{ padding: '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h2>Vacancies Management</h2>
-                <button style={{ padding: '10px 15px', backgroundColor: '#0056b3', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                    + Add Manual Vacancy
+                <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase">{t('admin.vacancies')}</h2>
+                <button
+                    className="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-green-900/20 active:scale-95"
+                >
+                    + {t('admin.manage')}
                 </button>
             </div>
 
@@ -45,7 +77,7 @@ const VacantesManagement = () => {
                                     <td style={{ padding: '10px' }}>{vacante.date}</td>
                                     <td style={{ padding: '10px' }}>
                                         <span style={{ color: vacante.isActive ? '#155724' : '#721c24', fontWeight: 'bold' }}>
-                                            {vacante.isActive ? 'Active' : 'Inactive'}
+                                            {vacante.isActive ? t('admin.activate') : t('admin.deactivate')}
                                         </span>
                                     </td>
                                     <td style={{ padding: '10px' }}>
@@ -53,7 +85,7 @@ const VacantesManagement = () => {
                                             onClick={() => handleToggleStatus(vacante.id, vacante.isActive)}
                                             style={{ padding: '5px 10px', backgroundColor: vacante.isActive ? '#dc3545' : '#28a745', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                                         >
-                                            {vacante.isActive ? 'Deactivate' : 'Activate'}
+                                            {vacante.isActive ? t('admin.deactivate') : t('admin.activate')}
                                         </button>
                                     </td>
                                 </tr>
