@@ -30,7 +30,12 @@ const MiPerfil = () => {
           return;
         }
         const data = await obtenerMiPerfil(usuario.id);
-        if (data && data.persona && data.persona.nombre) {
+
+        if (data && data.perfil_completo === false) {
+          // Si el backend explicitly dice que el perfil está incompleto, mostramos el formulario
+          setPerfil(data);
+          setMostrarForm(true);
+        } else if (data && data.persona && data.persona.nombre) {
           setPerfil({
             ...data.usuario,
             ...data.persona,
@@ -66,8 +71,8 @@ const MiPerfil = () => {
             <Edit className="w-6 h-6 text-green-600" />
             Completar Mi Perfil
           </h2>
-          {rol === "aspirante" && <FormAspirante usuarioId={usuario.id} />}
-          {rol === "empresa" && <FormEmpresa usuarioId={usuario.id} />}
+          {rol === "aspirante" && <FormAspirante usuarioId={usuario.id} currentData={perfil} />}
+          {rol === "empresa" && <FormEmpresa usuarioId={usuario.id} currentData={perfil} />}
         </div>
       </div>
     );
