@@ -210,6 +210,11 @@ const DashboardAspirante = () => {
                                         <span className="flex items-center gap-1 text-[11px] font-bold text-slate-400 dark:text-slate-500">
                                             <MapPin size={12} /> {perfil.provincia}, {perfil.canton}
                                         </span>
+                                        {usuarioLocalStorage.recomendado_por && (
+                                            <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 text-[11px] font-black rounded-lg uppercase tracking-wider border border-yellow-200 dark:border-yellow-800 flex items-center gap-1">
+                                                <Award size={12} /> RECOMENDADO POR {usuarioLocalStorage.recomendado_por}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex gap-2">

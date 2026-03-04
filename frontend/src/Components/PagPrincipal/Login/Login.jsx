@@ -26,7 +26,9 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
       if (onLoginSuccess) onLoginSuccess(data);
 
       if (data.rol === "empresa") {
-        navigate("/dashboard-empresa");
+        navigate("/empresa/dashboard/perfil");
+      } else if (data.rol === "institucion") {
+        navigate("/institucion/dashboard");
       } else if (data.rol === "aspirante") {
         navigate("/dashboard-aspirante");
       } else {

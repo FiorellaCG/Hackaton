@@ -115,6 +115,14 @@ export default function RegisterModal({ isOpen, onClose }) {
                 >
                   Empresa
                 </button>
+
+                <button
+                  type="button"
+                  className={`user-type-button ${form.rol === "institucion" ? "active" : ""}`}
+                  onClick={() => handleRoleSelect("institucion")}
+                >
+                  Institución
+                </button>
               </div>
             </div>
 

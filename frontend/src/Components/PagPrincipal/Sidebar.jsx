@@ -58,7 +58,6 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         { path: "/empresa/dashboard/estadisticas", icon: BarChart3, label: "Estadísticas" },
         { path: "/empresa/dashboard/vacantes", icon: Briefcase, label: "Vacantes" },
         { path: "/empresa/dashboard/aspirantes", icon: Zap, label: "Personas Aspirantes" },
-        { path: "/empresa/dashboard/mensajes", icon: Video, label: "Mensajes" },
         { path: "/empresa/dashboard/ajustes", icon: Settings, label: "Configuraciones" },
     ];
 

@@ -10,7 +10,7 @@ const FeaturedJobs = ({ jobs = [] }) => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [successMessage, setSuccessMessage] = useState(false);
 
-    const handleApply = (job) => {
+    const handleApplyClick = (job) => {
         const user = localStorage.getItem("usuario");
         if (!user) {
             setLoginOpen(true);
@@ -18,6 +18,27 @@ const FeaturedJobs = ({ jobs = [] }) => {
             setSelectedJob(job);
             setApplicationOpen(true);
         }
+    };
+
+    const handleConfirmApply = () => {
+        try {
+            const user = JSON.parse(localStorage.getItem("usuario") || "{}");
+            const postulaciones = JSON.parse(localStorage.getItem('postulaciones_empresa') || '[]');
+
+            const nuevaPostulacion = {
+                id: Date.now(),
+                jobId: selectedJob.id,
+                jobTitle: selectedJob.title,
+                candidatoName: user.nombre ? `${user.nombre} ${user.apellidos || ''}` : user.correo,
+                match: Math.floor(Math.random() * 30) + 70, // Random match 70-99
+                status: 'Pendiente'
+            };
+
+            localStorage.setItem('postulaciones_empresa', JSON.stringify([...postulaciones, nuevaPostulacion]));
+        } catch (e) {
+            console.error("Error saving postulation", e);
+        }
+        setSuccessMessage(true);
     };
 
     return (
@@ -132,7 +153,7 @@ const FeaturedJobs = ({ jobs = [] }) => {
                             </div>
                             <div className="flex gap-4">
                                 <button onClick={() => setApplicationOpen(false)} className="flex-1 py-3 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-xl transition-colors">Cancelar</button>
-                                <button onClick={() => setSuccessMessage(true)} className="flex-1 py-3 bg-[#163a6d] hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg transition-colors">Inscribirse</button>
+                                <button onClick={handleConfirmApply} className="flex-1 py-3 bg-[#163a6d] hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg transition-colors">Inscribirse</button>
                             </div>
                         </div>
                     )}
