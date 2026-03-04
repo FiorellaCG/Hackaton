@@ -8,12 +8,14 @@ const AdminLayout = () => {
     const location = useLocation();
     const { t, i18n } = useTranslation();
 
-    // SEGURIDAD ADICIONAL: Si por alguna razón RequireAdminAuth fallara, 
-    // este check secundario sacará al usuario si no es admin.
-    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
-    if (usuario.rol !== 'admin' && usuario.correo !== 'admin@gmail.com') {
-        window.location.href = '/';
-        return null; // O un spinner
+    // BLOQUEO ABSOLUTO EN CAPA DE DISEÑO
+    const usuarioStr = localStorage.getItem('usuario');
+    const usuarioObj = usuarioStr ? JSON.parse(usuarioStr) : null;
+
+    if (!usuarioObj || (usuarioObj.rol !== 'admin' && usuarioObj.correo !== 'admin@gmail.com')) {
+        // Redirigir usando window para asegurar que se limpie cualquier estado residual
+        window.location.href = "/";
+        return null;
     }
 
     const navItems = [

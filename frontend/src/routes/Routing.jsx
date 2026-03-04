@@ -77,7 +77,7 @@ function Routing() {
       </Route>
 
       {/* ADMIN ROUTES PROTEGIDAS */}
-      <Route path="/admin" element={<RequireAdminAuth />}>
+      <Route path="/admin/*" element={<RequireAdminAuth />}>
         <Route element={<AdminLayout />}>
           <Route index element={<ReportsDashboard />} />
           <Route path="users" element={<UsersManagement />} />
