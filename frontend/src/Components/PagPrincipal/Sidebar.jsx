@@ -52,7 +52,8 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         { path: "/talento-match", icon: Zap, label: t('sidebar.talent_match'), badge: true },
         { path: "/empleos", icon: Briefcase, label: t('sidebar.jobs') },
         { path: "/pasantias", icon: GraduationCap, label: t('sidebar.internships') },
-        { path: "/entrevista-ia", icon: Video, label: t('sidebar.interviews') },
+        { path: "/entrevistas", icon: Video, label: "Mis Entrevistas" },
+        { path: "/entrevista-ia", icon: Bot, label: t('sidebar.interviews') },
         { path: "/estadisticas", icon: BarChart3, label: t('sidebar.stats') },
         { path: "/capacitaciones", icon: BookOpen, label: t('sidebar.capacitaciones') },
     ];
@@ -62,7 +63,8 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         { path: "/empresa/dashboard/perfil", icon: User, label: t('sidebar.my_profile') },
         { path: "/empresa/dashboard/estadisticas", icon: BarChart3, label: t('sidebar.stats') },
         { path: "/empresa/dashboard/vacantes", icon: Briefcase, label: t('sidebar.jobs') },
-        { path: "/empresa/dashboard/aspirantes", icon: Zap, label: t('sidebar.candidates') },
+        { path: "/empresa/dashboard/aspirantes", icon: Users, label: t('sidebar.candidates') },
+        { path: "/empresa/dashboard/entrevistas", icon: Video, label: "Entrevistas" },
         { path: "/empresa/dashboard/capacitaciones", icon: BookOpen, label: t('sidebar.capacitaciones') },
     ];
 

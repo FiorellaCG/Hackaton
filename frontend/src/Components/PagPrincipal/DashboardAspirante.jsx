@@ -94,6 +94,8 @@ const DashboardAspirante = () => {
             case 'En revisión': return 'badge badge-yellow';
             case 'Entrevista': return 'badge badge-green';
             case 'Rechazado': return 'badge badge-red';
+            case 'Aceptado': return 'badge badge-green';
+            case 'pendiente': return 'badge badge-blue';
             default: return 'badge badge-blue';
         }
     };

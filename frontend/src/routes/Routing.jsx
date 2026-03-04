@@ -41,6 +41,8 @@ import VacantesEmpresa from "../Components/PagPrincipal/Empresa/VacantesEmpresa"
 import MensajesEmpresa from "../Components/PagPrincipal/Empresa/MensajesEmpresa";
 import EmpresaHome from "../Components/PagPrincipal/Empresa/EmpresaHome";
 import CapacitacionesEmpresa from "../Components/PagPrincipal/Empresa/CapacitacionesEmpresa";
+import EntrevistasEmpresa from "../Components/PagPrincipal/Empresa/EntrevistasEmpresa";
+import EntrevistasAspirante from "../Components/PagPrincipal/EntrevistasAspirante";
 
 function Routing() {
   return (
@@ -62,6 +64,7 @@ function Routing() {
       <Route path="/entrevista-ia" element={<EntrevistaIA />} />
       <Route path="/talento-match" element={<TalentMatchPage />} />
       <Route path="/capacitaciones" element={<CapacitacionesPage />} />
+      <Route path="/entrevistas" element={<EntrevistasAspirante />} />
 
 
       {/* RUTAS EMPRESA */}
@@ -75,6 +78,7 @@ function Routing() {
           <Route path="vacantes" element={<VacantesEmpresa />} />
           <Route path="mensajes" element={<MensajesEmpresa />} />
           <Route path="capacitaciones" element={<CapacitacionesEmpresa />} />
+          <Route path="entrevistas" element={<EntrevistasEmpresa />} />
         </Route>
       </Route>
 

@@ -7,7 +7,7 @@ from .views import (
     ProgramaFormacionViewSet, AspiranteViewSet, VacanteViewSet,
     PostulacionViewSet, CurriculoViewSet, PracticanteViewSet,
     NotificacionViewSet, AuditoriaViewSet, CapacitacionViewSet,
-    FavoritoViewSet, InscripcionCapacitacionViewSet,
+    FavoritoViewSet, InscripcionCapacitacionViewSet, EntrevistaViewSet,
     LoginView, CrearPerfilAspiranteView, MiPerfilView, CrearPerfilEmpresaView,
     UpdatePreferenciasView, CambiarPasswordView, EliminarCuentaView, EnviarCredencialesAspiranteView
 )
@@ -30,6 +30,7 @@ router.register(r'auditoria', AuditoriaViewSet)
 router.register(r'capacitaciones', CapacitacionViewSet)
 router.register(r'favoritos', FavoritoViewSet)
 router.register(r'inscripciones-capacitacion', InscripcionCapacitacionViewSet)
+router.register(r'entrevistas', EntrevistaViewSet)
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),

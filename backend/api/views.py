@@ -16,7 +16,7 @@ from .models import (
     Usuario, Persona, AreaTrabajo, Carrera, Institucion,
     Empresa, ProgramaFormacion, Aspirante, Vacante, Postulacion, Curriculo,
     Practicante, Notificacion, Auditoria, Capacitacion,
-    Favorito, InscripcionCapacitacion
+    Favorito, InscripcionCapacitacion, Entrevista
 )
 
 from .serializers import (
@@ -26,7 +26,7 @@ from .serializers import (
     PostulacionSerializer, CurriculoSerializer, PracticanteSerializer,
     NotificacionSerializer, AuditoriaSerializer, CapacitacionSerializer,
     CrearPerfilAspiranteSerializer, CrearPerfilEmpresaSerializer, LoginSerializer, MiPerfilSerializer,
-    FavoritoSerializer, InscripcionCapacitacionSerializer
+    FavoritoSerializer, InscripcionCapacitacionSerializer, EntrevistaSerializer
 )
 
 # =====================================================
@@ -834,3 +834,22 @@ class InscripcionCapacitacionViewSet(viewsets.ModelViewSet):
                 except Aspirante.DoesNotExist:
                     pass
         return super().create(request, *args, **kwargs)
+
+
+class EntrevistaViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = Entrevista.objects.all()
+    serializer_class = EntrevistaSerializer
+
+    def get_queryset(self):
+        queryset = Entrevista.objects.all()
+        usuario_id = self.request.query_params.get('usuario_id')
+        rol = self.request.query_params.get('rol')
+        
+        if usuario_id and rol:
+            if rol == 'empresa':
+                queryset = queryset.filter(empresa__usuario__id=usuario_id)
+            elif rol == 'aspirante':
+                queryset = queryset.filter(aspirante__usuario__id=usuario_id)
+        
+        return queryset.order_by('fecha', 'hora')

@@ -276,3 +276,27 @@ class Favorito(models.Model):
         # unique_together no funciona bien con campos nulos de forma sencilla para este caso,
         # pero para simplicidad lo haremos así:
         unique_together = [('aspirante', 'vacante'), ('aspirante', 'capacitacion')]
+
+
+class Entrevista(models.Model):
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('confirmada', 'Confirmada'),
+        ('completada', 'Completada'),
+        ('cancelada', 'Cancelada'),
+    ]
+
+    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
+    postulacion = models.ForeignKey(Postulacion, on_delete=models.CASCADE, related_name='entrevistas')
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    aspirante = models.ForeignKey(Aspirante, on_delete=models.CASCADE)
+    fecha = models.DateField()
+    hora = models.TimeField()
+    meet_url = models.CharField(max_length=500)
+    notas = models.TextField(null=True, blank=True)
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    creado_en = models.DateTimeField(auto_now_add=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'entrevistas'

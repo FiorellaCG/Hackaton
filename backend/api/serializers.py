@@ -5,7 +5,7 @@ from .models import (
     Usuario, Persona, AreaTrabajo, Carrera, Institucion,
     Empresa, Aspirante, Vacante, Postulacion, Curriculo,
     Practicante, Notificacion, Auditoria, ProgramaFormacion,
-    Capacitacion, Favorito, InscripcionCapacitacion
+    Capacitacion, Favorito, InscripcionCapacitacion, Entrevista
 )
 
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -55,6 +55,10 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop('contrasena')
+        correo = validated_data.get('correo', '').lower().strip()
+        if correo:
+            validated_data['correo'] = correo
+            
         usuario = Usuario.objects.create(
             **validated_data,
             contrasena_hash=make_password(password)
@@ -100,9 +104,17 @@ class ProgramaFormacionSerializer(serializers.ModelSerializer):
 
 
 class AspiranteSerializer(serializers.ModelSerializer):
+    nombre = serializers.ReadOnlyField(source='persona.nombre')
+    apellidos = serializers.ReadOnlyField(source='persona.apellidos')
+    
     class Meta:
         model = Aspirante
-        fields = '__all__'
+        fields = [
+            'id', 'usuario', 'persona', 'carrera', 'institucion_origen',
+            'empresa_recomendada', 'nivel_educativo', 'estado_laboral',
+            'sobre_mi', 'foto_url', 'habilidades_tecnicas', 'habilidades_blandas',
+            'experiencia', 'creado_en', 'actualizado_en', 'nombre', 'apellidos'
+        ]
 
 
 class VacanteSerializer(serializers.ModelSerializer):
@@ -114,9 +126,16 @@ class VacanteSerializer(serializers.ModelSerializer):
 
 
 class PostulacionSerializer(serializers.ModelSerializer):
+    vacante_obj = VacanteSerializer(source='vacante', read_only=True)
+    aspirante_obj = AspiranteSerializer(source='aspirante', read_only=True)
+    
     class Meta:
         model = Postulacion
-        fields = '__all__'
+        fields = [
+            'id', 'aspirante', 'vacante', 'curriculo', 'estado',
+            'visto', 'contratado', 'puntaje_ia', 'postulado_en',
+            'actualizado_en', 'vacante_obj', 'aspirante_obj'
+        ]
 
 
 class CapacitacionSerializer(serializers.ModelSerializer):
@@ -315,7 +334,9 @@ class LoginSerializer(serializers.Serializer):
     contrasena = serializers.CharField()
 
     def validate(self, data):
-        usuario_qs = Usuario.objects.filter(correo=data['correo']).order_by('-creado_en')
+        correo = data['correo'].strip().lower()
+        usuario_qs = Usuario.objects.filter(correo__iexact=correo).order_by('-creado_en')
+        
         if not usuario_qs.exists():
             raise serializers.ValidationError("Credenciales inválidas")
         
@@ -333,3 +354,30 @@ class LoginSerializer(serializers.Serializer):
             "correo": usuario_valido.correo,
             "rol": usuario_valido.rol
         }
+
+class EntrevistaSerializer(serializers.ModelSerializer):
+    nombre_aspirante = serializers.SerializerMethodField()
+    titulo_vacante = serializers.SerializerMethodField()
+    nombre_empresa = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Entrevista
+        fields = '__all__'
+
+    def get_nombre_aspirante(self, obj):
+        try:
+            return f"{obj.aspirante.persona.nombre} {obj.aspirante.persona.apellidos}"
+        except:
+            return "Aspirante"
+
+    def get_titulo_vacante(self, obj):
+        try:
+            return obj.postulacion.vacante.titulo
+        except:
+            return "Vacante"
+
+    def get_nombre_empresa(self, obj):
+        try:
+            return obj.empresa.nombre
+        except:
+            return "Empresa"

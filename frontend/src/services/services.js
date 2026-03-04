@@ -12,7 +12,10 @@ export const loginUser = async (correo, contrasena) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ correo, contrasena }),
+    body: JSON.stringify({
+      correo: correo.trim(),
+      contrasena: contrasena.trim()
+    }),
   });
 
   if (!response.ok) {
@@ -28,12 +31,20 @@ export const obtenerMiPerfil = async (usuarioId) => {
 };
 
 export const registerUser = async (data) => {
+  // Trim the data for consistency
+  const processedData = {
+    ...data,
+    correo: data.correo?.trim().toLowerCase(),
+    contrasena: data.contrasena?.trim(),
+    telefono: data.telefono?.trim()
+  };
+
   const response = await fetch("http://127.0.0.1:8000/api/usuarios/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(processedData),
   });
 
   if (!response.ok) {
@@ -276,3 +287,53 @@ export const postularVacante = async (aspiranteId, vacanteId) => {
   }
   return await response.json();
 };
+
+export const obtenerEntrevistas = async (usuarioId, rol) => {
+  const response = await fetch(`${API_URL}/entrevistas/?usuario_id=${usuarioId}&rol=${rol}`);
+  if (!response.ok) throw new Error("Error al obtener entrevistas");
+  return await response.json();
+};
+
+export const agendarEntrevista = async (data) => {
+  const response = await fetch(`${API_URL}/entrevistas/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+  return await response.json();
+};
+
+export const actualizarEntrevista = async (id, data) => {
+  const response = await fetch(`${API_URL}/entrevistas/${id}/`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error("Error al actualizar entrevista");
+  return await response.json();
+};
+
+export const obtenerPostulacionesEmpresa = async (empresaUsuarioId) => {
+  const miPerfil = await obtenerMiPerfil(empresaUsuarioId);
+  const empresaId = miPerfil.empresa_id;
+  if (!empresaId) return [];
+  const response = await fetch(`${API_URL}/postulaciones/`);
+  if (!response.ok) throw new Error("Error al obtener postulaciones");
+  const allPostulaciones = await response.json();
+  return allPostulaciones.filter(p => String(p.vacante_obj?.empresa) === String(empresaId));
+};
+
+export const actualizarEstadoPostulacion = async (id, estado) => {
+  const response = await fetch(`${API_URL}/postulaciones/${id}/`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ estado }),
+  });
+  if (!response.ok) throw new Error("Error al actualizar la postulación");
+  return await response.json();
+};
+

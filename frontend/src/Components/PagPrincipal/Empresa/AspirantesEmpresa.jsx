@@ -2,40 +2,53 @@ import React, { useState, useEffect } from 'react';
 import { Users, Search, Check, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import './AspirantesEmpresa.css';
-
-const mockAspirantes = [
-    { id: 1, candidatoName: 'Ana García', jobTitle: 'Frontend Dev', match: 98, status: 'Pendiente' },
-    { id: 2, candidatoName: 'Luis Martínez', jobTitle: 'UI/UX Designer', match: 85, status: 'Pendiente' },
-    { id: 3, candidatoName: 'Sofía Castro', jobTitle: 'Full Stack', match: 72, status: 'Rechazado' },
-];
+import { obtenerPostulacionesEmpresa, actualizarEstadoPostulacion } from '../../../services/services';
 
 const AspirantesEmpresa = () => {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
-    const [aspirantes, setAspirantes] = useState(mockAspirantes);
+    const [aspirantes, setAspirantes] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const data = await obtenerPostulacionesEmpresa(usuario.id);
+            setAspirantes(data);
+        } catch (error) {
+            console.error("Error al cargar aspirantes:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const stored = localStorage.getItem('postulaciones_empresa');
-        if (stored) {
-            setAspirantes([...mockAspirantes, ...JSON.parse(stored)]);
+        if (usuario.id) {
+            fetchData();
         }
-    }, []);
+    }, [usuario.id]);
 
-    const updateStatus = (id, newStatus) => {
-        const updated = aspirantes.map(asp =>
-            asp.id === id ? { ...asp, status: newStatus } : asp
-        );
-        setAspirantes(updated);
-
-        const localData = updated.filter(a => a.id > 1000); // Filter out mock inputs that use small IDs
-        if (localData.length > 0) {
-            localStorage.setItem('postulaciones_empresa', JSON.stringify(localData));
+    const updateStatus = async (id, newStatus) => {
+        try {
+            await actualizarEstadoPostulacion(id, newStatus);
+            fetchData();
+        } catch (error) {
+            alert("Error al actualizar el estado");
         }
     };
 
     const filteredAspirantes = aspirantes.filter((asp) =>
-        (asp.jobTitle || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (asp.candidatoName || '').toLowerCase().includes(searchTerm.toLowerCase())
+        (asp.vacante_obj?.titulo || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (asp.aspirante_obj?.nombre || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (asp.aspirante_obj?.apellidos || '').toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (loading) return (
+        <div className="flex h-96 items-center justify-center">
+            <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
     );
 
     return (
@@ -73,28 +86,28 @@ const AspirantesEmpresa = () => {
                                 <tr key={asp.id} className="aspirantes-tr">
                                     <td className="aspirantes-td">
                                         <div className="aspirantes-candidate-info">
-                                            <div className="aspirantes-candidate-avatar">{(asp.candidatoName || 'U').charAt(0)}</div>
-                                            {asp.candidatoName}
+                                            <div className="aspirantes-candidate-avatar">{(asp.aspirante_obj?.nombre || 'U').charAt(0)}</div>
+                                            {asp.aspirante_obj?.nombre} {asp.aspirante_obj?.apellidos}
                                         </div>
                                     </td>
-                                    <td className="aspirantes-td font-medium">{asp.jobTitle}</td>
+                                    <td className="aspirantes-td font-medium">{asp.vacante_obj?.titulo}</td>
                                     <td className="aspirantes-td">
                                         <div className="aspirantes-match-container">
                                             <div className="aspirantes-match-bar-bg">
-                                                <div className="aspirantes-match-bar-fill" style={{ width: `${asp.match}%` }}></div>
+                                                <div className="aspirantes-match-bar-fill" style={{ width: `85%` }}></div>
                                             </div>
-                                            <span className="aspirantes-match-text">{asp.match}%</span>
+                                            <span className="aspirantes-match-text">85%</span>
                                         </div>
                                     </td>
                                     <td className="aspirantes-td">
-                                        <span className={`aspirantes-badge ${asp.status === 'Pendiente' ? 'blue' :
-                                            asp.status === 'Aceptado' ? 'green' : 'red'
+                                        <span className={`aspirantes-badge ${asp.estado === 'pendiente' ? 'blue' :
+                                            asp.estado === 'Aceptado' ? 'green' : 'red'
                                             }`}>
-                                            {asp.status}
+                                            {asp.estado}
                                         </span>
                                     </td>
                                     <td className="aspirantes-td" style={{ textAlign: 'right' }}>
-                                        {asp.status === 'Pendiente' ? (
+                                        {asp.estado === 'pendiente' ? (
                                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                                                 <button onClick={() => updateStatus(asp.id, 'Rechazado')} style={{ padding: '6px 12px', borderRadius: '8px', backgroundColor: '#ffebee', color: '#d32f2f', border: 'none', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
                                                     <X size={14} /> Rechazar
