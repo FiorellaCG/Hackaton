@@ -1,0 +1,119 @@
+/* AjustesEmpresa.css */
+.ajustes-empresa-container {
+    background-color: #ffffff;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e4edf0;
+    animation: fade-in 0.3s ease-out;
+}
+
+.ajustes-empresa-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #163a6d;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e4edf0;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    margin-top: 0;
+}
+
+.ajustes-max-w {
+    max-width: 36rem;
+}
+
+.ajustes-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.ajustes-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 0.5rem;
+}
+
+.ajustes-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #c9dbe0;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f4f7f9;
+    color: #163a6d;
+    box-sizing: border-box;
+}
+
+.ajustes-input:focus:not(:disabled) {
+    border-color: #b1b900;
+    background-color: #ffffff;
+}
+
+.ajustes-input:disabled {
+    background-color: #e4edf0;
+    color: #1988a6;
+    cursor: not-allowed;
+}
+
+.ajustes-alert {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #fff7ed;
+    border: 1px solid #ffedd5;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: #c2410c;
+}
+
+.ajustes-alert-content p {
+    margin: 0;
+}
+
+.ajustes-alert-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.ajustes-alert-desc {
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.ajustes-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid #e4edf0;
+}
+
+.ajustes-btn-submit {
+    padding: 0.75rem 1.5rem;
+    background-color: #b1b900;
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+}
+
+.ajustes-btn-submit:hover:not(:disabled) {
+    background-color: #8e9400;
+}
+
+.ajustes-btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

@@ -14,6 +14,7 @@ function JobsPage({ tipo }) {
 
     const [searchTerm, setSearchTerm] = useState(initialQuery);
     const [inputValue, setInputValue] = useState(initialQuery);
+    const [allJobsCombined, setAllJobsCombined] = useState([...allJobs]);
 
     // Sync state if URL changes
     useEffect(() => {
@@ -21,6 +22,45 @@ function JobsPage({ tipo }) {
         setSearchTerm(q);
         setInputValue(q);
     }, [searchParams]);
+
+    // Load active jobs from localStorage
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem('vacantes_empresa');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                let companyName = "Empresa Confidencial";
+                let companyLogo = `https://ui-avatars.com/api/?name=Empresa&background=163a6d&color=fff`;
+
+                const currentUser = localStorage.getItem('usuario');
+                if (currentUser) {
+                    const u = JSON.parse(currentUser);
+                    if (u.empresa?.nombre) {
+                        companyName = u.empresa.nombre;
+                        companyLogo = u.empresa.url_imagen || `https://ui-avatars.com/api/?name=${encodeURIComponent(companyName)}&background=163a6d&color=fff`;
+                    }
+                }
+
+                const localJobs = parsed.map(v => ({
+                    id: `local-${v.id}`,
+                    title: v.titulo,
+                    company: companyName,
+                    location: v.ubicacion,
+                    type: v.tipo || "Empleo",
+                    schedule: v.horario || v.modalidad,
+                    level: "Profesional",
+                    salary: "A convenir",
+                    logo: companyLogo,
+                    tags: [v.modalidad, ...(v.requisitos ? v.requisitos.split(',').map(r => r.trim()) : [])]
+                }));
+
+                // Merge with mock
+                setAllJobsCombined([...localJobs, ...allJobs]);
+            }
+        } catch (e) {
+            console.error("Error cargando vacantes:", e);
+        }
+    }, []);
 
     const isPasantia = tipo === 'pasantia';
     const title = isPasantia ? "Pasantías Disponibles" : "Explorar Vacantes";
@@ -39,7 +79,7 @@ function JobsPage({ tipo }) {
         }
     };
 
-    const filteredJobs = allJobs.filter(job => {
+    const filteredJobs = allJobsCombined.filter(job => {
         // First check if the job matches the current page type (empleo vs pasantia)
         const normalizedJobType = job.type.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const normalizedFilterType = filterType.normalize("NFD").replace(/[\u0300-\u036f]/g, "");

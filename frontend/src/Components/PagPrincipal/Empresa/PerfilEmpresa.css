@@ -1,0 +1,124 @@
+/* PerfilEmpresa.css */
+.perfil-empresa-container {
+    background-color: #ffffff;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e4edf0;
+    animation: fade-in 0.3s ease-out;
+}
+
+.perfil-empresa-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #163a6d;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e4edf0;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    margin-top: 0;
+}
+
+.perfil-empresa-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+    .perfil-empresa-content {
+        flex-direction: row;
+    }
+}
+
+.perfil-empresa-avatar {
+    width: 8rem;
+    height: 8rem;
+    background-color: #fbfcfa;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid #f3f5cc;
+}
+
+.perfil-empresa-avatar-icon {
+    width: 4rem;
+    height: 4rem;
+    color: #b1b900;
+}
+
+.perfil-empresa-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.perfil-empresa-name {
+    font-size: 1.875rem;
+    font-weight: 900;
+    color: #163a6d;
+    margin: 0;
+}
+
+.perfil-empresa-badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background-color: #f3f5cc;
+    color: #8e9400;
+    font-size: 0.625rem;
+    font-weight: 900;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid #e3e899;
+}
+
+.perfil-empresa-desc {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1988a6;
+    line-height: 1.625;
+    border-left: 2px solid #c9dbe0;
+    padding-left: 1rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    margin: 0;
+}
+
+.perfil-empresa-details {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-top: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1988a6;
+}
+
+@media (min-width: 640px) {
+    .perfil-empresa-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.perfil-empresa-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background-color: #f4f7f9;
+    border-radius: 0.75rem;
+    border: 1px solid #e4edf0;
+}
+
+.perfil-empresa-detail-icon {
+    width: 1rem;
+    height: 1rem;
+    color: #1988a6;
+}

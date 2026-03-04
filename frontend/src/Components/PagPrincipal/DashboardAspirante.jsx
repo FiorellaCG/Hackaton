@@ -185,6 +185,8 @@ const DashboardAspirante = () => {
                     <div className="profile-header flex flex-col md:flex-row gap-8 items-start p-6">
                         <div className="relative group self-center md:self-start">
                             <img
+                                src={perfil.foto_url || "https://i.pravatar.cc/250?u=a042581f4e29026704d"}
+                                alt="Perfil"
                                 className="profile-img w-32 h-32 md:w-40 md:h-40 object-cover rounded-3xl border-4 border-white dark:border-[var(--bg-card)] shadow-xl rotate-3 group-hover:rotate-0 transition-transform duration-500"
                             />
                             <div className="absolute -bottom-2 -right-2 bg-green-600 text-white p-2 rounded-xl shadow-lg border-2 border-white dark:border-slate-800">
@@ -225,7 +227,7 @@ const DashboardAspirante = () => {
                             </p>
 
                             <div className="flex flex-wrap gap-2 mt-6">
-                                {[...perfil.habilidades_tecnicas, ...perfil.habilidades_blandas].slice(0, 8).map((skill, idx) => (
+                                {[...(perfil.habilidades_tecnicas || []), ...(perfil.habilidades_blandas || [])].slice(0, 8).map((skill, idx) => (
                                     <motion.div
                                         key={idx}
                                         whileHover={{ y: -2 }}

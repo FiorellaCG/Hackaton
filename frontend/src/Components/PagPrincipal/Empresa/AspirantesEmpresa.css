@@ -1,0 +1,193 @@
+/* AspirantesEmpresa.css */
+.aspirantes-empresa-container {
+    background-color: #ffffff;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e4edf0;
+    animation: fade-in 0.3s ease-out;
+}
+
+.aspirantes-empresa-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #163a6d;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0;
+}
+
+.aspirantes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e4edf0;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.aspirantes-search-container {
+    position: relative;
+}
+
+.aspirantes-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1988a6;
+}
+
+.aspirantes-search-input {
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border: 1px solid #c9dbe0;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f4f7f9;
+    color: #163a6d;
+    width: 250px;
+    font-family: 'Gotham', sans-serif;
+}
+
+.aspirantes-search-input:focus {
+    border-color: #b1b900;
+}
+
+.aspirantes-table-wrapper {
+    overflow-x: auto;
+}
+
+.aspirantes-table {
+    width: 100%;
+    text-align: left;
+    font-size: 0.875rem;
+    color: #1988a6;
+    border-collapse: collapse;
+}
+
+.aspirantes-thead {
+    font-size: 0.75rem;
+    color: #334155;
+    text-transform: uppercase;
+    background-color: #f4f7f9;
+}
+
+.aspirantes-th {
+    padding: 1rem 1.5rem;
+    font-weight: 900;
+}
+
+.aspirantes-tr {
+    border-bottom: 1px solid #e4edf0;
+    transition: background-color 0.2s ease;
+}
+
+.aspirantes-tr:hover {
+    background-color: #f4f7f9;
+}
+
+.aspirantes-td {
+    padding: 1rem 1.5rem;
+}
+
+.aspirantes-td.font-medium {
+    font-weight: 500;
+}
+
+.aspirantes-candidate-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+    color: #163a6d;
+    white-space: nowrap;
+}
+
+.aspirantes-candidate-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: #c9dbe0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    color: #1988a6;
+}
+
+.aspirantes-match-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.aspirantes-match-bar-bg {
+    width: 4rem;
+    height: 0.5rem;
+    background-color: #c9dbe0;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.aspirantes-match-bar-fill {
+    height: 100%;
+    background-color: #b1b900;
+}
+
+.aspirantes-match-text {
+    font-weight: 900;
+    color: #b1b900;
+    font-size: 0.75rem;
+}
+
+.aspirantes-badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.625rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    border-radius: 0.5rem;
+    display: inline-block;
+}
+
+.aspirantes-badge.blue {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+.aspirantes-badge.green {
+    background-color: #f3f5cc;
+    color: #8e9400;
+    border: 1px solid #e3e899;
+}
+
+.aspirantes-badge.red {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.aspirantes-btn-action {
+    color: #2563eb;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.aspirantes-btn-action:hover {
+    color: #1e3a8a;
+}

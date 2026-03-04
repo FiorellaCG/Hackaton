@@ -23,6 +23,16 @@ import ReportsDashboard from "../Pages/admin/ReportsDashboard";
 
 import CreateCompanyInstitutionForm from "../Components/admin/CreateCompanyInstitutionForm";
 
+// EMPRESA
+import RequireEmpresaAuth from "../Components/PagPrincipal/Empresa/RequireEmpresaAuth";
+import DashboardEmpresa from "../Components/PagPrincipal/Empresa/DashboardEmpresa";
+import PerfilEmpresa from "../Components/PagPrincipal/Empresa/PerfilEmpresa";
+import AjustesEmpresa from "../Components/PagPrincipal/Empresa/AjustesEmpresa";
+import AspirantesEmpresa from "../Components/PagPrincipal/Empresa/AspirantesEmpresa";
+import EstadisticasEmpresa from "../Components/PagPrincipal/Empresa/EstadisticasEmpresa";
+import VacantesEmpresa from "../Components/PagPrincipal/Empresa/VacantesEmpresa";
+import MensajesEmpresa from "../Components/PagPrincipal/Empresa/MensajesEmpresa";
+
 function Routing() {
   return (
     <Routes>
@@ -38,6 +48,18 @@ function Routing() {
       <Route path="/pasantias" element={<JobsPage tipo="pasantia" />} />
       <Route path="/entrevista-ia" element={<EntrevistaIA />} />
 
+
+      {/* RUTAS EMPRESA */}
+      <Route element={<RequireEmpresaAuth />}>
+        <Route path="/empresa/dashboard" element={<DashboardEmpresa />}>
+          <Route path="perfil" element={<PerfilEmpresa />} />
+          <Route path="ajustes" element={<AjustesEmpresa />} />
+          <Route path="aspirantes" element={<AspirantesEmpresa />} />
+          <Route path="estadisticas" element={<EstadisticasEmpresa />} />
+          <Route path="vacantes" element={<VacantesEmpresa />} />
+          <Route path="mensajes" element={<MensajesEmpresa />} />
+        </Route>
+      </Route>
 
       {/* ADMIN ROUTES CON NESTING */}
       <Route path="/admin" element={<AdminLayout />}>

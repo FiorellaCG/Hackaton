@@ -39,9 +39,10 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         window.location.href = "/";
     };
 
-    const dashboardPath = usuario?.rol === 'empresa' ? '/dashboard-empresa' : (usuario?.rol === 'aspirante' ? '/dashboard-aspirante' : '/admin');
+    const isEmpresa = usuario?.rol === 'empresa';
+    const dashboardPath = isEmpresa ? '/empresa/dashboard/perfil' : (usuario?.rol === 'aspirante' ? '/dashboard-aspirante' : '/admin');
 
-    const navLinks = [
+    const navLinksAspirante = [
         { path: dashboardPath, icon: LayoutDashboard, label: "Dashboard" },
         { path: "#", icon: Zap, label: "TalentMatch", badge: true },
         { path: "#", icon: Briefcase, label: "Vacantes" },
@@ -50,6 +51,18 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         { path: "#", icon: BarChart3, label: "Estadísticas" },
         { path: "#", icon: Bot, label: "Asistente IA" },
     ];
+
+    const navLinksEmpresa = [
+        { path: dashboardPath, icon: LayoutDashboard, label: "Dashboard" },
+        { path: "/empresa/dashboard/perfil", icon: User, label: "Mi Perfil" },
+        { path: "/empresa/dashboard/estadisticas", icon: BarChart3, label: "Estadísticas" },
+        { path: "/empresa/dashboard/vacantes", icon: Briefcase, label: "Vacantes" },
+        { path: "/empresa/dashboard/aspirantes", icon: Zap, label: "Personas Aspirantes" },
+        { path: "/empresa/dashboard/mensajes", icon: Video, label: "Mensajes" },
+        { path: "/empresa/dashboard/ajustes", icon: Settings, label: "Configuraciones" },
+    ];
+
+    const navLinks = isEmpresa ? navLinksEmpresa : navLinksAspirante;
 
     return (
         <>

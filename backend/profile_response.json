@@ -1,0 +1,85 @@
+{
+  "usuario_id": "752ea621-d3e9-47f5-9939-b86e5045276b",
+  "persona_id": "0034a026-6968-43f4-aae8-f1e728e1ef16",
+  "aspirante_id": "c24dd498-c915-4dd8-bdb2-fe746a0bff3b",
+  "nombre": "Naidelyn",
+  "apellidos": "Rios",
+  "cedula": "77777777777",
+  "foto_url": "http://127.0.0.1:8000/media/perfiles/Captura_de_pantalla_2025-08-24_182143.png",
+  "sobre_mi": "aa",
+  "carrera": "Ingenier\u00eda en Sistemas de Informaci\u00f3n",
+  "carrera_id": "ea9e54af-9a82-45d0-9d32-32feaa2d5eb5",
+  "nivel_educativo": "tecnico",
+  "estado_laboral": "buscando",
+  "telefono": "1234567",
+  "provincia": "aaa",
+  "canton": "roble",
+  "genero": "Femenino",
+  "nacionalidad": "Costarricense",
+  "fecha_nacimiento": "0029-08-22",
+  "habilidades_tecnicas": [
+    {
+      "desc": "Creaci\u00f3n de interfaces interactivas con React/Vue",
+      "icon": "Code",
+      "name": "Frontend"
+    },
+    {
+      "desc": "Gesti\u00f3n de datos y servidores con Node o Django",
+      "icon": "Database",
+      "name": "Backend"
+    },
+    {
+      "desc": "Despliegue y gesti\u00f3n en AWS, Azure o Google Cloud",
+      "icon": "Globe",
+      "name": "Cloud"
+    },
+    {
+      "desc": "Dise\u00f1o de sistemas escalables y robustos",
+      "icon": "Cpu",
+      "name": "Arquitectura"
+    }
+  ],
+  "habilidades_blandas": [
+    {
+      "desc": "Colaboraci\u00f3n efectiva en grupos multidisciplinarios",
+      "icon": "Users",
+      "name": "Trabajo en Equipo"
+    },
+    {
+      "desc": "Priorizaci\u00f3n eficiente de tareas y entregas",
+      "icon": "Clock",
+      "name": "Gesti\u00f3n Tiempo"
+    },
+    {
+      "desc": "Capacidad de transmitir ideas claramente",
+      "icon": "MessageSquare",
+      "name": "Comunicaci\u00f3n"
+    },
+    {
+      "desc": "Capacidad de guiar y motivar equipos",
+      "icon": "Shield",
+      "name": "Liderazgo"
+    }
+  ],
+  "experiencia": [],
+  "practicante": false,
+  "postulaciones": [
+    {
+      "id": "fe037db8-46d3-4b13-8a3c-27378aa14856",
+      "cargo": "Software Engineer",
+      "empresa": "Intel",
+      "estado": "En revisi\u00f3n",
+      "fecha": "2026-03-03T16:32:00.847512+00:00"
+    },
+    {
+      "id": "92f136cc-3f9c-4b2f-8e27-832535c95bf5",
+      "cargo": "Hardware Intern",
+      "empresa": "Teradyne",
+      "estado": "Entrevista",
+      "fecha": "2026-03-03T16:32:00.852333+00:00"
+    }
+  ],
+  "preferencias": {
+    "dark_mode": false
+  }
+}
