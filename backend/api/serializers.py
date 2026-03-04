@@ -194,6 +194,38 @@ class CrearPerfilAspiranteSerializer(serializers.Serializer):
 
         return aspirante
 
+class CrearPerfilEmpresaSerializer(serializers.Serializer):
+    usuario_id = serializers.UUIDField()
+    nombre = serializers.CharField()
+    descripcion = serializers.CharField(required=False, allow_blank=True)
+    nombre_contacto = serializers.CharField()
+    correo_contacto = serializers.EmailField()
+    url_externa = serializers.CharField(required=False, allow_blank=True)
+
+    def validate(self, data):
+        try:
+            usuario = Usuario.objects.get(id=data['usuario_id'])
+        except Usuario.DoesNotExist:
+            raise serializers.ValidationError("Usuario no existe")
+
+        if usuario.rol != 'empresa':
+            raise serializers.ValidationError("El usuario no tiene rol de empresa")
+        return data
+
+    def create(self, validated_data):
+        usuario = Usuario.objects.get(id=validated_data['usuario_id'])
+        empresa, _ = Empresa.objects.update_or_create(
+            usuario=usuario,
+            defaults={
+                'nombre': validated_data['nombre'],
+                'descripcion': validated_data.get('descripcion', ''),
+                'nombre_contacto': validated_data['nombre_contacto'],
+                'correo_contacto': validated_data['correo_contacto'],
+                'url_externa': validated_data.get('url_externa', '')
+            }
+        )
+        return empresa
+
 class LoginSerializer(serializers.Serializer):
     correo = serializers.CharField()
     contrasena = serializers.CharField()

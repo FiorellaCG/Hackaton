@@ -22,7 +22,7 @@ from .serializers import (
     ProgramaFormacionSerializer, AspiranteSerializer, VacanteSerializer,
     PostulacionSerializer, CurriculoSerializer, PracticanteSerializer,
     NotificacionSerializer, AuditoriaSerializer,
-    CrearPerfilAspiranteSerializer, LoginSerializer, MiPerfilSerializer
+    CrearPerfilAspiranteSerializer, CrearPerfilEmpresaSerializer, LoginSerializer, MiPerfilSerializer
 )
 
 # =====================================================
@@ -60,7 +60,7 @@ class MiPerfilView(APIView):
         try:
             persona = usuario.persona
             aspirante = usuario.aspirante
-        except:
+        except (Persona.DoesNotExist, Aspirante.DoesNotExist):
             # Perfil incompleto: devolver 200 con datos seguros y banderas para que el frontend no estalle con 404
             return Response({
                 "usuario_id": usuario.id,
@@ -149,6 +149,23 @@ class CrearPerfilAspiranteView(APIView):
                 "aspirante_id": aspirante.id
             }, status=status.HTTP_201_CREATED)
 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# =====================================================
+# CREAR PERFIL EMPRESA
+# =====================================================
+
+class CrearPerfilEmpresaView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = CrearPerfilEmpresaSerializer(data=request.data)
+        if serializer.is_valid():
+            empresa = serializer.save()
+            return Response({
+                "mensaje": "Perfil de empresa creado correctamente",
+                "empresa_id": empresa.id
+            }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # =====================================================
