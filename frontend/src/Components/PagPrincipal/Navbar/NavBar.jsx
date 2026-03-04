@@ -53,14 +53,14 @@ const Navbar = () => {
 
         {/* LINKS */}
         <ul className="navbar-links">
-          <li><Link to="/empleos">{t('navbar.jobs')}</Link></li>
-          <li><Link to="/pasantias">{t('navbar.internships')}</Link></li>
-          <li>{t('navbar.companies')}</li>
-          <li>{t('navbar.statistics')}</li>
+          <li><Link to="/empleos">{t('navbar.jobs', 'Empleos')}</Link></li>
+          <li><Link to="/pasantias">{t('navbar.internships', 'Pasantías')}</Link></li>
+          <li>{t('navbar.companies', 'Empresas')}</li>
+          <li>{t('navbar.statistics', 'Estadísticas')}</li>
 
           {usuario && (
             <li>
-              <Link to="/dashboard-aspirante" className="active-link">{t('navbar.my_profile')}</Link>
+              <Link to="/dashboard-aspirante" className="active-link">{t('navbar.my_profile', 'Mi Perfil')}</Link>
             </li>
           )}
         </ul>
@@ -73,19 +73,19 @@ const Navbar = () => {
                 className="login-btn"
                 onClick={() => setLoginOpen(true)}
               >
-                {t('navbar.login')}
+                {t('navbar.login', 'Iniciar Sesión')}
               </button>
 
               <button
                 className="register-btn"
                 onClick={() => setRegisterOpen(true)}
               >
-                {t('navbar.register')}
+                {t('navbar.register', 'Registrarse')}
               </button>
             </>
           ) : (
             <button className="logout-btn" onClick={handleLogout}>
-              {t('navbar.logout')}
+              {t('navbar.logout', 'Cerrar Sesión')}
             </button>
           )}
         </div>

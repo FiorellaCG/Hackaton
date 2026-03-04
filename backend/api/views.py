@@ -45,10 +45,34 @@ class MiPerfilView(APIView):
             persona = usuario.persona
             aspirante = usuario.aspirante
         except:
-            return Response(
-                {"error": "Perfil incompleto"},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            # Perfil incompleto: devolver 200 con datos seguros y banderas para que el frontend no estalle con 404
+            return Response({
+                "usuario_id": usuario.id,
+                "persona_id": None,
+                "aspirante_id": None,
+                "nombre": "Usuario",
+                "apellidos": "Registrado",
+                "cedula": "",
+                "foto_url": None,
+                "sobre_mi": "Aún no has completado tu perfil.",
+                "carrera": "No definida",
+                "carrera_id": None,
+                "nivel_educativo": "",
+                "estado_laboral": "",
+                "telefono": usuario.telefono,
+                "provincia": "",
+                "canton": "",
+                "genero": "",
+                "nacionalidad": "",
+                "fecha_nacimiento": None,
+                "habilidades_tecnicas": [],
+                "habilidades_blandas": [],
+                "experiencia": [],
+                "practicante": False,
+                "postulaciones": [],
+                "preferencias": usuario.preferencias,
+                "perfil_completo": False
+            }, status=status.HTTP_200_OK)
 
         postulaciones = Postulacion.objects.filter(aspirante=aspirante).select_related('vacante', 'vacante__empresa')
         postulaciones_data = []

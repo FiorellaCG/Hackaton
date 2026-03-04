@@ -7,7 +7,8 @@ i18n
   .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en',
+    lng: 'es', // Set Spanish as default
+    fallbackLng: 'es',
     supportedLngs: ['en', 'es', 'fr', 'de', 'zh', 'ja'], // agrega más si quieres
     backend: {
       loadPath: '/locales/{{lng}}.json', // o tu API de traducciones
