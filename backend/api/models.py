@@ -3,7 +3,7 @@ import uuid
 
 
 class Usuario(models.Model):
-    ROL_CHOICES = [('admin', 'Admin'), ('empresa', 'Empresa'), ('aspirante', 'Aspirante')]
+    ROL_CHOICES = [('admin', 'Admin'), ('empresa', 'Empresa'), ('aspirante', 'Aspirante'), ('institucion', 'Institución')]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     correo = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
@@ -109,6 +109,7 @@ class Aspirante(models.Model):
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE)
     carrera = models.ForeignKey(Carrera, on_delete=models.SET_NULL, null=True)
     institucion_origen = models.ForeignKey(Institucion, on_delete=models.SET_NULL, null=True, blank=True)
+    empresa_recomendada = models.ForeignKey(Empresa, on_delete=models.SET_NULL, null=True, blank=True)
     nivel_educativo = models.CharField(max_length=50, choices=NIVEL_EDUCATIVO_CHOICES)
     estado_laboral = models.CharField(max_length=50, choices=ESTADO_LABORAL_CHOICES)
     sobre_mi = models.TextField(null=True, blank=True)

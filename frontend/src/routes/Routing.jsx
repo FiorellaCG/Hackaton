@@ -9,9 +9,11 @@ import DashboardEmpresaPage from "../Pages/Home/DashboardEmpresaPage";
 import DashboardInstitucion from "../Components/PagPrincipal/Institucion/DashboardInstitucion";
 import AjustesPage from "../Pages/Home/AjustesPage";
 import JobsPage from "../Pages/Home/JobsPage";
+import CompaniesPage from "../Pages/Home/CompaniesPage";
 import EntrevistaIA from "../Components/PagPrincipal/Home/EntrevistaIA/EntrevistaIA";
 import FormCarrera from "../Components/PagPrincipal/FormCarrera";
 import VisualizarCarreras from "../Components/PagPrincipal/VisualizarCarreras";
+import StatsPage from "../Pages/Home/StatsPage";
 
 // ADMIN
 import AdminLayout from "../Pages/admin/AdminLayout";
@@ -33,6 +35,7 @@ import AspirantesEmpresa from "../Components/PagPrincipal/Empresa/AspirantesEmpr
 import EstadisticasEmpresa from "../Components/PagPrincipal/Empresa/EstadisticasEmpresa";
 import VacantesEmpresa from "../Components/PagPrincipal/Empresa/VacantesEmpresa";
 import MensajesEmpresa from "../Components/PagPrincipal/Empresa/MensajesEmpresa";
+import EmpresaHome from "../Components/PagPrincipal/Empresa/EmpresaHome";
 
 function Routing() {
   return (
@@ -48,12 +51,15 @@ function Routing() {
       <Route path="/ajustes" element={<AjustesPage />} />
       <Route path="/empleos" element={<JobsPage tipo="empleo" />} />
       <Route path="/pasantias" element={<JobsPage tipo="pasantia" />} />
+      <Route path="/empresas" element={<CompaniesPage />} />
+      <Route path="/estadisticas" element={<StatsPage />} />
       <Route path="/entrevista-ia" element={<EntrevistaIA />} />
 
 
       {/* RUTAS EMPRESA */}
       <Route element={<RequireEmpresaAuth />}>
         <Route path="/empresa/dashboard" element={<DashboardEmpresa />}>
+          <Route index element={<EmpresaHome />} />
           <Route path="perfil" element={<PerfilEmpresa />} />
           <Route path="ajustes" element={<AjustesEmpresa />} />
           <Route path="aspirantes" element={<AspirantesEmpresa />} />

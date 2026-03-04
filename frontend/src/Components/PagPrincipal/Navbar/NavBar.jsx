@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import logoImg from "../../../assents/Logo.png";
+import logoImg from "../../../assents/logo.png";
 
 import { LoginModal } from "../Login/Login";
 import RegistroModal from "../../PagPrincipal/Login/Registrer";
@@ -45,7 +45,7 @@ const Navbar = () => {
               <img src={logoImg} alt="Logo" className="navbar-logo" />
             </div>
             <div className="brand">
-              <h1 className="text-xl font-black">{t('brand.name') || 'GreenTalent'}</h1>
+              <h1 className="text-xl font-black">{t('') || 'GreenTalent'}</h1>
               <span className="text-[10px] uppercase">{t('brand.location') || 'ZFL La Lima'}</span>
             </div>
           </Link>
@@ -55,12 +55,21 @@ const Navbar = () => {
         <ul className="navbar-links">
           <li><Link to="/empleos">{t('navbar.jobs', 'Empleos')}</Link></li>
           <li><Link to="/pasantias">{t('navbar.internships', 'Pasantías')}</Link></li>
-          <li>{t('navbar.companies', 'Empresas')}</li>
-          <li>{t('navbar.statistics', 'Estadísticas')}</li>
+          <li><Link to="/empresas">{t('navbar.companies', 'Empresas')}</Link></li>
+          <li><Link to="/estadisticas">{t('navbar.statistics', 'Estadísticas')}</Link></li>
 
           {usuario && (
             <li>
-              <Link to="/dashboard-aspirante" className="active-link">{t('navbar.my_profile', 'Mi Perfil')}</Link>
+              <Link
+                to={
+                  usuario.rol === 'empresa' ? '/empresa/dashboard' :
+                    usuario.rol === 'institucion' ? '/institucion/dashboard' :
+                      '/dashboard-aspirante'
+                }
+                className="active-link"
+              >
+                {t('navbar.my_profile', 'Mi Perfil')}
+              </Link>
             </li>
           )}
         </ul>

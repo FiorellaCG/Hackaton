@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Building2, Globe, Mail, MapPin, Search, Edit, Sparkles, Building, Code } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { obtenerMiPerfil } from '../../../services/services';
 
 const PerfilEmpresa = () => {
     const [empresaData, setEmpresaData] = useState({
@@ -16,26 +17,32 @@ const PerfilEmpresa = () => {
     });
 
     useEffect(() => {
-        try {
-            const usuarioStr = localStorage.getItem('usuario');
-            if (usuarioStr) {
-                const usuario = JSON.parse(usuarioStr);
-                const perfil = usuario.empresa || {}; // Datos de la empresa guardados
-                setEmpresaData({
-                    nombre: perfil.nombre || usuario.correo.split('@')[0],
-                    descripcion: perfil.descripcion || "Sin descripción proporcionada. Edita tu perfil para que los talentos conozcan más sobre tu empresa, cultura y objetivos.",
-                    contacto: perfil.nombre_contacto || "No registrado",
-                    correo: perfil.correo_contacto || usuario.correo,
-                    url_externa: perfil.url_externa || "No especificado",
-                    url_imagen: perfil.url_imagen || "",
-                    ubicacion: perfil.ubicacion || "Ubicación no especificada",
-                    sector: perfil.sector || "Sector Tecnológico",
-                    tamaño: perfil.tamaño_empresa || "StartUp"
-                });
+        const cargarPerfil = async () => {
+            try {
+                const usuarioStr = localStorage.getItem('usuario');
+                if (usuarioStr) {
+                    const usuario = JSON.parse(usuarioStr);
+                    const data = await obtenerMiPerfil(usuario.id);
+
+                    if (data && data.perfil_completo) {
+                        setEmpresaData({
+                            nombre: data.nombre || "Empresa",
+                            descripcion: data.descripcion || "Sin descripción proporcionada.",
+                            contacto: data.nombre_contacto || "No registrado",
+                            correo: data.correo_contacto || usuario.correo,
+                            url_externa: data.url_externa || "No especificado",
+                            url_imagen: data.url_imagen || "",
+                            ubicacion: data.ubicacion || "Cartago, Costa Rica",
+                            sector: data.sector || "Industria / Tecnología",
+                            tamaño: data.tamaño_empresa || "Corporativo"
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error("Error cargando perfil de empresa:", e);
             }
-        } catch (e) {
-            console.error("Error cargando perfil de empresa:", e);
-        }
+        };
+        cargarPerfil();
     }, []);
 
     return (

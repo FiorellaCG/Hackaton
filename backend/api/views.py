@@ -126,7 +126,8 @@ class MiPerfilView(APIView):
             "experiencia": aspirante.experiencia,
             "practicante": hasattr(aspirante, 'practicante'),
             "postulaciones": postulaciones_data,
-            "preferencias": usuario.preferencias
+            "preferencias": usuario.preferencias,
+            "institucion_recomendadora": aspirante.institucion_origen.nombre if aspirante.institucion_origen else None
         }
 
         return Response(data, status=status.HTTP_200_OK)
@@ -150,6 +151,47 @@ class CrearPerfilAspiranteView(APIView):
             }, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# =====================================================
+# ENVIAR CREDENCIALES ASPIRANTE
+# =====================================================
+
+from django.core.mail import send_mail
+
+class EnviarCredencialesAspiranteView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        correo = request.data.get('correo')
+        contrasena = request.data.get('contrasena')
+        nombre = request.data.get('nombre', 'Estudiante')
+        institucion = request.data.get('institucion', 'una institución')
+
+        if not correo or not contrasena:
+            return Response({'error': 'Faltan datos requeridos.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        asunto = f"¡Bienvenido a GreenTalent, {nombre}!"
+        mensaje = f"""Hola {nombre},
+
+Has sido recomendado en la plataforma de GreenTalent por {institucion}.
+Nos alegra contar con tu talento en nuestro ecosistema.
+
+Tus credenciales de acceso temporal son:
+Usuario/Correo: {correo}
+Contraseña: {contrasena}
+
+Por favor, inicia sesión lo antes posible y completa tu perfil profesional.
+
+Atentamente,
+El equipo de GreenTalent"""
+        
+        try:
+            send_mail(asunto, mensaje, 'noreply@greentalent.com', [correo], fail_silently=False)
+            return Response({'status': 'Correo enviado exitosamente'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f"Error enviando correo: {e}")
+            return Response({'status': 'Registro completado, pero sin envío de correo'}, status=status.HTTP_200_OK)
+
 
 # =====================================================
 # CREAR PERFIL EMPRESA
@@ -222,8 +264,11 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        print("LOGIN REQUEST DATA:", request.data)
         serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            print("LOGIN ERRORS:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
@@ -252,11 +297,37 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def stats(self, request):
-        from .models import Aspirante, Empresa, Vacante
+        from .models import Aspirante, Empresa, Vacante, Postulacion
+        
+        # Totales básicos
+        total_estudiantes = Aspirante.objects.count()
+        total_empresas = Empresa.objects.count()
+        total_vacantes = Vacante.objects.count()
+        total_postulaciones = Postulacion.objects.count()
+        
+        # Distribución de vacantes por área
+        vacantes_por_area = Vacante.objects.values('area_trabajo__nombre').annotate(
+            count=Count('id')
+        ).order_by('-count')
+        
+        # Distribución de estudiantes por carrera
+        estudiantes_por_carrera = Aspirante.objects.values('carrera__nombre').annotate(
+            count=Count('id')
+        ).order_by('-count')
+        
+        # Tasa de colocación (simulada o real si tenemos el campo)
+        # Supongamos que estado_laboral 'empleado' significa colocado
+        colocados = Aspirante.objects.filter(estado_laboral='empleado').count()
+        tasa_colocacion = (colocados / total_estudiantes * 100) if total_estudiantes > 0 else 0
+
         return Response({
-            "total_estudiantes": Aspirante.objects.count(),
-            "total_empresas": Empresa.objects.count(),
-            "total_vacantes": Vacante.objects.count()
+            "total_estudiantes": total_estudiantes,
+            "total_empresas": total_empresas,
+            "total_vacantes": total_vacantes,
+            "total_postulaciones": total_postulaciones,
+            "vacantes_por_area": list(vacantes_por_area),
+            "estudiantes_por_carrera": list(estudiantes_por_carrera),
+            "tasa_colocacion": round(tasa_colocacion, 2)
         })
 
 

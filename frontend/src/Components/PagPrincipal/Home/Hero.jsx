@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, TrendingUp, Users, Briefcase, Sparkles, GraduationCap } from 'lucide-react';
 import { useTranslation } from "react-i18next";
+import { obtenerEstadisticasGeneral } from "../../../services/services";
 
 const Hero = ({ onSearch }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [searchValue, setSearchValue] = useState("");
     const [activeCategory, setActiveCategory] = useState("todos");
+    const [serverStats, setServerStats] = useState(null);
+
+    useEffect(() => {
+        obtenerEstadisticasGeneral()
+            .then(data => setServerStats(data))
+            .catch(err => console.error("Error fetching hero stats:", err));
+    }, []);
 
     const handleSearchChange = (e) => {
         const val = e.target.value;
@@ -32,9 +40,9 @@ const Hero = ({ onSearch }) => {
     };
 
     const stats = [
-        { label: t('hero.stats.vacancies'), value: '120+', icon: Briefcase, color: 'text-indigo-600', bg: 'bg-indigo-50 dark:bg-indigo-900/30' },
-        { label: t('hero.stats.companies'), value: '45+', icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/30' },
-        { label: t('hero.stats.hired'), value: '850+', icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-900/30' },
+        { label: t('hero.stats.vacancies'), value: serverStats?.total_vacantes ? `${serverStats.total_vacantes}+` : '120+', icon: Briefcase, color: 'text-indigo-600', bg: 'bg-indigo-50 dark:bg-indigo-900/30', path: '/empleos' },
+        { label: t('hero.stats.companies'), value: serverStats?.total_empresas ? `${serverStats.total_empresas}+` : '45+', icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/30', path: '/empresas' },
+        { label: t('hero.stats.hired'), value: serverStats?.total_postulaciones ? `${serverStats.total_postulaciones}+` : '850+', icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-900/30', path: '/estadisticas' },
     ];
 
     return (
@@ -122,7 +130,11 @@ const Hero = ({ onSearch }) => {
                         {t('hero.popular')}
                     </span>
                     {Object.entries(t('hero.popular_tags', { returnObjects: true })).map(([key, tag]) => (
-                        <span key={key} className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-600 transition-colors cursor-pointer capitalize">
+                        <span
+                            key={key}
+                            onClick={() => navigate(`/empleos?q=${tag}`)}
+                            className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-600 transition-colors cursor-pointer capitalize"
+                        >
                             {tag}
                         </span>
                     ))}
@@ -133,8 +145,11 @@ const Hero = ({ onSearch }) => {
                     {stats.map((stat, idx) => {
                         const Icon = stat.icon;
                         return (
-                            <div key={idx} className="flex flex-col items-center p-4">
-                                <div className={`${stat.bg} ${stat.color} p-4 rounded-2xl mb-3`}>
+                            <div key={idx}
+                                onClick={() => navigate(stat.path)}
+                                className="flex flex-col items-center p-4 cursor-pointer hover:scale-105 transition-transform group"
+                            >
+                                <div className={`${stat.bg} ${stat.color} p-4 rounded-2xl mb-3 group-hover:shadow-lg transition-all`}>
                                     <Icon className="w-8 h-8" />
                                 </div>
                                 <span className="text-2xl font-black text-slate-800 dark:text-white leading-none mb-1">{stat.value}</span>

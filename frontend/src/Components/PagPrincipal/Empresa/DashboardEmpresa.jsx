@@ -8,7 +8,7 @@ const DashboardEmpresa = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300 w-full" style={{ fontFamily: "'Gotham', sans-serif" }}>
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300 w-full">
             <Sidebar isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
 
             <main className="flex-1 w-full lg:ml-72 p-6 flex flex-col min-h-screen transition-all">

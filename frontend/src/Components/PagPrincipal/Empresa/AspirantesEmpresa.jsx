@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Search, Check, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import './AspirantesEmpresa.css';
 
 const mockAspirantes = [
@@ -9,6 +10,7 @@ const mockAspirantes = [
 ];
 
 const AspirantesEmpresa = () => {
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [aspirantes, setAspirantes] = useState(mockAspirantes);
 

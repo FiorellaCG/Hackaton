@@ -1,5 +1,6 @@
 import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import logoImg from "../../../assents/Logo.png";
 
 const Footer = () => {
@@ -35,10 +36,10 @@ const Footer = () => {
                 <div>
                     <h3 className="text-white font-black mb-6 text-sm uppercase tracking-widest">{t('footer.candidates')}</h3>
                     <ul className="space-y-4 text-sm font-bold">
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.search_jobs')}</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.internships')}</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.create_profile')}</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.cv_tips')}</a></li>
+                        <li><Link to="/empleos" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.search_jobs')}</Link></li>
+                        <li><Link to="/pasantias" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.internships')}</Link></li>
+                        <li><Link to="/register" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.create_profile')}</Link></li>
+                        <li><Link to="/estadisticas" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.cv_tips')}</Link></li>
                     </ul>
                 </div>
 
@@ -46,10 +47,10 @@ const Footer = () => {
                 <div>
                     <h3 className="text-white font-black mb-6 text-sm uppercase tracking-widest">{t('footer.companies')}</h3>
                     <ul className="space-y-4 text-sm font-bold">
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.post_job')}</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.find_candidates')}</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.plans_pricing')}</a></li>
-                        <li><a href="#" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.about_us')}</a></li>
+                        <li><Link to="/login" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.post_job')}</Link></li>
+                        <li><Link to="/empresas" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.find_candidates')}</Link></li>
+                        <li><Link to="/estadisticas" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.plans_pricing')}</Link></li>
+                        <li><Link to="/empresas" className="text-slate-500 hover:text-green-500 transition-colors">{t('footer.about_us')}</Link></li>
                     </ul>
                 </div>
 

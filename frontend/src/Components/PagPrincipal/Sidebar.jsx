@@ -13,8 +13,7 @@ import {
     Bot,
     User,
     LogOut,
-    Menu,
-    Settings
+    Menu
 } from "lucide-react";
 
 const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
@@ -40,25 +39,24 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
     };
 
     const isEmpresa = usuario?.rol === 'empresa';
-    const dashboardPath = isEmpresa ? '/empresa/dashboard/perfil' : (usuario?.rol === 'aspirante' ? '/dashboard-aspirante' : '/admin');
+    const dashboardPath = isEmpresa ? '/empresa/dashboard' : (usuario?.rol === 'aspirante' ? '/dashboard-aspirante' : '/admin');
 
     const navLinksAspirante = [
-        { path: dashboardPath, icon: LayoutDashboard, label: "Dashboard" },
-        { path: "#", icon: Zap, label: "TalentMatch", badge: true },
-        { path: "#", icon: Briefcase, label: "Vacantes" },
-        { path: "#", icon: GraduationCap, label: "Pasantías" },
-        { path: "/entrevista-ia", icon: Video, label: "Entrevistas IA" },
-        { path: "#", icon: BarChart3, label: "Estadísticas" },
-        { path: "#", icon: Bot, label: "Asistente IA" },
+        { path: dashboardPath, icon: LayoutDashboard, label: t('sidebar.dashboard') },
+        { path: "#", icon: Zap, label: t('sidebar.talent_match'), badge: true },
+        { path: "#", icon: Briefcase, label: t('sidebar.jobs') },
+        { path: "#", icon: GraduationCap, label: t('sidebar.internships') },
+        { path: "/entrevista-ia", icon: Video, label: t('sidebar.interviews') },
+        { path: "#", icon: BarChart3, label: t('sidebar.stats') },
+        { path: "#", icon: Bot, label: t('sidebar.ai_assistant') },
     ];
 
     const navLinksEmpresa = [
-        { path: dashboardPath, icon: LayoutDashboard, label: "Dashboard" },
-        { path: "/empresa/dashboard/perfil", icon: User, label: "Mi Perfil" },
-        { path: "/empresa/dashboard/estadisticas", icon: BarChart3, label: "Estadísticas" },
-        { path: "/empresa/dashboard/vacantes", icon: Briefcase, label: "Vacantes" },
-        { path: "/empresa/dashboard/aspirantes", icon: Zap, label: "Personas Aspirantes" },
-        { path: "/empresa/dashboard/ajustes", icon: Settings, label: "Configuraciones" },
+        { path: dashboardPath, icon: LayoutDashboard, label: t('sidebar.dashboard') },
+        { path: "/empresa/dashboard/perfil", icon: User, label: t('sidebar.my_profile') },
+        { path: "/empresa/dashboard/estadisticas", icon: BarChart3, label: t('sidebar.stats') },
+        { path: "/empresa/dashboard/vacantes", icon: Briefcase, label: t('sidebar.jobs') },
+        { path: "/empresa/dashboard/aspirantes", icon: Zap, label: t('sidebar.candidates') },
     ];
 
     const navLinks = isEmpresa ? navLinksEmpresa : navLinksAspirante;
@@ -108,8 +106,8 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
                                 key={idx}
                                 onClick={() => link.path !== "#" && navigate(link.path)}
                                 className={`flex items-center gap-4 px-4 py-3.5 text-xs font-black uppercase tracking-[0.15em] rounded-2xl transition-all cursor-pointer group ${isActive
-                                    ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl"
-                                    : "text-slate-500 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
+                                        ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl"
+                                        : "text-slate-500 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
                                     }`}
                             >
                                 <Icon className={`w-5 h-5 ${isActive ? "text-green-400 dark:text-green-600" : "group-hover:text-green-500 transition-colors"}`} />
@@ -118,19 +116,6 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
                             </div>
                         );
                     })}
-
-                    <div className="pt-4 mt-4 border-t border-slate-50 dark:border-slate-800">
-                        <div
-                            onClick={() => navigate("/ajustes")}
-                            className={`flex items-center gap-4 px-4 py-3.5 text-xs font-black uppercase tracking-[0.15em] rounded-2xl cursor-pointer transition-all ${location.pathname === "/ajustes"
-                                ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl"
-                                : "text-slate-500 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
-                                }`}
-                        >
-                            <Settings className={`w-5 h-5 ${location.pathname === "/ajustes" ? "text-green-400 dark:text-green-600" : ""}`} />
-                            {t('admin.settings')}
-                        </div>
-                    </div>
                 </nav>
 
                 {/* User Section */}

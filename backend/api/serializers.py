@@ -144,7 +144,7 @@ class CrearPerfilAspiranteSerializer(serializers.Serializer):
     fecha_nacimiento = serializers.DateField(required=False)
 
     # ----- Datos Aspirante -----
-    carrera_id = serializers.CharField()
+    carrera_id = serializers.CharField(required=False, allow_null=True)
     nivel_educativo = serializers.ChoiceField(
         choices=Aspirante.NIVEL_EDUCATIVO_CHOICES
     )
@@ -156,6 +156,8 @@ class CrearPerfilAspiranteSerializer(serializers.Serializer):
     habilidades_tecnicas = serializers.JSONField(required=False, default=list)
     habilidades_blandas = serializers.JSONField(required=False, default=list)
     experiencia = serializers.JSONField(required=False, default=list)
+    institucion_origen_id = serializers.CharField(required=False, allow_null=True)
+    empresa_recomendada_id = serializers.CharField(required=False, allow_null=True)
 
     def validate(self, data):
         try:
@@ -173,7 +175,13 @@ class CrearPerfilAspiranteSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         usuario = Usuario.objects.get(id=validated_data['usuario_id'])
-        carrera = Carrera.objects.get(id=validated_data['carrera_id'])
+        carrera = Carrera.objects.filter(id=validated_data.get('carrera_id')).first() if validated_data.get('carrera_id') else Carrera.objects.first()
+
+        inst_id = validated_data.get('institucion_origen_id')
+        emp_id = validated_data.get('empresa_recomendada_id')
+
+        institucion_origen = Institucion.objects.get(id=inst_id) if inst_id else None
+        empresa_recomendada = Empresa.objects.get(id=emp_id) if emp_id else None
 
         persona, _ = Persona.objects.update_or_create(
             usuario=usuario,
@@ -201,7 +209,9 @@ class CrearPerfilAspiranteSerializer(serializers.Serializer):
                 'foto_url': validated_data.get('foto_url', ''),
                 'habilidades_tecnicas': validated_data.get('habilidades_tecnicas', []),
                 'habilidades_blandas': validated_data.get('habilidades_blandas', []),
-                'experiencia': validated_data.get('experiencia', [])
+                'experiencia': validated_data.get('experiencia', []),
+                'institucion_origen': institucion_origen,
+                'empresa_recomendada': empresa_recomendada
             }
         )
 

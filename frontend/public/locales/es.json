@@ -26,9 +26,9 @@
         "search_button": "Buscar",
         "popular": "Popular:",
         "stats": {
-            "vacancies": "Vacantes Activas",
-            "companies": "Empresas",
-            "hired": "Contratados"
+            "vacancies": "Oportunidades Activas",
+            "companies": "Empresas Aliadas",
+            "hired": "Talento Colocado"
         },
         "categories": {
             "all": "Todos",
@@ -48,7 +48,12 @@
         "subtitle": "Descubre las oportunidades más recientes y de mayor demanda.",
         "view_all": "Ver todas las ofertas",
         "salary_per_month": "/ mes",
-        "budget": "Presupuesto"
+        "budget": "Presupuesto",
+        "apply": "Postularse",
+        "apply_modal_title": "Postulación de Talento",
+        "confirm_btn": "Confirmar Postulación",
+        "success_title": "¡Postulación Exitosa!",
+        "success_desc": "Tu perfil ha sido enviado a {{company}}. Recibirás una notificación pronto."
     },
     "footer": {
         "description": "Conectamos el mejor talento con las empresas líderes en la Zona Franca La Lima, impulsando el crecimiento profesional.",
@@ -222,5 +227,40 @@
         "terms_desc_1": "En cumplimiento con las leyes de protección de datos, GreenTalent tratara su información de manera confidencial y segura.",
         "terms_desc_2": "Sus datos serán utilizados únicamente para conectar aspirantes con empresas registradas.",
         "terms_desc_3": "Puede solicitar la eliminación de sus datos en cualquier momento."
+    },
+    "dashboard_inst": {
+        "portal_title": "Panel Institucional de Talento",
+        "add_student": "Registrar Nuevo Aspirante",
+        "student_list": "Base de Candidatos Inscritos",
+        "register_btn": "Finalizar Inscripción",
+        "select_company": "Empresa para recomendación"
+    },
+    "sidebar": {
+        "dashboard": "Panel Principal",
+        "talent_match": "TalentMatch (Beta)",
+        "jobs": "Oportunidades de Empleo",
+        "internships": "Prácticas y Pasantías",
+        "interviews": "Evaluación IA",
+        "stats": "Impacto y Métricas",
+        "ai_assistant": "Asistente Virtual",
+        "my_profile": "Perfil de Empresa",
+        "candidates": "Gestión de Aspirantes",
+        "settings": "Configuración General"
+    },
+    "empresa_aspirantes": {
+        "title": "Gestión de Talento",
+        "search_placeholder": "Buscar por nombre o puesto...",
+        "table": {
+            "candidate": "Perfil Profesional",
+            "job": "Puesto Aplicado",
+            "match": "Match Tecnológico",
+            "status": "Estatus Proceso",
+            "actions": "Decisión"
+        },
+        "decisions": {
+            "accept": "Aceptar",
+            "reject": "Rechazar",
+            "reviewed": "Revisado"
+        }
     }
 }

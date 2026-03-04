@@ -1,5 +1,11 @@
 const API_URL = "http://127.0.0.1:8000/api";
 
+export const obtenerEmpresas = async () => {
+  const response = await fetch(`${API_URL}/empresas/`);
+  if (!response.ok) throw new Error("Error al obtener empresas");
+  return await response.json();
+};
+
 export const loginUser = async (correo, contrasena) => {
   const response = await fetch(`${API_URL}/login/`, {
     method: "POST",
@@ -79,6 +85,20 @@ export const obtenerCarreras = async () => {
   const response = await fetch(`${API_URL}/carreras/`);
   if (!response.ok) {
     throw new Error("Error al obtener las carreras");
+  }
+  return await response.json();
+};
+
+export const enviarCredenciales = async (data) => {
+  const response = await fetch(`${API_URL}/enviar-credenciales/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
   }
   return await response.json();
 };

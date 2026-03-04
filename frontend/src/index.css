@@ -1,8 +1,9 @@
 @import "tailwindcss";
-@import url('https://fonts.cdnfonts.com/css/gotham');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;800;900&display=swap');
 
 @theme {
-  --font-sans: "Gotham", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
 
   /* Primary Green mapped to #b1b900 */
   --color-green-400: #d6dd1c;
@@ -28,35 +29,47 @@
   --bg-main: #f8fafc;
   --bg-card: #ffffff;
   --text-primary: #163a6d;
-  /* Replaces #1e293b dark blue */
-  --text-secondary: #1988a6;
-  /* Replaces #64748b light blue */
+  --text-secondary: #0f172a;
   --border-color: #f1f5f9;
   --accent-green: #b1b900;
-  /* Replaces #1a8641 / #16a34a secondary green/yellow */
   --sidebar-bg: #ffffff;
+
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.5);
 }
 
 .dark {
-  --bg-main: #0a1128;
-  /* Slightly darker tone of primary dark blue */
-  --bg-card: #0b1a3d;
+  --bg-main: #020617;
+  --bg-card: #0b1426;
   --text-primary: #f8fafc;
-  --text-secondary: #1988a6;
-  --border-color: #163a6d;
+  --text-secondary: #94a3b8;
+  --border-color: #1e293b;
   --accent-green: #b1b900;
-  --sidebar-bg: #0b1a3d;
+  --sidebar-bg: #0b1426;
+
+  --glass-bg: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(30, 41, 59, 0.5);
 
   color-scheme: dark;
 }
 
 html,
 body {
-  font-family: 'Gotham', sans-serif;
+  font-family: var(--font-sans);
   background-color: var(--bg-main);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
 }
 
 /* Base transitions for smooth dark mode */

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useEffect } from 'react';
 import Routing from './routes/Routing';
+import CookieBanner from './Components/PagPrincipal/Home/CookieBanner';
 import './assents/i18n';
 import { obtenerMiPerfil } from './services/services';
 
@@ -33,6 +34,7 @@ function App() {
   return (
     <Router>
       <Routing />
+      <CookieBanner />
     </Router>
   );
 }

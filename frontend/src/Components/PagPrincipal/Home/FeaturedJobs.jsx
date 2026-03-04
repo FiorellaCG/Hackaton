@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MapPin, Briefcase, GraduationCap, Clock, CheckCircle2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LoginModal } from "../Login/Login";
 
 const FeaturedJobs = ({ jobs = [] }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [loginOpen, setLoginOpen] = useState(false);
     const [applicationOpen, setApplicationOpen] = useState(false);
     const [selectedJob, setSelectedJob] = useState(null);
@@ -49,7 +51,10 @@ const FeaturedJobs = ({ jobs = [] }) => {
                         <h2 className="text-3xl font-bold text-slate-800 dark:text-white mb-2">{t('featured_jobs.title')}</h2>
                         <p className="text-slate-500 dark:text-slate-400 font-medium">{t('featured_jobs.subtitle')}</p>
                     </div>
-                    <button className="hidden sm:block px-6 py-2.5 text-[#1a8641] dark:text-green-500 font-bold border-2 border-[#1a8641] dark:border-green-600 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 transition-all active:scale-95">
+                    <button
+                        onClick={() => navigate('/empleos')}
+                        className="hidden sm:block px-6 py-2.5 text-[#1a8641] dark:text-green-500 font-bold border-2 border-[#1a8641] dark:border-green-600 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 transition-all active:scale-95"
+                    >
                         {t('featured_jobs.view_all')}
                     </button>
                 </div>
@@ -107,8 +112,8 @@ const FeaturedJobs = ({ jobs = [] }) => {
                             </div>
 
                             <div className="pt-5 border-t border-slate-100 dark:border-slate-700 flex gap-3 mt-auto">
-                                <button onClick={() => handleApply(job)} className="flex-1 py-2.5 bg-[#163a6d] hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md">
-                                    Aplicar
+                                <button onClick={() => handleApplyClick(job)} className="flex-1 py-2.5 bg-[#163a6d] hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md">
+                                    {t('featured_jobs.apply')}
                                 </button>
                                 <button className="px-4 py-2.5 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-500 hover:text-[#b1b900] hover:border-[#b1b900] rounded-xl transition-all flex items-center justify-center">
                                     <Clock className="w-4 h-4" />
@@ -119,7 +124,10 @@ const FeaturedJobs = ({ jobs = [] }) => {
                 </div>
 
                 <div className="mt-12 text-center sm:hidden">
-                    <button className="w-full px-6 py-4 bg-[#1a8641] text-white font-bold rounded-2xl shadow-lg transition-colors">
+                    <button
+                        onClick={() => navigate('/empleos')}
+                        className="w-full px-6 py-4 bg-[#1a8641] text-white font-bold rounded-2xl shadow-lg transition-colors"
+                    >
                         {t('featured_jobs.view_all')}
                     </button>
                 </div>
@@ -133,8 +141,8 @@ const FeaturedJobs = ({ jobs = [] }) => {
                                 <X size={24} />
                             </button>
                             <CheckCircle2 size={64} className="mx-auto text-green-500 mb-4" />
-                            <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">¡Inscrito correctamente!</h3>
-                            <p className="text-slate-500 font-medium text-sm">Te has postulado a {selectedJob.title}. El estado de tu solicitud ha sido enviado a la empresa.</p>
+                            <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">{t('featured_jobs.success_title')}</h3>
+                            <p className="text-slate-500 font-medium text-sm">{t('featured_jobs.success_desc', { company: selectedJob.company })}</p>
                             <button onClick={() => { setApplicationOpen(false); setSuccessMessage(false); }} className="mt-6 w-full py-3 bg-[#163a6d] hover:bg-slate-800 text-white font-bold rounded-xl transition-all">Continuar</button>
                         </div>
                     ) : (
@@ -142,18 +150,18 @@ const FeaturedJobs = ({ jobs = [] }) => {
                             <button onClick={() => setApplicationOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
                                 <X size={24} />
                             </button>
-                            <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">Aplicar a Vacante</h3>
+                            <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">{t('featured_jobs.apply_modal_title')}</h3>
                             <p className="text-slate-500 mb-6 font-medium text-sm">Vacante: <span className="font-bold text-[#163a6d] dark:text-[#b1b900]">{selectedJob.title}</span> en {selectedJob.company}</p>
 
                             <div className="space-y-4 mb-8">
                                 <div>
                                     <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Tu perfil principal:</label>
-                                    <input type="text" readOnly value="Aspirante Registrado" className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl p-3 text-slate-500" />
+                                    <input type="text" readOnly value={t('dashboard.student')} className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl p-3 text-slate-500 font-bold" />
                                 </div>
                             </div>
                             <div className="flex gap-4">
                                 <button onClick={() => setApplicationOpen(false)} className="flex-1 py-3 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-xl transition-colors">Cancelar</button>
-                                <button onClick={handleConfirmApply} className="flex-1 py-3 bg-[#163a6d] hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg transition-colors">Inscribirse</button>
+                                <button onClick={handleConfirmApply} className="flex-1 py-3 bg-[#163a6d] hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg transition-colors">{t('featured_jobs.confirm_btn')}</button>
                             </div>
                         </div>
                     )}
