@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Search, ChevronLeft, ChevronRight, MoreVertical, Edit2, Shield, UserX } from 'lucide-react';
+import { useTranslation } from "react-i18next";
+import { Search, ChevronLeft, ChevronRight, Edit2, Shield, UserX } from 'lucide-react';
 
 const UserTable = ({ users, onEditRow, onActionClick }) => {
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
@@ -20,12 +21,12 @@ const UserTable = ({ users, onEditRow, onActionClick }) => {
     return (
         <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden transition-all duration-300">
             <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <h3 className="text-xl font-black text-slate-800 dark:text-white">Users List</h3>
+                <h3 className="text-xl font-black text-slate-800 dark:text-white">{t('admin.users_list')}</h3>
                 <div className="relative w-full sm:w-72">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <input
                         type="text"
-                        placeholder="Search user..."
+                        placeholder={t('admin.search_user')}
                         value={searchTerm}
                         onChange={(e) => {
                             setSearchTerm(e.target.value);
@@ -40,11 +41,11 @@ const UserTable = ({ users, onEditRow, onActionClick }) => {
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-slate-50/50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-[11px] font-black uppercase tracking-wider">
-                            <th className="px-6 py-4">Name</th>
-                            <th className="px-6 py-4">Email Address</th>
-                            <th className="px-6 py-4">Role</th>
-                            <th className="px-6 py-4">Status</th>
-                            <th className="px-6 py-4 text-right">Actions</th>
+                            <th className="px-6 py-4">{t('admin.name')}</th>
+                            <th className="px-6 py-4">{t('admin.email')}</th>
+                            <th className="px-6 py-4">{t('admin.role')}</th>
+                            <th className="px-6 py-4">{t('admin.status')}</th>
+                            <th className="px-6 py-4 text-right">{t('admin.actions')}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -62,10 +63,10 @@ const UserTable = ({ users, onEditRow, onActionClick }) => {
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`px-3 py-1 text-xs font-bold rounded-full ${user.isActive
-                                                ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50'
-                                                : 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800/50'
+                                            ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50'
+                                            : 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800/50'
                                             }`}>
-                                            {user.isActive ? 'Active' : 'Inactive'}
+                                            {user.isActive ? t('admin.active') : t('admin.inactive')}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-right">
@@ -73,7 +74,7 @@ const UserTable = ({ users, onEditRow, onActionClick }) => {
                                             onClick={() => onActionClick(user)}
                                             className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-indigo-100 dark:shadow-none"
                                         >
-                                            Manage
+                                            {t('admin.manage')}
                                         </button>
                                     </td>
                                 </tr>
@@ -81,7 +82,7 @@ const UserTable = ({ users, onEditRow, onActionClick }) => {
                         ) : (
                             <tr>
                                 <td colSpan="5" className="px-6 py-10 text-center text-slate-400 dark:text-slate-600 font-bold italic">
-                                    No users found matching your criteria.
+                                    {t('admin.no_users')}
                                 </td>
                             </tr>
                         )}
@@ -92,7 +93,7 @@ const UserTable = ({ users, onEditRow, onActionClick }) => {
             {/* Pagination controls */}
             <div className="p-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center transition-colors">
                 <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                    Page {currentPage} <span className="mx-1 opacity-30">/</span> {totalPages > 0 ? totalPages : 1}
+                    {t('admin.page')} {currentPage} <span className="mx-1 opacity-30">/</span> {totalPages > 0 ? totalPages : 1}
                 </span>
                 <div className="flex gap-2">
                     <button

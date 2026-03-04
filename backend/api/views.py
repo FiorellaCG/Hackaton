@@ -250,6 +250,15 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         usuario.save()
         return Response({'status': 'Cuenta desactivada'})
 
+    @action(detail=False, methods=['get'])
+    def stats(self, request):
+        from .models import Aspirante, Empresa, Vacante
+        return Response({
+            "total_estudiantes": Aspirante.objects.count(),
+            "total_empresas": Empresa.objects.count(),
+            "total_vacantes": Vacante.objects.count()
+        })
+
 
 class PersonaViewSet(viewsets.ModelViewSet):
     queryset = Persona.objects.all()

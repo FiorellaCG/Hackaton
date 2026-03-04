@@ -1,12 +1,12 @@
-
-
 import { X, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { registerUser } from "../../../services/services";
 import "./Login.css";
 
-export default function RegisterModal({ isOpen, onClose }) {
+export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -51,7 +51,7 @@ export default function RegisterModal({ isOpen, onClose }) {
     e.preventDefault();
 
     if (!aceptado) {
-      setError("Debes aceptar los términos y condiciones.");
+      setError(t('auth.must_accept'));
       return;
     }
 
@@ -61,11 +61,10 @@ export default function RegisterModal({ isOpen, onClose }) {
 
       await registerUser(form);
 
-      alert("Registro exitoso");
-      onClose();
-      navigate("/login");
+      alert(t('auth.register_success') || "¡Registro exitoso!");
+      onSwitchToLogin();
     } catch (err) {
-      setError("Error al registrar usuario");
+      setError(t('auth.error_register') || "Error");
     } finally {
       setLoading(false);
     }
@@ -76,7 +75,7 @@ export default function RegisterModal({ isOpen, onClose }) {
       <div className="modal-backdrop" onClick={onClose}></div>
 
       <div className="modal-container">
-        <div className="login-modal modal-large">
+        <div className="login-modal">
           <div className="modal-header">
             <button className="close-button" onClick={onClose}>
               <X className="icon-md" />
@@ -88,8 +87,8 @@ export default function RegisterModal({ isOpen, onClose }) {
               </div>
 
               <div>
-                <h2 className="modal-title">Registro</h2>
-                <p className="modal-subtitle">Crea tu cuenta</p>
+                <h2 className="modal-title">{t('auth.register_title')}</h2>
+                <p className="modal-subtitle">{t('auth.register_subtitle')}</p>
               </div>
             </div>
           </div>
@@ -98,14 +97,14 @@ export default function RegisterModal({ isOpen, onClose }) {
 
             {/* Tipo de usuario */}
             <div className="form-group">
-              <label className="form-label">Tipo de usuario</label>
+              <label className="form-label">{t('auth.user_type')}</label>
               <div className="user-type-selector">
                 <button
                   type="button"
                   className={`user-type-button ${form.rol === "aspirante" ? "active" : ""}`}
                   onClick={() => handleRoleSelect("aspirante")}
                 >
-                  Aspirante
+                  {t('auth.candidate')}
                 </button>
 
                 <button
@@ -113,7 +112,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   className={`user-type-button ${form.rol === "empresa" ? "active" : ""}`}
                   onClick={() => handleRoleSelect("empresa")}
                 >
-                  Empresa
+                  {t('auth.company')}
                 </button>
 
                 <button
@@ -128,10 +127,11 @@ export default function RegisterModal({ isOpen, onClose }) {
 
             {/* Correo */}
             <div className="form-group">
-              <label className="form-label">Correo</label>
+              <label className="form-label">{t('auth.email')}</label>
               <input
                 type="email"
                 name="correo"
+                placeholder={t('auth.email_placeholder')}
                 value={form.correo}
                 onChange={handleChange}
                 className="form-input"
@@ -141,10 +141,11 @@ export default function RegisterModal({ isOpen, onClose }) {
 
             {/* Teléfono */}
             <div className="form-group">
-              <label className="form-label">Teléfono</label>
+              <label className="form-label">{t('auth.phone')}</label>
               <input
                 type="text"
                 name="telefono"
+                placeholder="8888-8888"
                 value={form.telefono}
                 onChange={handleChange}
                 className="form-input"
@@ -154,11 +155,12 @@ export default function RegisterModal({ isOpen, onClose }) {
 
             {/* Contraseña */}
             <div className="form-group">
-              <label className="form-label">Contraseña</label>
+              <label className="form-label">{t('auth.password')}</label>
               <div className="input-wrapper">
                 <input
                   type={mostrarContrasena ? "text" : "password"}
                   name="contrasena"
+                  placeholder="••••••••"
                   value={form.contrasena}
                   onChange={handleChange}
                   className="form-input"
@@ -181,13 +183,13 @@ export default function RegisterModal({ isOpen, onClose }) {
                 className="terms-link"
                 onClick={() => setMostrarModal(true)}
               >
-                📄 Ver Términos y Condiciones
+                📄 {t('auth.see_terms')}
               </button>
 
               <p className={`terms-status ${aceptado ? "accepted" : "not-accepted"}`}>
                 {aceptado
-                  ? "✅ Términos aceptados"
-                  : "❌ Debes aceptar los términos"}
+                  ? `✅ ${t('auth.terms_accepted')}`
+                  : `❌ ${t('auth.must_accept')}`}
               </p>
             </div>
 
@@ -198,9 +200,18 @@ export default function RegisterModal({ isOpen, onClose }) {
               className="submit-button"
               disabled={loading}
             >
-              {loading ? "Registrando..." : "Registrarse"}
+              {loading ? t('auth.registering') : t('auth.register_button')}
             </button>
           </form>
+
+          <div className="switch-auth">
+            <p className="switch-text">
+              {t('auth.already_account')}{" "}
+              <button type="button" className="switch-link" onClick={onSwitchToLogin}>
+                {t('auth.login_link')}
+              </button>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -208,23 +219,12 @@ export default function RegisterModal({ isOpen, onClose }) {
       {mostrarModal && (
         <div className="terms-modal-backdrop">
           <div className="terms-modal">
-            <h3>Términos y Condiciones</h3>
+            <h3>{t('auth.terms')}</h3>
 
             <div className="terms-content">
-              <p>
-                En cumplimiento con las leyes de protección de datos,
-                GreenTalent – ZFL La Lima tratará su información
-                de manera confidencial y segura.
-              </p>
-
-              <p>
-                Sus datos serán utilizados únicamente para conectar
-                aspirantes con empresas registradas.
-              </p>
-
-              <p>
-                Puede solicitar la eliminación de sus datos en cualquier momento.
-              </p>
+              <p>{t('auth.terms_desc_1')}</p>
+              <p>{t('auth.terms_desc_2')}</p>
+              <p>{t('auth.terms_desc_3')}</p>
             </div>
 
             <div className="terms-actions">
@@ -233,7 +233,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                 className="btn-reject"
                 onClick={handleRechazarConsentimiento}
               >
-                No acepto
+                {t('auth.reject')}
               </button>
 
               <button
@@ -241,7 +241,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                 className="btn-accept"
                 onClick={handleAceptarConsentimiento}
               >
-                Acepto
+                {t('auth.accept')}
               </button>
             </div>
           </div>

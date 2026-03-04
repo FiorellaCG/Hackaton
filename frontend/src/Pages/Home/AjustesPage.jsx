@@ -77,7 +77,7 @@ function AjustesPage() {
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         if (passwords.new !== passwords.confirm) {
-            setPassStatus({ type: "error", msg: "Las nuevas contraseñas no coinciden" });
+            setPassStatus({ type: "error", msg: t('settings.passwords_mismatch') });
             return;
         }
 
@@ -86,25 +86,25 @@ function AjustesPage() {
 
         try {
             await cambiarPassword(usuario.id, passwords.current, passwords.new);
-            setPassStatus({ type: "success", msg: t('settings.success_password') || "Contraseña actualizada" });
+            setPassStatus({ type: "success", msg: t('settings.success_password') });
             setPasswords({ current: "", new: "", confirm: "" });
         } catch (error) {
-            setPassStatus({ type: "error", msg: error.error || "Error" });
+            setPassStatus({ type: "error", msg: error.error || t('settings.error_generic') });
         } finally {
             setPasswordLoading(false);
         }
     };
 
     const handleDeleteAccount = async () => {
-        if (window.confirm("¿ESTÁS COMPLETAMENTE SEGURO?")) {
-            const confirmEmail = window.prompt("Escribe tu correo para confirmar:");
+        if (window.confirm(t('settings.confirm_delete_title'))) {
+            const confirmEmail = window.prompt(t('settings.confirm_delete_input'));
             if (confirmEmail === usuario.correo) {
                 try {
                     await eliminarCuenta(usuario.id);
                     localStorage.clear();
                     window.location.href = "/";
                 } catch (error) {
-                    alert("Error");
+                    alert(t('settings.error_generic'));
                 }
             }
         }
@@ -264,7 +264,7 @@ function AjustesPage() {
                             <div className="pt-8 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between">
                                 <div className="space-y-1">
                                     <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight">{t('settings.system_language')}</h3>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">{i18n.language.startsWith('es') ? 'Español (ES)' : 'English (EN)'}</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">{i18n.language.startsWith('es') ? t('settings.lang_es') : t('settings.lang_en')}</p>
                                 </div>
                                 <button
                                     onClick={toggleLanguage}
@@ -299,7 +299,7 @@ function AjustesPage() {
                         </div>
                         <span className="text-[10px] font-black uppercase tracking-widest">{t('settings.data_protected')}</span>
                     </div>
-                    <p className="text-[10px] font-black uppercase tracking-widest">GreenTalent AI Platform © 2026</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest">{t('brand.name')} AI Platform © 2026</p>
                 </footer>
             </main>
         </div>

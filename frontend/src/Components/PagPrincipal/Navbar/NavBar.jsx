@@ -96,6 +96,10 @@ const Navbar = () => {
         <LoginModal
           isOpen={loginOpen}
           onClose={() => setLoginOpen(false)}
+          onSwitchToRegister={() => {
+            setLoginOpen(false);
+            setRegisterOpen(true);
+          }}
           onLoginSuccess={(userData) => setUsuario(userData)}
         />
       )}
@@ -104,6 +108,10 @@ const Navbar = () => {
         <RegistroModal
           isOpen={registerOpen}
           onClose={() => setRegisterOpen(false)}
+          onSwitchToLogin={() => {
+            setRegisterOpen(false);
+            setLoginOpen(true);
+          }}
           onRegisterSuccess={(userData) => setUsuario(userData)}
         />
       )}
