@@ -8,6 +8,14 @@ const AdminLayout = () => {
     const location = useLocation();
     const { t, i18n } = useTranslation();
 
+    // SEGURIDAD ADICIONAL: Si por alguna razón RequireAdminAuth fallara, 
+    // este check secundario sacará al usuario si no es admin.
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    if (usuario.rol !== 'admin' && usuario.correo !== 'admin@gmail.com') {
+        window.location.href = '/';
+        return null; // O un spinner
+    }
+
     const navItems = [
         { path: '/admin', label: t('admin.analytics'), icon: BarChart3 },
         { path: '/admin/users', label: t('admin.users'), icon: Users },

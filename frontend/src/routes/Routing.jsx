@@ -25,6 +25,7 @@ import VacantesManagement from "../Pages/admin/VacantesManagement";
 import ProgramasManagement from "../Pages/admin/ProgramasManagement";
 import PracticasManagement from "../Pages/admin/PracticasManagement";
 import ReportsDashboard from "../Pages/admin/ReportsDashboard";
+import RequireAdminAuth from "../Components/admin/RequireAdminAuth";
 
 import CreateCompanyInstitutionForm from "../Components/admin/CreateCompanyInstitutionForm";
 
@@ -75,21 +76,17 @@ function Routing() {
         </Route>
       </Route>
 
-      {/* ADMIN ROUTES CON NESTING */}
-      <Route path="/admin" element={<AdminLayout />}>
-        {/* Dashboard por defecto */}
-        <Route index element={<ReportsDashboard />} />
-
-        {/* Users */}
-        <Route path="users" element={<UsersManagement />} />
-        <Route path="users/create-company" element={<CreateCompanyInstitutionForm />} />
-
-        {/* Content */}
-        <Route path="content" element={<ContentManagement />} />
-        <Route path="content/vacantes" element={<VacantesManagement />} />
-        <Route path="content/programas" element={<ProgramasManagement />} />
-        <Route path="content/practicas" element={<PracticasManagement />} />
-
+      {/* ADMIN ROUTES PROTEGIDAS */}
+      <Route path="/admin" element={<RequireAdminAuth />}>
+        <Route element={<AdminLayout />}>
+          <Route index element={<ReportsDashboard />} />
+          <Route path="users" element={<UsersManagement />} />
+          <Route path="users/create-company" element={<CreateCompanyInstitutionForm />} />
+          <Route path="content" element={<ContentManagement />} />
+          <Route path="content/vacantes" element={<VacantesManagement />} />
+          <Route path="content/programas" element={<ProgramasManagement />} />
+          <Route path="content/practicas" element={<PracticasManagement />} />
+        </Route>
       </Route>
     </Routes>
   );

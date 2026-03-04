@@ -25,7 +25,9 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess, onSwitchToRegister
       localStorage.setItem("usuario", JSON.stringify(data));
       if (onLoginSuccess) onLoginSuccess(data);
 
-      if (data.rol === "empresa") {
+      if (data.rol === "admin" || data.correo === "admin@gmail.com") {
+        navigate("/admin");
+      } else if (data.rol === "empresa") {
         navigate("/empresa/dashboard/perfil");
       } else if (data.rol === "institucion") {
         navigate("/institucion/dashboard");

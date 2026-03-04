@@ -65,9 +65,10 @@ const Navbar = () => {
             <li>
               <Link
                 to={
-                  usuario.rol === 'empresa' ? '/empresa/dashboard' :
-                    usuario.rol === 'institucion' ? '/institucion/dashboard' :
-                      '/dashboard-aspirante'
+                  usuario.rol === 'admin' ? '/admin' :
+                    usuario.rol === 'empresa' ? '/empresa/dashboard' :
+                      usuario.rol === 'institucion' ? '/institucion/dashboard' :
+                        '/dashboard-aspirante'
                 }
                 className="active-link"
               >
