@@ -1,25 +1,29 @@
 import React from 'react';
+import { useTranslation } from "react-i18next";
 
 const UserTabs = ({ activeTab, onTabSelect }) => {
-    const tabs = ['All Users', 'Companies', 'Institutions', 'Students'];
+    const { t } = useTranslation();
+    const tabs = [
+        { id: 'All Users', label: t('admin.all_users') },
+        { id: 'Companies', label: t('admin.companies_tab') },
+        { id: 'Institutions', label: t('admin.institutions_tab') }
+    ];
 
     return (
-        <div style={{ display: 'flex', gap: '10px', borderBottom: '1px solid #ddd', paddingBottom: '10px', marginBottom: '15px' }}>
+        <div className="flex gap-2 border-b border-slate-100 dark:border-slate-800 mb-6 overflow-x-auto pb-px">
             {tabs.map((tab) => (
                 <button
-                    key={tab}
-                    onClick={() => onTabSelect(tab)}
-                    style={{
-                        padding: '8px 16px',
-                        border: 'none',
-                        borderBottom: activeTab === tab ? '2px solid #0056b3' : 'none',
-                        backgroundColor: 'transparent',
-                        cursor: 'pointer',
-                        fontWeight: activeTab === tab ? 'bold' : 'normal',
-                        color: activeTab === tab ? '#0056b3' : '#555',
-                    }}
+                    key={tab.id}
+                    onClick={() => onTabSelect(tab.id)}
+                    className={`px-6 py-4 text-xs font-black uppercase tracking-widest transition-all relative whitespace-nowrap ${activeTab === tab.id
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400'
+                        }`}
                 >
-                    {tab}
+                    {tab.label}
+                    {activeTab === tab.id && (
+                        <div className="absolute bottom-0 left-0 w-full h-1 bg-green-500 rounded-t-full shadow-[0_-4px_10px_rgba(34,197,94,0.3)]"></div>
+                    )}
                 </button>
             ))}
         </div>

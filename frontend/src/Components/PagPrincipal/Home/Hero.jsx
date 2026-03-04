@@ -56,10 +56,10 @@ const Hero = ({ onSearch }) => {
 
             <div className="max-w-4xl w-full text-center space-y-12">
                 <div className="space-y-4">
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-800 dark:text-white tracking-tight leading-[1.1]">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
                         {t('hero.title')}
                     </h1>
-                    <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">
+                    <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-medium max-w-2xl mx-auto">
                         {t('hero.subtitle')}
                     </p>
                 </div>

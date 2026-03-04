@@ -27,11 +27,31 @@ class UsuarioSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def get_nombre_completo(self, obj):
-        try:
-            persona = obj.persona
-            return f"{persona.nombre} {persona.apellidos}"
-        except:
-            return "Sin perfil"
+        if obj.rol == 'aspirante' or obj.rol == 'admin':
+            try:
+                persona = obj.persona
+                return f"{persona.nombre} {persona.apellidos}"
+            except:
+                pass
+        
+        if obj.rol == 'empresa':
+            try:
+                # Assuming one-to-many or one-to-one, obtaining the first one if it exists
+                empresa = obj.empresa_set.first()
+                if empresa:
+                    return empresa.nombre
+            except:
+                pass
+        
+        if obj.rol == 'institucion':
+            try:
+                institucion = obj.institucion_set.first()
+                if institucion:
+                    return institucion.nombre
+            except:
+                pass
+                
+        return obj.correo
 
     def create(self, validated_data):
         password = validated_data.pop('contrasena')

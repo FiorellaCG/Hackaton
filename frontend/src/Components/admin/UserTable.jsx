@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Search, ChevronLeft, ChevronRight, Edit2, Shield, UserX } from 'lucide-react';
 
