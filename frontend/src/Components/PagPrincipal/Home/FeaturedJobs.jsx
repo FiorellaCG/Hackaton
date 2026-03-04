@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Briefcase, GraduationCap, Clock, CheckCircle2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Heart, MapPin, Briefcase, GraduationCap, X, CheckCircle2 } from "lucide-react";
+import { toggleFavorito, postularVacante } from "../../../services/services";
 import { LoginModal } from "../Login/Login";
 
 const FeaturedJobs = ({ jobs = [] }) => {
@@ -11,6 +12,7 @@ const FeaturedJobs = ({ jobs = [] }) => {
     const [applicationOpen, setApplicationOpen] = useState(false);
     const [selectedJob, setSelectedJob] = useState(null);
     const [successMessage, setSuccessMessage] = useState(false);
+    const [favoritos, setFavoritos] = useState({}); // Tracking local likes
 
     const handleApplyClick = (job) => {
         const user = localStorage.getItem("usuario");
@@ -22,11 +24,38 @@ const FeaturedJobs = ({ jobs = [] }) => {
         }
     };
 
-    const handleConfirmApply = () => {
+    const handleLike = async (e, jobId) => {
+        e.stopPropagation();
+        const userStr = localStorage.getItem("usuario");
+        if (!userStr) {
+            setLoginOpen(true);
+            return;
+        }
+
+        const user = JSON.parse(userStr);
+        try {
+            await toggleFavorito(user.id, jobId);
+            setFavoritos(prev => ({
+                ...prev,
+                [jobId]: !prev[jobId]
+            }));
+            // Opcional: mostrar un mini toast o feedback
+        } catch (error) {
+            console.error("Error toggling favorite:", error);
+        }
+    };
+
+    const handleConfirmApply = async () => {
         try {
             const user = JSON.parse(localStorage.getItem("usuario") || "{}");
-            const postulaciones = JSON.parse(localStorage.getItem('postulaciones_empresa') || '[]');
 
+            // Send Application to API if it is a real Job (has UUID)
+            if (selectedJob.id && typeof selectedJob.id === 'string' && selectedJob.id.includes('-') && !selectedJob.id.includes('local')) {
+                await postularVacante(user.id, selectedJob.id);
+            }
+
+            // Keep local version for mocks / local
+            const postulaciones = JSON.parse(localStorage.getItem('postulaciones_empresa') || '[]');
             const nuevaPostulacion = {
                 id: Date.now(),
                 jobId: selectedJob.id,
@@ -115,8 +144,13 @@ const FeaturedJobs = ({ jobs = [] }) => {
                                 <button onClick={() => handleApplyClick(job)} className="flex-1 py-2.5 bg-[#163a6d] hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md">
                                     {t('featured_jobs.apply')}
                                 </button>
-                                <button className="px-4 py-2.5 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-500 hover:text-[#b1b900] hover:border-[#b1b900] rounded-xl transition-all flex items-center justify-center">
-                                    <Clock className="w-4 h-4" />
+                                <button
+                                    onClick={(e) => handleLike(e, job.id)}
+                                    className={`px-4 py-2.5 bg-white dark:bg-slate-800 border-2 rounded-xl transition-all flex items-center justify-center ${favoritos[job.id]
+                                        ? 'border-rose-500 text-rose-500 bg-rose-50 dark:bg-rose-900/20'
+                                        : 'border-slate-200 dark:border-slate-700 text-slate-500 hover:text-rose-500 hover:border-rose-500'}`}
+                                >
+                                    <Heart className={`w-4 h-4 ${favoritos[job.id] ? 'fill-current' : ''}`} />
                                 </button>
                             </div>
                         </div>

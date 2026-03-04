@@ -246,6 +246,7 @@
     "dashboard": {
         "title": "Panel de Control",
         "welcome": "¡Bienvenido a {{brand}}!",
+        "welcome_back": "¡Bienvenido de nuevo, {{name}}!",
         "incomplete_profile": "Parece que aún no has completado tu perfil profesional. Hazlo ahora para que las empresas puedan encontrarte.",
         "complete_profile": "Completar mi Perfil",
         "edit_profile": "Editar Perfil",
@@ -354,7 +355,7 @@
         "interviews": "Evaluación IA",
         "stats": "Impacto y Métricas",
         "capacitaciones": "Capacitaciones",
-        "my_profile": "Perfil de Empresa",
+        "my_profile": "Mi Perfil",
         "candidates": "Gestión de Aspirantes",
         "settings": "Configuración General"
     },

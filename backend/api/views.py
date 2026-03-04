@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Count
+from django.core.mail import send_mail
+from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -26,6 +28,111 @@ from .serializers import (
     CrearPerfilAspiranteSerializer, CrearPerfilEmpresaSerializer, LoginSerializer, MiPerfilSerializer,
     FavoritoSerializer, InscripcionCapacitacionSerializer
 )
+
+# =====================================================
+# ENVIAR CREDENCIALES AL ASPIRANTE (EMAIL)
+# =====================================================
+
+class EnviarCredencialesAspiranteView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        correo = request.data.get('correo')
+        contrasena = request.data.get('contrasena')
+        nombre = request.data.get('nombre', 'Estudiante')
+        institucion = request.data.get('institucion', 'tu institución')
+
+        if not correo or not contrasena:
+            return Response({'error': 'Correo y contraseña son requeridos'}, status=status.HTTP_400_BAD_REQUEST)
+
+        asunto = '🎉 ¡Bienvenido a GreenTalent! Tus credenciales de acceso'
+
+        cuerpo_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body {{ font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }}
+            .container {{ max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }}
+            .header {{ background: linear-gradient(135deg, #1a8641, #0f5e2f); padding: 40px 30px; text-align: center; }}
+            .header h1 {{ color: white; margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -1px; }}
+            .header p {{ color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 14px; }}
+            .body {{ padding: 40px 30px; }}
+            .greeting {{ font-size: 18px; font-weight: bold; color: #1a2236; margin-bottom: 12px; }}
+            .text {{ color: #555; line-height: 1.6; font-size: 14px; margin-bottom: 20px; }}
+            .credentials-box {{ background: #f8fffe; border: 2px solid #1a8641; border-radius: 12px; padding: 24px; margin: 24px 0; }}
+            .credentials-box .label {{ font-size: 11px; font-weight: 900; color: #1a8641; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }}
+            .credentials-box .value {{ font-size: 16px; font-weight: bold; color: #1a2236; background: white; border: 1px solid #e0e0e0; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; font-family: monospace; }}
+            .btn {{ display: inline-block; background: #1a8641; color: white; text-decoration: none; padding: 14px 32px; border-radius: 10px; font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }}
+            .footer {{ padding: 20px 30px; text-align: center; background: #f9f9f9; color: #aaa; font-size: 11px; }}
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🌿 GreenTalent</h1>
+              <p>Zona Franca La Lima · Plataforma de Talento</p>
+            </div>
+            <div class="body">
+              <p class="greeting">¡Hola, {nombre}! 👋</p>
+              <p class="text">
+                Has sido registrado(a) en <strong>GreenTalent</strong> por <strong>{institucion}</strong>.
+                A continuación encontrarás tus credenciales de acceso a la plataforma.
+              </p>
+
+              <div class="credentials-box">
+                <div class="label">Correo de acceso</div>
+                <div class="value">{correo}</div>
+                <div class="label">Contraseña temporal</div>
+                <div class="value">{contrasena}</div>
+              </div>
+
+              <p class="text">
+                Te recomendamos ingresar y <strong>cambiar tu contraseña</strong> lo antes posible desde la sección de Ajustes.
+              </p>
+
+              <a href="http://localhost:5173/login" class="btn">Iniciar sesión ahora →</a>
+
+              <p class="text" style="margin-top:24px; font-size:12px; color:#999;">
+                Si no esperabas este correo, puedes ignorarlo. Si tienes dudas, contacta a tu institución.
+              </p>
+            </div>
+            <div class="footer">
+              © 2025 GreenTalent · Zona Franca La Lima · Todos los derechos reservados
+            </div>
+          </div>
+        </body>
+        </html>
+        """
+
+        cuerpo_texto = f"""
+        ¡Bienvenido a GreenTalent, {nombre}!
+
+        Has sido registrado por: {institucion}
+
+        Tus credenciales:
+        - Correo: {correo}
+        - Contraseña temporal: {contrasena}
+
+        Ingresa en: http://localhost:5173/login
+
+        Recuerda cambiar tu contraseña después de iniciar sesión.
+        """
+
+        try:
+            send_mail(
+                subject=asunto,
+                message=cuerpo_texto,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[correo],
+                html_message=cuerpo_html,
+                fail_silently=False,
+            )
+            return Response({'mensaje': f'Correo enviado a {correo}'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 # =====================================================
 # MI PERFIL (GET)
@@ -61,6 +168,52 @@ class MiPerfilView(APIView):
                 "logo_url": request.build_absolute_uri(empresa.logo_url.url) if empresa.logo_url else None,
                 "perfil_completo": True,
                 "rol": "empresa"
+            }, status=status.HTTP_200_OK)
+
+        if usuario.rol == 'institucion':
+            institucion = usuario.institucion_set.first()
+            if not institucion:
+                return Response({"usuario_id": str(usuario.id), "perfil_completo": False, "rol": "institucion"}, status=status.HTTP_200_OK)
+
+            # Practicantes vinculados a esta institución
+            practicantes = Practicante.objects.filter(institucion=institucion).select_related('aspirante__usuario__persona')
+            practicantes_data = []
+            for p in practicantes:
+                estudiante = p.aspirante
+                try:
+                    persona = estudiante.usuario.persona
+                    nom = f"{persona.nombre} {persona.apellidos}"
+                    correo = estudiante.usuario.correo
+                except:
+                    nom = "Estudiante"
+                    correo = ""
+                practicantes_data.append({
+                    "id": str(p.id),
+                    "nombre": nom,
+                    "correo": correo,
+                    "programa": p.nombre_programa,
+                    "nivel_academico": p.nivel_academico,
+                    "estado": p.estado_pasantia,
+                    "horas_requeridas": p.horas_requeridas,
+                    "fecha_inicio": p.fecha_inicio.isoformat() if p.fecha_inicio else None,
+                    "fecha_fin": p.fecha_fin.isoformat() if p.fecha_fin else None,
+                })
+
+            return Response({
+                "usuario_id": str(usuario.id),
+                "institucion_id": str(institucion.id),
+                "nombre": institucion.nombre,
+                "titulo": institucion.titulo,
+                "tipo": institucion.tipo,
+                "nombre_contacto": institucion.nombre_contacto,
+                "correo_contacto": institucion.correo_contacto,
+                "correo": usuario.correo,
+                "telefono": usuario.telefono,
+                "activa": institucion.activa,
+                "total_practicantes": len(practicantes_data),
+                "practicantes": practicantes_data,
+                "perfil_completo": True,
+                "rol": "institucion"
             }, status=status.HTTP_200_OK)
 
         try:
@@ -103,7 +256,7 @@ class MiPerfilView(APIView):
                 "id": p.id,
                 "cargo": p.vacante.titulo,
                 "empresa": p.vacante.empresa.nombre,
-                "tipo": p.vacante.get_tipo_vacante_display(),
+                "tipo": p.vacante.tipo_vacante,
                 "estado": p.estado,
                 "fecha": p.postulado_en.isoformat() if p.postulado_en else None
             })
@@ -131,12 +284,12 @@ class MiPerfilView(APIView):
             "habilidades_tecnicas": aspirante.habilidades_tecnicas,
             "habilidades_blandas": aspirante.habilidades_blandas,
             "experiencia": aspirante.experiencia,
-            "practicante": hasattr(aspirante, 'practicante'),
+            "practicante": hasattr(aspirante, 'practicante_set') and aspirante.practicante_set.exists(),
             "postulaciones": postulaciones_data,
             "favoritos": [],
             "capacitaciones_inscritas": [],
             "preferencias": usuario.preferencias,
-            "institucion_recomendadora": aspirante.institucion_origen.nombre if aspirante.institucion_origen else None
+            "institucion_origen": None,
         }
 
         # --- FAVORITOS ---
@@ -162,6 +315,24 @@ class MiPerfilView(APIView):
                 "fecha_inscripcion": ins.fecha_inscripcion.isoformat()
             })
 
+        # --- INSTITUCIÓN DE ORIGEN (via Practicante) ---
+        practicante_obj = aspirante.practicante_set.select_related('institucion').first()
+        if practicante_obj and practicante_obj.institucion:
+            inst = practicante_obj.institucion
+            data["institucion_origen"] = {
+                "id": str(inst.id),
+                "nombre": inst.nombre,
+                "titulo": inst.titulo,
+                "tipo": inst.tipo,
+                "nombre_contacto": inst.nombre_contacto,
+                "correo_contacto": inst.correo_contacto,
+                "programa": practicante_obj.nombre_programa,
+                "nivel_academico": practicante_obj.nivel_academico,
+                "horas_requeridas": practicante_obj.horas_requeridas,
+                "estado_pasantia": practicante_obj.estado_pasantia,
+                "fecha_inicio": practicante_obj.fecha_inicio.isoformat() if practicante_obj.fecha_inicio else None,
+                "fecha_fin": practicante_obj.fecha_fin.isoformat() if practicante_obj.fecha_fin else None,
+            }
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -560,8 +731,24 @@ class VacanteViewSet(viewsets.ModelViewSet):
 
 
 class PostulacionViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
     queryset = Postulacion.objects.all()
     serializer_class = PostulacionSerializer
+
+    def create(self, request, *args, **kwargs):
+        # Allow aspirante field to be either aspirante_id or usuario_id
+        aspirante_val = request.data.get('aspirante')
+        if aspirante_val:
+            try:
+                # Si no existe como Aspirante ID, tratar como Usuario ID
+                Aspirante.objects.get(id=aspirante_val)
+            except Aspirante.DoesNotExist:
+                try:
+                    asp = Aspirante.objects.get(usuario__id=aspirante_val)
+                    request.data['aspirante'] = str(asp.id)
+                except Aspirante.DoesNotExist:
+                    pass
+        return super().create(request, *args, **kwargs)
 
 
 class CurriculoViewSet(viewsets.ModelViewSet):
@@ -601,7 +788,20 @@ class FavoritoViewSet(viewsets.ModelViewSet):
         vacante_id = request.data.get('vacante_id')
         capacitacion_id = request.data.get('capacitacion_id')
 
-        filtros = {'aspirante_id': aspirante_id}
+        if not aspirante_id:
+            return Response({"error": "Falta aspirante_id"}, status=400)
+
+        # Acepta tanto aspirante_id real como usuario_id
+        try:
+            aspirante_obj = Aspirante.objects.get(id=aspirante_id)
+        except (Aspirante.DoesNotExist, Exception):
+            try:
+                # Tratar como usuario_id
+                aspirante_obj = Aspirante.objects.get(usuario__id=aspirante_id)
+            except Aspirante.DoesNotExist:
+                return Response({"error": "Aspirante no encontrado"}, status=404)
+
+        filtros = {'aspirante': aspirante_obj}
         if vacante_id: filtros['vacante_id'] = vacante_id
         elif capacitacion_id: filtros['capacitacion_id'] = capacitacion_id
         else: return Response({"error": "Falta vacante_id o capacitacion_id"}, status=400)
@@ -619,3 +819,18 @@ class InscripcionCapacitacionViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = InscripcionCapacitacion.objects.all()
     serializer_class = InscripcionCapacitacionSerializer
+
+    def create(self, request, *args, **kwargs):
+        # Allow aspirante field to be either aspirante_id or usuario_id
+        aspirante_val = request.data.get('aspirante')
+        if aspirante_val:
+            try:
+                # Si no existe como Aspirante ID, tratar como Usuario ID
+                Aspirante.objects.get(id=aspirante_val)
+            except Aspirante.DoesNotExist:
+                try:
+                    asp = Aspirante.objects.get(usuario__id=aspirante_val)
+                    request.data['aspirante'] = str(asp.id)
+                except Aspirante.DoesNotExist:
+                    pass
+        return super().create(request, *args, **kwargs)

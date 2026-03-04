@@ -1,30 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { useTranslation } from "react-i18next";
-import { allJobs } from '../../data/mockJobs';
 import MatchCard from '../../Components/PagPrincipal/TalentMatch/MatchCard';
 import Sidebar from '../../Components/PagPrincipal/Sidebar';
-import NavBar from '../../Components/PagPrincipal/Navbar/NavBar';
-import { RefreshCcw, Heart, X, Sparkles, Info } from 'lucide-react';
+import { RefreshCcw, Heart, X, Sparkles, Info, CheckCircle } from 'lucide-react';
+import { obtenerVacantesAdmin, toggleFavorito } from '../../services/services';
 
 const TalentMatchPage = () => {
     const { t } = useTranslation();
     const [jobs, setJobs] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
-    const [lastAction, setLastAction] = useState(null); // 'like' or 'dislike'
+    const [lastAction, setLastAction] = useState(null);
+    const [liked, setLiked] = useState([]);
+    const [toast, setToast] = useState(null);
     const x = useMotionValue(0);
 
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
     useEffect(() => {
-        // Mezclar trabajos para que parezca nuevo cada vez
-        const shuffled = [...allJobs].sort(() => Math.random() - 0.5);
-        setJobs(shuffled);
+        obtenerVacantesAdmin()
+            .then(data => {
+                const shuffled = [...data]
+                    .sort(() => Math.random() - 0.5)
+                    .map(v => ({
+                        id: v.id,
+                        title: v.titulo,
+                        company: v.nombre_empresa || (v.empresa && v.empresa.nombre) || 'Empresa',
+                        location: v.canton || 'Costa Rica',
+                        type: v.tipo_vacante || 'Empleo',
+                        schedule: v.nivel_educativo || '',
+                        level: v.nivel_educativo || '',
+                        salary: 'A convenir',
+                        logo: v.logo_url || `https://picsum.photos/seed/${String(v.id).slice(0, 8)}/200/200`,
+                        tags: []
+                    }));
+                setJobs(shuffled);
+            })
+            .catch(() => setJobs([]));
     }, []);
 
-    const handleSwipe = (direction) => {
-        setLastAction(direction === 'right' ? 'like' : 'dislike');
+    const showToast = (msg) => {
+        setToast(msg);
+        setTimeout(() => setToast(null), 2500);
+    };
 
-        // Simular un pequeño delay para la animación
+    const handleSwipe = async (direction) => {
+        setLastAction(direction === 'right' ? 'like' : 'dislike');
+        const currentJob = jobs[currentIndex];
+
+        if (direction === 'right' && currentJob && usuario?.id) {
+            try {
+                await toggleFavorito(usuario.id, currentJob.id, null);
+                setLiked(prev => [...prev, currentJob]);
+                showToast(`¡${currentJob.title} guardado en favoritos!`);
+            } catch (err) {
+                console.error('Error al guardar favorito:', err);
+            }
+        }
+
         setTimeout(() => {
             setCurrentIndex(prev => prev + 1);
             setLastAction(null);
@@ -34,7 +68,7 @@ const TalentMatchPage = () => {
 
     const resetDeck = () => {
         setCurrentIndex(0);
-        setJobs([...jobs].sort(() => Math.random() - 0.5));
+        setJobs(prev => [...prev].sort(() => Math.random() - 0.5));
     };
 
     const currentJob = jobs[currentIndex];
@@ -44,7 +78,23 @@ const TalentMatchPage = () => {
             <Sidebar isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
 
             <main className="flex-1 lg:ml-72 flex flex-col items-center justify-center p-4 lg:p-10 relative">
-                {/* Header info */}
+
+                {/* Toast notification */}
+                <AnimatePresence>
+                    {toast && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -40 }}
+                            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-3 bg-green-600 text-white rounded-2xl shadow-2xl font-bold text-sm"
+                        >
+                            <CheckCircle size={18} />
+                            {toast}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Header */}
                 <div className="absolute top-10 text-center">
                     <div className="flex items-center justify-center gap-2 mb-2">
                         <Sparkles className="text-green-500 w-5 h-5" />
@@ -55,6 +105,11 @@ const TalentMatchPage = () => {
                     <p className="text-slate-500 dark:text-slate-400 font-bold max-w-xl mx-auto uppercase tracking-widest text-sm">
                         {t('talent_match.subtitle')}
                     </p>
+                    {liked.length > 0 && (
+                        <p className="mt-2 text-green-600 dark:text-green-400 font-black text-xs uppercase tracking-widest">
+                            ❤️ {liked.length} vacante{liked.length > 1 ? 's' : ''} guardada{liked.length > 1 ? 's' : ''} en tu perfil
+                        </p>
+                    )}
                 </div>
 
                 {/* Card Container */}
@@ -79,6 +134,11 @@ const TalentMatchPage = () => {
                                 <h2 className="text-2xl font-black text-slate-800 dark:text-white mb-2 uppercase">
                                     {t('talent_match.no_more')}
                                 </h2>
+                                {liked.length > 0 && (
+                                    <p className="text-green-600 font-bold mb-4 text-sm">
+                                        ✅ {liked.length} vacante(s) guardadas en tus favoritos
+                                    </p>
+                                )}
                                 <button
                                     onClick={resetDeck}
                                     className="flex items-center gap-3 px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-black uppercase tracking-widest transition-all shadow-xl shadow-green-900/20 active:scale-95"
@@ -89,11 +149,6 @@ const TalentMatchPage = () => {
                             </motion.div>
                         )}
                     </AnimatePresence>
-
-                    {/* Background stack decoration */}
-                    {!currentJob === false && currentIndex < jobs.length - 1 && (
-                        <div className="absolute inset-0 -z-10 translate-y-4 scale-95 opacity-40 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-lg"></div>
-                    )}
                 </div>
 
                 {/* Action Buttons */}

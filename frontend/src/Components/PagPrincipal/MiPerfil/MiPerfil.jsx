@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { obtenerMiPerfil } from "../../../services/services";
 import FormAspirante from "./FormAspirante";
-import { User, Briefcase, MapPin, Phone, GraduationCap, Edit, CheckCircle2, ChevronRight, UploadCloud, FileText, Sparkles, Building2, Code, Database, Cpu, Globe, Users, MessageSquare, Clock, Shield, Star } from "lucide-react";
+import { User, Briefcase, MapPin, Phone, GraduationCap, Edit, CheckCircle2, ChevronRight, UploadCloud, FileText, Sparkles, Building2, Code, Database, Cpu, Globe, Users, MessageSquare, Clock, Shield, Star, BookOpen } from "lucide-react";
 import FormEmpresa from "./FormEmpresa";
 import CVIAModal from "./CVIAModal";
+import FormExperiencia from "./FormExperiencia";
 
 const MiPerfil = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const MiPerfil = () => {
   const [cargando, setCargando] = useState(true);
   const [mostrarForm, setMostrarForm] = useState(false);
   const [mostrarCVIAModal, setMostrarCVIAModal] = useState(false);
+  const [mostrarFormExp, setMostrarFormExp] = useState(false);
   const [skillInfo, setSkillInfo] = useState(null);
 
   const iconsMap = { Code, Database, Cpu, Globe, Users, MessageSquare, Clock, Shield };
@@ -24,36 +26,36 @@ const MiPerfil = () => {
     return <IconComponent className="w-4 h-4" />;
   };
 
-  useEffect(() => {
-    const cargarPerfil = async () => {
-      try {
-        if (!usuario.id) {
-          setCargando(false);
-          return;
-        }
-        const data = await obtenerMiPerfil(usuario.id);
-
-        if (data && data.perfil_completo === false) {
-          // Si el backend explicitly dice que el perfil está incompleto, mostramos el formulario
-          setPerfil(data);
-          setMostrarForm(true);
-        } else if (data && data.persona && data.persona.nombre) {
-          setPerfil({
-            ...data.usuario,
-            ...data.persona,
-            ...(data.aspirante || {})
-          });
-        } else if (data && data.nombre) {
-          setPerfil(data);
-        } else {
-          setMostrarForm(true);
-        }
-      } catch (error) {
-        setMostrarForm(true);
-      } finally {
+  const cargarPerfil = async () => {
+    try {
+      if (!usuario.id) {
         setCargando(false);
+        return;
       }
-    };
+      const data = await obtenerMiPerfil(usuario.id);
+
+      if (data && data.perfil_completo === false) {
+        setPerfil(data);
+        setMostrarForm(true);
+      } else if (data && data.persona && data.persona.nombre) {
+        setPerfil({
+          ...data.usuario,
+          ...data.persona,
+          ...(data.aspirante || {})
+        });
+      } else if (data && data.nombre) {
+        setPerfil(data);
+      } else {
+        setMostrarForm(true);
+      }
+    } catch (error) {
+      setMostrarForm(true);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
     cargarPerfil();
   }, []);
 
@@ -181,43 +183,232 @@ const MiPerfil = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+            {/* EXPERIENCIA */}
             <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
-              <h3 className="text-sm font-black text-slate-800 dark:text-white mb-5 flex items-center gap-2 uppercase tracking-wider">
-                <CheckCircle2 className="w-4 h-4 text-green-500" /> Postulaciones Recientes
-              </h3>
-
-              <div className="space-y-3">
-                {perfil.postulaciones && perfil.postulaciones.length > 0 ? (
-                  perfil.postulaciones.map((postulacion, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all cursor-pointer border border-transparent hover:border-slate-100 dark:hover:border-slate-700">
-                      <div>
-                        <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm">{postulacion.cargo}</h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{postulacion.empresa}</p>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tight border ${postulacion.estado.toLowerCase().includes('entrevista')
-                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800/50'
-                        : postulacion.estado.toLowerCase().includes('rechazado')
-                          ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-100 dark:border-red-800/50'
-                          : 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-100 dark:border-green-800/50'
-                        }`}>
-                        {postulacion.estado}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-6">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Aún no tienes postulaciones recientes.</p>
-                    <button
-                      onClick={() => navigate("/empleos")}
-                      className="mt-4 text-xs text-green-600 dark:text-green-400 font-black hover:underline uppercase tracking-widest"
-                    >
-                      Explorar vacantes
-                    </button>
-                  </div>
-                )}
+              <div className="flex items-center justify-between mb-8 border-b border-slate-50 dark:border-slate-800 pb-4">
+                <h3 className="flex items-center gap-2 text-slate-800 dark:text-white font-black uppercase tracking-wider text-sm !mb-0">
+                  <Briefcase className="w-4 h-4 text-green-600" /> Experiencia
+                </h3>
+                <button
+                  onClick={() => setMostrarFormExp(true)}
+                  className="text-[10px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest bg-green-50 dark:bg-green-900/20 px-4 py-1.5 rounded-full border border-green-100 dark:border-green-800/50 hover:bg-green-100 transition-colors"
+                >
+                  Añadir
+                </button>
               </div>
+
+              {perfil.experiencia && perfil.experiencia.length > 0 ? (
+                <div className="space-y-8">
+                  {perfil.experiencia.map(exp => (
+                    <div key={exp.id} className="timeline-item border-l-2 border-slate-100 dark:border-slate-800 pl-6 pb-2 last:pb-0 relative">
+                      <div className="absolute top-0 -left-[5px] w-2 h-2 rounded-full bg-green-500"></div>
+                      <div className="timeline-title font-black text-slate-800 dark:text-slate-200 flex justify-between items-start mb-1 text-base">
+                        {exp.puesto}
+                        <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg text-slate-500 dark:text-slate-400 font-black uppercase tracking-tight">{exp.periodo}</span>
+                      </div>
+                      <div className="timeline-company text-green-600 dark:text-green-400 text-xs font-black uppercase tracking-widest mb-3">
+                        {exp.empresa}
+                      </div>
+                      <div className="timeline-description text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                        {exp.descripcion}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border-2 border-dashed border-slate-100 dark:border-slate-800">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">Aún no has añadido experiencia</p>
+                </div>
+              )}
             </div>
 
+            {/* DETALLES DE CONTACTO */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-3xl shadow-sm transition-colors">
+              <h3 className="flex items-center gap-2 text-slate-800 dark:text-white font-black uppercase tracking-wider text-sm mb-6">
+                <User className="w-4 h-4 text-green-600" /> Detalles de Contacto
+              </h3>
+
+              <div className="grid grid-cols-1 gap-4">
+                {[
+                  { icon: Users, label: 'Género', value: perfil.genero, color: 'green' },
+                  { icon: Phone, label: 'Teléfono', value: perfil.telefono, color: 'blue' },
+                  { icon: MapPin, label: 'Ubicación', value: perfil.provincia, color: 'orange' },
+                  { icon: BookOpen, label: 'Educación', value: perfil.nivel_educativo, color: 'purple' }
+                ].map((item, i) => {
+                  const Icon = item.icon;
+                  const colors = {
+                    green: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
+                    blue: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
+                    orange: 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400',
+                    purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
+                  };
+                  return (
+                    <div key={i} className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 shadow-sm">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-inner ${colors[item.color]}`}>
+                        <Icon size={20} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{item.label}</p>
+                        <p className="text-sm font-black text-slate-800 dark:text-slate-200 capitalize">{item.value}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* ====== POSTULACIONES ====== */}
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 w-full transition-colors">
+            <h3 className="text-sm font-black text-slate-800 dark:text-white mb-5 flex items-center gap-2 uppercase tracking-wider">
+              <CheckCircle2 className="w-4 h-4 text-green-500" /> Postulaciones Recientes
+            </h3>
+            <div className="space-y-3">
+              {perfil.postulaciones && perfil.postulaciones.length > 0 ? (
+                perfil.postulaciones.map((postulacion, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all cursor-pointer border border-transparent hover:border-slate-100 dark:hover:border-slate-700">
+                    <div>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm">{postulacion.cargo}</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{postulacion.empresa}</p>
+                    </div>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tight border ${postulacion.estado?.toLowerCase().includes('entrevista')
+                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800/50'
+                      : postulacion.estado?.toLowerCase().includes('rechazado')
+                        ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-100 dark:border-red-800/50'
+                        : 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-100 dark:border-green-800/50'
+                      }`}>
+                      {postulacion.estado}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-6">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Aún no tienes postulaciones recientes.</p>
+                  <button onClick={() => navigate("/empleos")} className="mt-4 text-xs text-green-600 dark:text-green-400 font-black hover:underline uppercase tracking-widest">
+                    Explorar vacantes
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ====== INSTITUCIÓN DE ORIGEN ====== */}
+          {perfil.institucion_origen && (
+            <div className="relative bg-gradient-to-br from-slate-900 via-green-950 to-slate-900 rounded-3xl p-6 shadow-lg border border-green-900/30 w-full overflow-hidden transition-colors">
+              {/* Decoración */}
+              <div className="absolute top-0 right-0 w-40 h-40 bg-green-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
+
+              <h3 className="text-sm font-black text-white mb-5 flex items-center gap-2 uppercase tracking-wider relative z-10">
+                <Building2 className="w-4 h-4 text-green-400" /> Institución de Origen
+              </h3>
+
+              <div className="relative z-10 flex flex-col sm:flex-row gap-5 items-start">
+                {/* Avatar */}
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-900/30 flex-shrink-0">
+                  <Building2 className="w-7 h-7 text-white" />
+                </div>
+
+                {/* Info institución */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-black text-lg leading-tight mb-0.5 truncate">{perfil.institucion_origen.nombre}</p>
+                  <p className="text-green-400 text-xs font-black uppercase tracking-widest mb-3">{perfil.institucion_origen.titulo}</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {[
+                      { label: "Tipo", value: perfil.institucion_origen.tipo },
+                      { label: "Programa", value: perfil.institucion_origen.programa },
+                      { label: "Nivel", value: perfil.institucion_origen.nivel_academico },
+                      { label: "Horas", value: perfil.institucion_origen.horas_requeridas ? `${perfil.institucion_origen.horas_requeridas} hrs` : "—" },
+                      { label: "Estado Pasantía", value: perfil.institucion_origen.estado_pasantia },
+                      { label: "Contacto", value: perfil.institucion_origen.nombre_contacto },
+                    ].map((item, i) => (
+                      <div key={i} className="bg-white/5 border border-white/10 rounded-xl px-3 py-2">
+                        <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{item.label}</p>
+                        <p className="text-xs text-white font-bold mt-0.5">{item.value || "—"}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Período */}
+                  {(perfil.institucion_origen.fecha_inicio || perfil.institucion_origen.fecha_fin) && (
+                    <div className="mt-3 flex items-center gap-2 text-xs text-slate-400 font-bold">
+                      <Clock className="w-3.5 h-3.5 text-green-400" />
+                      <span>
+                        {perfil.institucion_origen.fecha_inicio
+                          ? new Date(perfil.institucion_origen.fecha_inicio).toLocaleDateString('es-CR', { month: 'long', year: 'numeric' })
+                          : "—"}
+                        {" → "}
+                        {perfil.institucion_origen.fecha_fin
+                          ? new Date(perfil.institucion_origen.fecha_fin).toLocaleDateString('es-CR', { month: 'long', year: 'numeric' })
+                          : "En curso"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ====== CAPACITACIONES INSCRITAS ====== */}
+
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 w-full transition-colors">
+            <h3 className="text-sm font-black text-slate-800 dark:text-white mb-5 flex items-center gap-2 uppercase tracking-wider">
+              <BookOpen className="w-4 h-4 text-blue-500" /> Mis Capacitaciones
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {perfil.capacitaciones_inscritas && perfil.capacitaciones_inscritas.length > 0 ? (
+                perfil.capacitaciones_inscritas.map((cap, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                    <div>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm">{cap.titulo}</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{cap.entidad}</p>
+                    </div>
+                    <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tight border bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800/50">
+                      Inscrito
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-6">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Aún no te has inscrito en ninguna capacitación.</p>
+                  <button onClick={() => navigate("/capacitaciones")} className="mt-4 text-xs text-blue-600 dark:text-blue-400 font-black hover:underline uppercase tracking-widest">
+                    Ver capacitaciones
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ====== FAVORITOS ====== */}
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 w-full transition-colors">
+            <h3 className="text-sm font-black text-slate-800 dark:text-white mb-5 flex items-center gap-2 uppercase tracking-wider">
+              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" /> Mis Favoritos (Me gustas)
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {perfil.favoritos && perfil.favoritos.length > 0 ? (
+                perfil.favoritos.map((fav, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                    <div>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm">{fav.titulo}</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{fav.entidad}</p>
+                    </div>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tight border ${fav.tipo === 'vacante' ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-100 dark:border-green-800' : 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800'}`}>
+                      {fav.tipo}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-6">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Aún no tienes favoritos. Usa TalentMatch o el corazón en empleos.</p>
+                  <button onClick={() => navigate("/talento-match")} className="mt-4 text-xs text-yellow-600 dark:text-yellow-400 font-black hover:underline uppercase tracking-widest">
+                    Ir a TalentMatch
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col h-full transition-colors">
               <h3 className="text-sm font-black text-slate-800 dark:text-white mb-5 flex items-center gap-2 uppercase tracking-wider">
                 <FileText className="w-4 h-4 text-green-500" /> Gestión de CV
@@ -286,6 +477,15 @@ const MiPerfil = () => {
         onClose={() => setMostrarCVIAModal(false)}
         perfil={perfil}
       />
+
+      {perfil && (
+        <FormExperiencia
+          isOpen={mostrarFormExp}
+          onClose={() => setMostrarFormExp(false)}
+          currentPerfil={perfil}
+          onSuccess={cargarPerfil}
+        />
+      )}
     </div>
   );
 };

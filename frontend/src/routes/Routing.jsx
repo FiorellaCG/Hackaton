@@ -7,6 +7,7 @@ import RegisterPage from "../Pages/Home/RegisterPage";
 import DashboardAspirantePage from "../Pages/Home/DashboardAspirantePage";
 import DashboardEmpresaPage from "../Pages/Home/DashboardEmpresaPage";
 import DashboardInstitucion from "../Components/PagPrincipal/Institucion/DashboardInstitucion";
+import PerfilInstitucion from "../Components/PagPrincipal/Institucion/PerfilInstitucion";
 import AjustesPage from "../Pages/Home/AjustesPage";
 import JobsPage from "../Pages/Home/JobsPage";
 import CompaniesPage from "../Pages/Home/CompaniesPage";
@@ -52,6 +53,7 @@ function Routing() {
       <Route path="/dashboard-aspirante" element={<DashboardAspirantePage />} />
       <Route path="/dashboard-empresa" element={<DashboardEmpresaPage />} />
       <Route path="/institucion/dashboard" element={<DashboardInstitucion />} />
+      <Route path="/institucion/perfil" element={<PerfilInstitucion />} />
       <Route path="/ajustes" element={<AjustesPage />} />
       <Route path="/empleos" element={<JobsPage tipo="empleo" />} />
       <Route path="/pasantias" element={<JobsPage tipo="pasantia" />} />

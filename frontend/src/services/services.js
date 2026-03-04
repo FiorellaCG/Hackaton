@@ -259,3 +259,20 @@ export const inscribirCapacitacion = async (aspiranteId, capacitacionId) => {
   }
   return await response.json();
 };
+
+export const postularVacante = async (aspiranteId, vacanteId) => {
+  const response = await fetch(`${API_URL}/postulaciones/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      aspirante: aspiranteId,
+      vacante: vacanteId,
+      estado: "pendiente"
+    }),
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw err;
+  }
+  return await response.json();
+};

@@ -1,37 +1,102 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../../Components/PagPrincipal/Navbar/NavBar";
 import Footer from "../../Components/PagPrincipal/Home/Footer";
 import Sidebar from "../../Components/PagPrincipal/Sidebar";
-import { Search, BookOpen, Clock, Calendar, MapPin, ExternalLink, Sparkles } from "lucide-react";
-import { obtenerCapacitaciones } from "../../services/services";
+import { Search, BookOpen, Clock, Calendar, ExternalLink, Sparkles, Heart, CheckCircle } from "lucide-react";
+import { obtenerCapacitaciones, toggleFavorito, inscribirCapacitacion } from "../../services/services";
+import { LoginModal } from "../../Components/PagPrincipal/Login/Login";
+import { AnimatePresence, motion } from "framer-motion";
 
 const CapacitacionesPage = () => {
     const [capacitaciones, setCapacitaciones] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [favoritos, setFavoritos] = useState({});
+    const [inscritos, setInscritos] = useState({});
+    const [loadingBtn, setLoadingBtn] = useState({});
+    const [toast, setToast] = useState(null);
+    const [loginOpen, setLoginOpen] = useState(false);
 
     useEffect(() => {
         obtenerCapacitaciones()
-            .then(data => {
-                setCapacitaciones(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
+            .then(data => { setCapacitaciones(data); setLoading(false); })
+            .catch(err => { console.error(err); setLoading(false); });
     }, []);
+
+    const showToast = (msg, type = 'success') => {
+        setToast({ msg, type });
+        setTimeout(() => setToast(null), 3000);
+    };
+
+    const handleLike = async (e, capId) => {
+        e.stopPropagation();
+        const userStr = localStorage.getItem("usuario");
+        if (!userStr) { setLoginOpen(true); return; }
+        const user = JSON.parse(userStr);
+        try {
+            await toggleFavorito(user.id, null, capId);
+            setFavoritos(prev => ({ ...prev, [capId]: !prev[capId] }));
+            showToast(favoritos[capId] ? "Eliminado de favoritos" : "¡Guardado en favoritos!");
+        } catch (error) {
+            console.error("Error toggling favorite:", error);
+        }
+    };
+
+    const handleInscribir = async (e, cap) => {
+        e.preventDefault();
+        const userStr = localStorage.getItem("usuario");
+        if (!userStr) { setLoginOpen(true); return; }
+        const user = JSON.parse(userStr);
+
+        if (inscritos[cap.id]) {
+            showToast("Ya estás inscrito en esta capacitación", "info");
+            return;
+        }
+
+        setLoadingBtn(prev => ({ ...prev, [cap.id]: true }));
+        try {
+            await inscribirCapacitacion(user.id, cap.id);
+            setInscritos(prev => ({ ...prev, [cap.id]: true }));
+            showToast(`¡Inscrito en "${cap.titulo}"! Aparecerá en tu perfil.`);
+            if (cap.url_inscripcion) {
+                window.open(cap.url_inscripcion, "_blank");
+            }
+        } catch (error) {
+            if (error?.aspirante || error?.non_field_errors) {
+                setInscritos(prev => ({ ...prev, [cap.id]: true }));
+                showToast("Ya estabas inscrito anteriormente.", "info");
+            } else {
+                showToast("Error al inscribirse. Intenta de nuevo.", "error");
+            }
+        } finally {
+            setLoadingBtn(prev => ({ ...prev, [cap.id]: false }));
+        }
+    };
 
     const filtered = capacitaciones.filter(c =>
         c.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (c.descripcion && c.descripcion.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (c.nombre_empresa && c.nombre_empresa.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     return (
         <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
             <Sidebar isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+            {/* Toast notification */}
+            <AnimatePresence>
+                {toast && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -40 }}
+                        className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-3 rounded-2xl shadow-2xl font-bold text-sm text-white ${toast.type === 'error' ? 'bg-red-500' : toast.type === 'info' ? 'bg-blue-500' : 'bg-green-600'}`}
+                    >
+                        <CheckCircle size={18} />
+                        {toast.msg}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <main className="flex-1 lg:ml-72 flex flex-col min-h-screen">
                 <div className="p-6 lg:p-10">
@@ -70,20 +135,27 @@ const CapacitacionesPage = () => {
                                         <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl">
                                             <BookOpen className="text-green-600" size={24} />
                                         </div>
-                                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${cap.modalidad.toLowerCase().includes('virtual')
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={(e) => handleLike(e, cap.id)}
+                                                className={`p-1.5 rounded-xl border transition-colors ${favoritos[cap.id] ? 'bg-rose-50 border-rose-200 text-rose-500' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 hover:border-rose-300'}`}
+                                            >
+                                                <Heart className={`w-4 h-4 ${favoritos[cap.id] ? 'fill-current' : ''}`} />
+                                            </button>
+                                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${cap.modalidad?.toLowerCase().includes('virtual')
                                                 ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900'
                                                 : 'bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 border border-orange-100 dark:border-orange-900'
-                                            }`}>
-                                            {cap.modalidad}
-                                        </span>
+                                                }`}>
+                                                {cap.modalidad}
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2 group-hover:text-green-600 transition-colors uppercase leading-tight tracking-tight relative z-10">
                                         {cap.titulo}
                                     </h3>
-
-                                    <p className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 relative z-10">
-                                        {cap.nombre_empresa || cap.nombre_institucion || "Empresa GreenTalent"}
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest relative z-10">
+                                        {cap.nombre_institucion || cap.nombre_empresa || "Institución"}
                                     </p>
 
                                     <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-6 font-medium leading-relaxed relative z-10">
@@ -91,24 +163,36 @@ const CapacitacionesPage = () => {
                                     </p>
 
                                     <div className="space-y-3 mb-8 relative z-10">
-                                        <div className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300">
-                                            <Clock size={14} className="text-slate-400" />
-                                            Duración: {cap.duracion}
+                                        <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400 font-bold">
+                                            <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
+                                                <Clock size={14} className="text-blue-500" />
+                                            </div>
+                                            Duración: {cap.duracion_horas || cap.duracion || '—'} h
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300">
-                                            <Calendar size={14} className="text-slate-400" />
+                                        <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400 font-bold">
+                                            <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
+                                                <Calendar size={14} className="text-orange-500" />
+                                            </div>
                                             Inicia: {cap.fecha_inicio ? new Date(cap.fecha_inicio).toLocaleDateString() : 'Pronto'}
                                         </div>
                                     </div>
 
-                                    <a
-                                        href={cap.url_inscripcion || "#"}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center gap-2 w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-green-600 dark:hover:bg-green-500 hover:text-white transition-all shadow-lg shadow-slate-200 dark:shadow-none relative z-10"
+                                    <button
+                                        onClick={(e) => handleInscribir(e, cap)}
+                                        disabled={loadingBtn[cap.id]}
+                                        className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-lg relative z-10 ${inscritos[cap.id]
+                                            ? 'bg-green-600 text-white cursor-default'
+                                            : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-green-600 dark:hover:bg-green-500 hover:text-white'
+                                            } ${loadingBtn[cap.id] ? 'opacity-70 pointer-events-none' : ''}`}
                                     >
-                                        Inscribirme <ExternalLink size={14} />
-                                    </a>
+                                        {loadingBtn[cap.id] ? (
+                                            <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                                        ) : inscritos[cap.id] ? (
+                                            <><CheckCircle size={14} /> Inscrito</>
+                                        ) : (
+                                            <>Inscribirme <ExternalLink size={14} /></>
+                                        )}
+                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -124,6 +208,7 @@ const CapacitacionesPage = () => {
                 </div>
                 <Footer />
             </main>
+            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} />}
         </div>
     );
 };

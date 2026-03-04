@@ -179,131 +179,18 @@ const DashboardAspirante = () => {
                     </motion.div>
                 )}
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="dashboard-card relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm"
-                >
-                    <div className="profile-header flex flex-col md:flex-row gap-8 items-start p-6">
-                        <div className="relative group self-center md:self-start">
-                            <img
-                                src={perfil.foto_url || "https://i.pravatar.cc/250?u=a042581f4e29026704d"}
-                                alt="Perfil"
-                                className="profile-img w-32 h-32 md:w-40 md:h-40 object-cover rounded-3xl border-4 border-white dark:border-[var(--bg-card)] shadow-xl rotate-3 group-hover:rotate-0 transition-transform duration-500"
-                            />
-                            <div className="absolute -bottom-2 -right-2 bg-green-600 text-white p-2 rounded-xl shadow-lg border-2 border-white dark:border-slate-800">
-                                <Sparkles size={16} />
-                            </div>
-                        </div>
-
-                        <div className="flex-1 w-full">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div>
-                                    <h1 className="profile-name text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-                                        {perfil.nombre} {perfil.apellidos}
-                                    </h1>
-                                    <div className="flex flex-wrap items-center gap-3 mt-2">
-                                        <span className="profile-career bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-lg text-sm font-bold flex items-center gap-1.5 border border-green-200 dark:border-green-800/50">
-                                            <GraduationCap className="w-4 h-4" /> {perfil.carrera || "Estudiante"}
-                                        </span>
-                                        <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[11px] font-black rounded-lg uppercase tracking-wider border border-slate-200 dark:border-slate-700">
-                                            {perfil.estado_laboral}
-                                        </span>
-                                        <span className="flex items-center gap-1 text-[11px] font-bold text-slate-400 dark:text-slate-500">
-                                            <MapPin size={12} /> {perfil.provincia}, {perfil.canton}
-                                        </span>
-                                        {(perfil.institucion_recomendadora || usuarioLocalStorage.recomendado_por) && (
-                                            <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 text-[11px] font-black rounded-lg uppercase tracking-wider border border-yellow-200 dark:border-yellow-800 flex items-center gap-1">
-                                                <Award size={12} /> RECOMENDADO POR {perfil.institucion_recomendadora || usuarioLocalStorage.recomendado_por}
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() => { setFormStep(1); setMostrarForm(true); }}
-                                        className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-2xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-all text-sm shadow-lg shadow-slate-200 dark:shadow-none"
-                                    >
-                                        <Edit className="w-4 h-4" /> {t('dashboard.edit_profile')}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <p className="profile-description mt-6 text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-3xl border-l-2 border-slate-100 dark:border-slate-800 pl-4">
-                                {perfil.sobre_mi || t('dashboard.no_description')}
-                            </p>
-
-                            <div className="flex flex-wrap gap-2 mt-6">
-                                {[...(perfil.habilidades_tecnicas || []), ...(perfil.habilidades_blandas || [])].slice(0, 8).map((skill, idx) => (
-                                    <motion.div
-                                        key={idx}
-                                        whileHover={{ y: -2 }}
-                                        onMouseEnter={() => setSkillInfo(skill)}
-                                        onMouseLeave={() => setSkillInfo(null)}
-                                        className="relative flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-green-300 dark:hover:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all cursor-help"
-                                    >
-                                        {renderSkillIcon(skill.icon, "w-3 h-3 text-green-600 dark:text-green-400")}
-                                        {skill.name}
-
-                                        <AnimatePresence>
-                                            {skillInfo === skill && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: 10 }}
-                                                    className="absolute bottom-full left-0 mb-2 p-3 w-56 bg-slate-900 dark:bg-slate-950 text-white text-[10px] rounded-xl shadow-2xl z-50 pointer-events-none border border-slate-800"
-                                                >
-                                                    {skill.desc}
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </motion.div>
+                <div className="flex flex-col gap-2 mb-8 mt-4">
+                    <h1 className="text-3xl font-black text-slate-800 dark:text-white">
+                        {t('dashboard.welcome_back', { name: perfil.nombre })}
+                    </h1>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">
+                        Aquí tienes un resumen de tus postulaciones, capacitaciones y herramientas de IA.
+                    </p>
+                </div>
 
                 <div className="dashboard-grid grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="dashboard-card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
-                            <div className="flex items-center justify-between mb-8 border-b border-slate-50 dark:border-slate-800 pb-4">
-                                <h3 className="flex items-center gap-2 text-slate-800 dark:text-white font-black uppercase tracking-wider text-sm !mb-0">
-                                    <Briefcase size={18} className="text-green-600" /> {t('dashboard.experience')}
-                                </h3>
-                                <button
-                                    onClick={() => setMostrarFormExp(true)}
-                                    className="text-[10px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest bg-green-50 dark:bg-green-900/20 px-4 py-1.5 rounded-full border border-green-100 dark:border-green-800/50 hover:bg-green-100 transition-colors"
-                                >
-                                    {t('dashboard.add')}
-                                </button>
-                            </div>
-
-                            {perfil.experiencia && perfil.experiencia.length > 0 ? (
-                                <div className="space-y-8">
-                                    {perfil.experiencia.map(exp => (
-                                        <div key={exp.id} className="timeline-item border-l-2 border-slate-100 dark:border-slate-800 pl-6 pb-2 last:pb-0 relative">
-                                            <div className="absolute top-0 -left-[5px] w-2 h-2 rounded-full bg-green-500"></div>
-                                            <div className="timeline-title font-black text-slate-800 dark:text-slate-200 flex justify-between items-start mb-1 text-base">
-                                                {exp.puesto}
-                                                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg text-slate-500 dark:text-slate-400 font-black uppercase tracking-tight">{exp.periodo}</span>
-                                            </div>
-                                            <div className="timeline-company text-green-600 dark:text-green-400 text-xs font-black uppercase tracking-widest mb-3">
-                                                {exp.empresa}
-                                            </div>
-                                            <div className="timeline-description text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                                                {exp.descripcion}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border-2 border-dashed border-slate-100 dark:border-slate-800">
-                                    <p className="text-xs text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">{t('dashboard.no_experience')}</p>
-                                </div>
-                            )}
-                        </div>
 
                         <div className="dashboard-card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
                             <div className="flex items-center justify-between mb-8 border-b border-slate-50 dark:border-slate-800 pb-4">
@@ -416,39 +303,6 @@ const DashboardAspirante = () => {
                     </div>
 
                     <div className="space-y-6">
-                        <div className="dashboard-card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
-                            <h3 className="flex items-center gap-2 text-slate-800 dark:text-white font-black uppercase tracking-wider text-sm mb-6">
-                                <User size={18} className="text-green-600" /> {t('dashboard.contact_details')}
-                            </h3>
-
-                            <div className="grid grid-cols-1 gap-4">
-                                {[
-                                    { icon: Users, label: t('dashboard.gender'), value: perfil.genero, color: 'green' },
-                                    { icon: Phone, label: t('dashboard.phone'), value: perfil.telefono, color: 'blue' },
-                                    { icon: MapPin, label: t('dashboard.location'), value: perfil.provincia, color: 'orange' },
-                                    { icon: BookOpen, label: t('dashboard.education'), value: perfil.nivel_educativo, color: 'purple' }
-                                ].map((item, i) => {
-                                    const Icon = item.icon;
-                                    const colors = {
-                                        green: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
-                                        blue: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
-                                        orange: 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400',
-                                        purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
-                                    };
-                                    return (
-                                        <div key={i} className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 shadow-sm">
-                                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-inner ${colors[item.color]}`}>
-                                                <Icon size={20} />
-                                            </div>
-                                            <div>
-                                                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{item.label}</p>
-                                                <p className="text-sm font-black text-slate-800 dark:text-slate-200 capitalize">{item.value}</p>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
 
                         <div className="dashboard-card bg-slate-900 dark:bg-slate-800 text-white p-6 rounded-3xl border-none shadow-2xl relative overflow-hidden group">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">

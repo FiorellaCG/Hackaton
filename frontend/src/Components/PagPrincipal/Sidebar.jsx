@@ -15,7 +15,9 @@ import {
     User,
     LogOut,
     Menu,
-    BookOpen
+    BookOpen,
+    Building2,
+    Users
 } from "lucide-react";
 
 const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
@@ -41,7 +43,8 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
     };
 
     const isEmpresa = usuario?.rol === 'empresa';
-    const dashboardPath = isEmpresa ? '/empresa/dashboard' : (usuario?.rol === 'aspirante' ? '/dashboard-aspirante' : '/admin');
+    const isInstitucion = usuario?.rol === 'institucion';
+    const dashboardPath = isEmpresa ? '/empresa/dashboard' : isInstitucion ? '/institucion/dashboard' : (usuario?.rol === 'aspirante' ? '/dashboard-aspirante' : '/admin');
 
     const navLinksAspirante = [
         { path: dashboardPath, icon: LayoutDashboard, label: t('sidebar.dashboard') },
@@ -63,7 +66,13 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         { path: "/empresa/dashboard/capacitaciones", icon: BookOpen, label: t('sidebar.capacitaciones') },
     ];
 
-    const navLinks = isEmpresa ? navLinksEmpresa : navLinksAspirante;
+    const navLinksInstitucion = [
+        { path: '/institucion/dashboard', icon: LayoutDashboard, label: 'Panel Principal' },
+        { path: '/institucion/perfil', icon: Building2, label: 'Mi Perfil' },
+        { path: '/ajustes', icon: User, label: t('sidebar.settings') },
+    ];
+
+    const navLinks = isEmpresa ? navLinksEmpresa : isInstitucion ? navLinksInstitucion : navLinksAspirante;
 
     return (
         <>

@@ -37,7 +37,7 @@ const ReportsDashboard = () => {
                         <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{t('admin.analytics_desc')}</p>
                     </div>
                 </div>
-                <ReportsExport />
+                <ReportsExport stats={stats} />
             </header>
 
             <section className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">

@@ -150,6 +150,7 @@
     "dashboard": {
         "title": "Dashboard",
         "welcome": "Welcome to {{brand}}!",
+        "welcome_back": "Welcome back, {{name}}!",
         "incomplete_profile": "It seems you haven't completed your professional profile yet. Do it now so companies can find you.",
         "complete_profile": "Complete my Profile",
         "edit_profile": "Edit Profile",

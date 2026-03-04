@@ -14,6 +14,7 @@ const DashboardInstitucion = () => {
     const [empresas, setEmpresas] = useState([]);
     const [showSuccess, setShowSuccess] = useState(false);
     const [tempKey, setTempKey] = useState('');
+    const [emailSent, setEmailSent] = useState(false);
 
     const [formData, setFormData] = useState({
         nombre: '',
@@ -106,17 +107,22 @@ const DashboardInstitucion = () => {
             setEstudiantes(nuevaLista);
             localStorage.setItem(`estudiantes_${usuario.id}`, JSON.stringify(nuevaLista));
 
-            // 4. Enviar correo virtual al estudiante con sus credenciales
+            // 4. Enviar correo con credenciales
+            let correoEnviado = false;
             try {
-                await enviarCredenciales({
+                const emailResp = await enviarCredenciales({
                     correo: formData.correo,
                     contrasena: passwordTemp,
                     nombre: formData.nombre.split(' ')[0],
                     institucion: usuario.nombre || usuario.correo
                 });
+                correoEnviado = true;
+                console.log('Correo enviado:', emailResp);
             } catch (err) {
                 console.warn('No se pudo enviar el correo:', err);
+                correoEnviado = false;
             }
+            setEmailSent(correoEnviado);
 
             setShowSuccess(true);
             setFormData({ nombre: '', telefono: '', correo: '', profesion: '', habilidadesTecnicas: '', habilidadesBlandas: '', empresaId: '' });
@@ -159,8 +165,16 @@ const DashboardInstitucion = () => {
                             </h2>
                             {showSuccess && (
                                 <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 text-green-700 dark:text-green-400 rounded-xl">
-                                    <div className="flex items-center gap-2 font-bold mb-1"><CheckCircle2 size={18} /> ¡Estudiante Registrado!</div>
-                                    <p className="text-sm">Se le envió un correo con su contraseña temporal: <strong className="text-slate-900 dark:text-white bg-green-200 dark:bg-green-600 px-1 rounded">{tempKey}</strong></p>
+                                    <div className="flex items-center gap-2 font-bold mb-2"><CheckCircle2 size={18} /> ¡Estudiante Registrado!</div>
+                                    {emailSent ? (
+                                        <p className="text-sm">✅ <strong>Correo enviado correctamente</strong> a <strong>{formData.correo || "..."}</strong></p>
+                                    ) : (
+                                        <p className="text-sm">⚠️ No se pudo enviar el correo automáticamente. Comparte estas credenciales manualmente:</p>
+                                    )}
+                                    <div className="mt-3 bg-white dark:bg-slate-900 rounded-xl p-3 border border-green-200 dark:border-green-800 space-y-1">
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">Contraseña temporal generada:</p>
+                                        <p className="text-lg font-black text-slate-900 dark:text-white bg-green-100 dark:bg-green-900/40 px-3 py-1 rounded-lg tracking-wider inline-block">{tempKey}</p>
+                                    </div>
                                 </div>
                             )}
                             <form onSubmit={handleRegister} className="space-y-6">
