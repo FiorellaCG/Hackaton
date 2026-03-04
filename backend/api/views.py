@@ -41,6 +41,22 @@ class MiPerfilView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        if usuario.rol == 'empresa':
+            empresa = usuario.empresa_set.first()
+            if not empresa:
+                return Response({"usuario_id": usuario.id, "perfil_completo": False}, status=status.HTTP_200_OK)
+            return Response({
+                "usuario_id": usuario.id,
+                "empresa_id": empresa.id,
+                "nombre": empresa.nombre,
+                "descripcion": empresa.descripcion,
+                "nombre_contacto": empresa.nombre_contacto,
+                "correo_contacto": empresa.correo_contacto,
+                "url_externa": empresa.url_externa,
+                "perfil_completo": True,
+                "rol": "empresa"
+            }, status=status.HTTP_200_OK)
+
         try:
             persona = usuario.persona
             aspirante = usuario.aspirante

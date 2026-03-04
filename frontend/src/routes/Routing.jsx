@@ -5,6 +5,7 @@ import MiPerfilPage from "../Pages/Home/MiPerfilPage";
 import LoginPage from "../Pages/Home/LoginPage";
 import RegisterPage from "../Pages/Home/RegisterPage";
 import DashboardAspirantePage from "../Pages/Home/DashboardAspirantePage";
+import DashboardEmpresaPage from "../Pages/Home/DashboardEmpresaPage";
 import AjustesPage from "../Pages/Home/AjustesPage";
 import JobsPage from "../Pages/Home/JobsPage";
 import EntrevistaIA from "../Components/PagPrincipal/Home/EntrevistaIA/EntrevistaIA";
@@ -20,7 +21,7 @@ import ProgramasManagement from "../Pages/admin/ProgramasManagement";
 import PracticasManagement from "../Pages/admin/PracticasManagement";
 import ReportsDashboard from "../Pages/admin/ReportsDashboard";
 
-import CreateCompanyInstitutionForm from "../Components/Admin/CreateCompanyInstitutionForm";
+import CreateCompanyInstitutionForm from "../Components/admin/CreateCompanyInstitutionForm";
 
 function Routing() {
   return (
@@ -31,6 +32,7 @@ function Routing() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/mi-perfil" element={<MiPerfilPage />} />
       <Route path="/dashboard-aspirante" element={<DashboardAspirantePage />} />
+      <Route path="/dashboard-empresa" element={<DashboardEmpresaPage />} />
       <Route path="/ajustes" element={<AjustesPage />} />
       <Route path="/empleos" element={<JobsPage tipo="empleo" />} />
       <Route path="/pasantias" element={<JobsPage tipo="pasantia" />} />

@@ -39,8 +39,10 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         window.location.href = "/";
     };
 
+    const dashboardPath = usuario?.rol === 'empresa' ? '/dashboard-empresa' : (usuario?.rol === 'aspirante' ? '/dashboard-aspirante' : '/admin');
+
     const navLinks = [
-        { path: "/", icon: LayoutDashboard, label: "Dashboard" },
+        { path: dashboardPath, icon: LayoutDashboard, label: "Dashboard" },
         { path: "#", icon: Zap, label: "TalentMatch", badge: true },
         { path: "#", icon: Briefcase, label: "Vacantes" },
         { path: "#", icon: GraduationCap, label: "Pasantías" },
