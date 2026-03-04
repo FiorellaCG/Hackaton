@@ -1,10 +1,7 @@
-<<<<<<< HEAD:frontend/src/Pages/Home/Home.jsx
-=======
 import { useState } from "react";
-import FormCarrera from "@/src/Components/PagPrincipal/FormCarrera";
-import VisualizarCarreras from "@/src/Components/PagPrincipal/VisualizarCarreras";
+import FormCarrera from "../../Components/PagPrincipal/FormCarrera";
+import VisualizarCarreras from "../../Components/PagPrincipal/VisualizarCarreras";
 import Navbar from "../../Components/PagPrincipal/Navbar/NavBar";
->>>>>>> f2f4e2fda1f86f7da54160838979ff075513c1af:src/Pages/Home/Home.jsx
 import { useTranslation } from 'react-i18next';
 
 import Hero from "../../Components/PagPrincipal/Home/Hero";
@@ -20,10 +17,6 @@ function Home() {
   const featuredPreview = allJobs.slice(0, 3);
 
   return (
-<<<<<<< HEAD:frontend/src/Pages/Home/Home.jsx
-    <div>
-      {/* Contenido de la página de inicio */}
-=======
     <div className="flex flex-col min-h-screen bg-[var(--bg-main)] transition-colors duration-300">
       <Navbar />
       <main className="flex-grow">
@@ -32,13 +25,8 @@ function Home() {
       </main>
       <Footer />
       <FloatingAI />
->>>>>>> f2f4e2fda1f86f7da54160838979ff075513c1af:src/Pages/Home/Home.jsx
     </div>
   );
 }
 
-<<<<<<< HEAD:frontend/src/Pages/Home/Home.jsx
-export default Home
-=======
 export default Home;
->>>>>>> f2f4e2fda1f86f7da54160838979ff075513c1af:src/Pages/Home/Home.jsx
