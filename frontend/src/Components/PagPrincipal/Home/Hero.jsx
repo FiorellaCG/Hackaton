@@ -162,7 +162,7 @@ const Hero = ({ onSearch }) => {
 
                 <div className="mt-20 flex flex-col items-center">
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-600 mb-6 italic flex items-center gap-4 w-full justify-center before:h-px before:bg-slate-200 dark:before:bg-slate-800 before:flex-1 after:h-px after:bg-slate-200 dark:after:bg-slate-800 after:flex-1">
-                        Impulsado por G&G Alianza Estratégica
+                        {t('hero.strategic_alliance')}
                     </p>
                     <div className="p-6 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md rounded-[2.5rem] border border-white dark:border-slate-800 shadow-xl shadow-green-900/10 group cursor-pointer hover:scale-105 transition-all duration-700">
                         <img src={garnierLogo} alt="Garnier" className="h-12 md:h-14 object-contain brightness-95 dark:brightness-125 group-hover:brightness-110 transition-all duration-700" />

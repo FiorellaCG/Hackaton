@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Building2, Globe, Mail, MapPin, Search, Edit, Sparkles, Building, Code } from 'lucide-react';
+import { Building2, Globe, Mail, MapPin, Search, Edit, Sparkles, Building, Code, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { obtenerMiPerfil } from '../../../services/services';
+import FormEmpresa from '../MiPerfil/FormEmpresa';
 
 const PerfilEmpresa = () => {
     const [empresaData, setEmpresaData] = useState({
@@ -15,33 +16,39 @@ const PerfilEmpresa = () => {
         sector: '',
         tamaño: ''
     });
+    const [originalData, setOriginalData] = useState(null);
+    const [mostrarForm, setMostrarForm] = useState(false);
+    const [usuarioId, setUsuarioId] = useState(null);
+
+    const cargarPerfil = async () => {
+        try {
+            const usuarioStr = localStorage.getItem('usuario');
+            if (usuarioStr) {
+                const usuario = JSON.parse(usuarioStr);
+                setUsuarioId(usuario.id);
+                const data = await obtenerMiPerfil(usuario.id);
+
+                if (data && data.perfil_completo) {
+                    setOriginalData(data);
+                    setEmpresaData({
+                        nombre: data.nombre || "Empresa",
+                        descripcion: data.descripcion || "Sin descripción proporcionada.",
+                        contacto: data.nombre_contacto || "No registrado",
+                        correo: data.correo_contacto || usuario.correo,
+                        url_externa: data.url_externa || "No especificado",
+                        url_imagen: data.logo_url || "",
+                        ubicacion: data.ubicacion || "No especificada",
+                        sector: data.sector || "No especificado",
+                        tamaño: data.tamano_empresa || "No especificado"
+                    });
+                }
+            }
+        } catch (e) {
+            console.error("Error cargando perfil de empresa:", e);
+        }
+    };
 
     useEffect(() => {
-        const cargarPerfil = async () => {
-            try {
-                const usuarioStr = localStorage.getItem('usuario');
-                if (usuarioStr) {
-                    const usuario = JSON.parse(usuarioStr);
-                    const data = await obtenerMiPerfil(usuario.id);
-
-                    if (data && data.perfil_completo) {
-                        setEmpresaData({
-                            nombre: data.nombre || "Empresa",
-                            descripcion: data.descripcion || "Sin descripción proporcionada.",
-                            contacto: data.nombre_contacto || "No registrado",
-                            correo: data.correo_contacto || usuario.correo,
-                            url_externa: data.url_externa || "No especificado",
-                            url_imagen: data.url_imagen || "",
-                            ubicacion: data.ubicacion || "Cartago, Costa Rica",
-                            sector: data.sector || "Industria / Tecnología",
-                            tamaño: data.tamaño_empresa || "Corporativo"
-                        });
-                    }
-                }
-            } catch (e) {
-                console.error("Error cargando perfil de empresa:", e);
-            }
-        };
         cargarPerfil();
     }, []);
 
@@ -89,7 +96,10 @@ const PerfilEmpresa = () => {
                                 </div>
                             </div>
                             <div className="flex gap-2">
-                                <button className="flex items-center gap-2 px-5 py-2.5 bg-[#163a6d] text-white font-bold rounded-2xl hover:bg-slate-800 transition-all text-sm shadow-lg shadow-slate-200 dark:shadow-none">
+                                <button
+                                    onClick={() => setMostrarForm(true)}
+                                    className="flex items-center gap-2 px-5 py-2.5 bg-[#163a6d] text-white font-bold rounded-2xl hover:bg-slate-800 transition-all text-sm shadow-lg shadow-slate-200 dark:shadow-none"
+                                >
                                     <Edit className="w-4 h-4" /> Editar Perfil
                                 </button>
                             </div>
@@ -123,6 +133,35 @@ const PerfilEmpresa = () => {
                     </div>
                 </div>
             </motion.div>
+
+            {/* Modal de edición */}
+            <AnimatePresence>
+                {mostrarForm && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 rounded-3xl shadow-2xl"
+                        >
+                            <button
+                                onClick={() => setMostrarForm(false)}
+                                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors z-10"
+                            >
+                                <X size={24} />
+                            </button>
+                            <FormEmpresa
+                                usuarioId={usuarioId}
+                                currentData={originalData}
+                                onSuccess={() => {
+                                    setMostrarForm(false);
+                                    cargarPerfil();
+                                }}
+                            />
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

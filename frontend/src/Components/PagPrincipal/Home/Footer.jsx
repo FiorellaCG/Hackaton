@@ -31,7 +31,7 @@ const Footer = () => {
                         <Linkedin className="w-5 h-5 text-slate-500 hover:text-green-500 cursor-pointer transition-colors" />
                     </div>
                     <div className="mt-4 pt-6 border-t border-slate-800 w-full">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-4 italic">Alianza Estratégica</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-4 italic">{t('footer.strategic_alliance_short')}</p>
                         <img src={garnierLogo} alt="Garnier" className="h-8 object-contain grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all" />
                     </div>
                 </div>

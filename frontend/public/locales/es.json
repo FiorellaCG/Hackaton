@@ -3,6 +3,79 @@
         "name": "GreenTalent",
         "location": "ZFL La Lima"
     },
+    "company_profile": {
+        "title": "Perfil Corporativo",
+        "subtitle": "Completa los datos de tu empresa",
+        "name": "Nombre de la Empresa",
+        "contact_name": "Nombre de Contacto",
+        "contact_email": "Correo de Contacto",
+        "location": "Ubicación",
+        "sector": "Sector",
+        "size": "Tamaño de Empresa",
+        "website": "Sitio Web Corporativo (Opcional)",
+        "about": "Descripción de la Empresa",
+        "save_changes": "Guardar Cambios",
+        "complete_profile": "Completar Perfil",
+        "saving": "Guardando...",
+        "logo": "Logo de la Empresa",
+        "error_save": "No se pudo guardar la información",
+        "error_retry": "Revisa la información registrada e intenta de nuevo."
+    },
+    "candidate_profile": {
+        "steps": {
+            "step": "Paso {{current}} de {{total}}",
+            "info_basica": "Información Básica",
+            "perfil_pro": "Perfil Profesional",
+            "habilidades": "Habilidades"
+        },
+        "basic": {
+            "title": "Datos Personales",
+            "subtitle": "Ingresa tu información de contacto"
+        },
+        "labels": {
+            "first_name": "Nombres",
+            "last_name": "Apellidos",
+            "photo": "Foto de Perfil",
+            "photo_hint": "Sube una foto desde tu equipo",
+            "photo_formats": "JPG, PNG o GIF. Máx 5MB.",
+            "id": "Cédula",
+            "birth_date": "Fecha de Nacimiento",
+            "province": "Provincia",
+            "canton": "Cantón",
+            "phone": "Teléfono",
+            "phone_alt": "Teléfono Alterno (Opcional)",
+            "gender": "Género",
+            "gender_placeholder": "Selecciona tu género",
+            "gender_female": "Femenino",
+            "gender_male": "Masculino",
+            "gender_other": "Otro / Prefiero no decir",
+            "nationality": "Nacionalidad"
+        },
+        "pro": {
+            "title": "Perfil Profesional",
+            "subtitle": "Cuéntanos sobre tu experiencia y estudios",
+            "career": "Carrera / Especialidad",
+            "education_level": "Nivel Educativo Actual",
+            "about_me": "Sobre mí (Breve descripción de tu perfil)",
+            "experience": "Experiencia Laboral",
+            "add_experience": "+ Agregar Experiencia",
+            "no_experience": "No has agregado experiencia laboral todavía.",
+            "placeholder_career": "Ej. Ingeniería en Sistemas de Información",
+            "placeholder_about": "Soy un profesional analítico con más de 3 años de experiencia en..."
+        },
+        "skills": {
+            "title": "Tus Habilidades",
+            "subtitle": "Selecciona tus fortalezas y toca el icono para saber más",
+            "tech": "Habilidades Técnicas",
+            "soft": "Habilidades Blandas"
+        },
+        "buttons": {
+            "next": "Siguiente Paso",
+            "back": "Atrás",
+            "complete": "Completar Perfil",
+            "saving": "Guardando..."
+        }
+    },
     "navbar": {
         "dashboard": "Panel de Control",
         "jobs": "Empleos",
@@ -25,6 +98,7 @@
         "search_internships_placeholder": "Dinos tu carrera...",
         "search_button": "Buscar",
         "popular": "Popular:",
+        "strategic_alliance": "Impulsado por G&G Alianza Estratégica",
         "stats": {
             "vacancies": "Oportunidades Activas",
             "companies": "Empresas Aliadas",
@@ -53,7 +127,11 @@
         "apply_modal_title": "Postulación de Talento",
         "confirm_btn": "Confirmar Postulación",
         "success_title": "¡Postulación Exitosa!",
-        "success_desc": "Tu perfil ha sido enviado a {{company}}. Recibirás una notificación pronto."
+        "success_desc": "Tu perfil ha sido enviado a {{company}}. Recibirás una notificación pronto.",
+        "continue": "Continuar",
+        "cancel": "Cancelar",
+        "your_profile": "Tu perfil principal:",
+        "vacancy_label": "Vacante:"
     },
     "footer": {
         "description": "Conectamos el mejor talento con las empresas líderes en la Zona Franca La Lima, impulsando el crecimiento profesional.",
@@ -61,6 +139,7 @@
         "companies": "Para Empresas",
         "contact": "Contacto",
         "rights": "Todos los derechos reservados.",
+        "strategic_alliance_short": "Alianza Estratégica",
         "search_jobs": "Buscar Empleos",
         "internships": "Pasantías",
         "create_profile": "Crear Perfil",
@@ -111,7 +190,19 @@
         "active": "Activo",
         "inactive": "Inactivo",
         "no_users": "No se encontraron usuarios con esos criterios.",
-        "page": "Página"
+        "page": "Página",
+        "analytics_desc": "Monitoreo del rendimiento del sistema GreenTalent",
+        "registration_trends": "Tendencias de Registro de Usuarios",
+        "roles_distribution": "Distribución de Roles",
+        "vacancies_by_area": "Vacantes por Área",
+        "apply_filter": "Aplicar Filtro",
+        "search_keywords": "Buscar palabras clave...",
+        "all_time": "Todo el tiempo",
+        "today": "Hoy",
+        "this_week": "Esta semana",
+        "this_month": "Este mes",
+        "export_excel": "Exportar Excel",
+        "export_pdf": "Exportar PDF"
     },
     "talent_match": {
         "title": "TalentMatch",
@@ -188,6 +279,26 @@
         "success_practicante": "¡Tu perfil ahora es Practicante!",
         "student": "Estudiante",
         "no_description": "Sin descripción profesional.",
+        "ai_tools": "Herramientas de IA",
+        "ai_tools_desc": "Optimiza tu perfil con inteligencia artificial o prepárate con nuestro simulador de entrevistas.",
+        "interview_simulator": "Simulador Entrevistas",
+        "upload_pdf": "Subir PDF",
+        "my_training": "Mis Capacitaciones",
+        "no_training": "No te has inscrito en capacitaciones aún.",
+        "my_favorites": "Mis Favoritos",
+        "no_favorites": "Aún no tienes elementos guardados como favoritos.",
+        "enrolled": "Inscrito",
+        "courses": "Cursos",
+        "active_vacancies": "Vacantes Activas",
+        "candidates": "Candidatos",
+        "interviews_today": "Entrevistas Hoy",
+        "publish_vacancy": "Publicar Nueva Vacante",
+        "recent_vacancies": "Vacantes Recientes",
+        "see_all": "Ver todas",
+        "position": "Puesto",
+        "modality": "Modalidad",
+        "actions": "Acciones",
+        "manage": "Gestionar",
         "status": {
             "review": "En revisión",
             "interview": "Entrevista",

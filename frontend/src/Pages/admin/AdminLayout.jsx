@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
-import { LayoutDashboard, Users, Building2, Briefcase, FileText, Settings, LogOut, Globe } from 'lucide-react';
+import { BarChart3, Users, Building2, Briefcase, Settings, LogOut, Globe } from 'lucide-react';
 import logoImg from '../../assents/Logo.png';
 
 const AdminLayout = () => {
@@ -9,11 +9,10 @@ const AdminLayout = () => {
     const { t, i18n } = useTranslation();
 
     const navItems = [
-        { path: '/admin', label: t('admin.reports'), icon: LayoutDashboard },
+        { path: '/admin', label: t('admin.analytics'), icon: BarChart3 },
         { path: '/admin/users', label: t('admin.users'), icon: Users },
         { path: '/admin/users/create-company', label: t('admin.create_company'), icon: Building2 },
         { path: '/admin/content/vacantes', label: t('admin.vacancies'), icon: Briefcase },
-        { path: '/admin/reports', label: t('admin.analytics'), icon: FileText },
     ];
 
     const changeLanguage = (lng) => {

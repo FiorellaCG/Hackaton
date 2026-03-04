@@ -33,8 +33,8 @@ const ReportsDashboard = () => {
                         <BarChart3 className="w-6 h-6" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Analytics & Reports</h2>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Monitoring GreenTalent System performance</p>
+                        <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">{t('admin.analytics')}</h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{t('admin.analytics_desc')}</p>
                     </div>
                 </div>
                 <ReportsExport />
@@ -55,18 +55,33 @@ const ReportsDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
                     <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm h-full">
-                        <ChartsSection title="User Registration Trends" type="line" />
+                        <ChartsSection
+                            title={t('admin.registration_trends')}
+                            type="line"
+                            data={stats?.tendencia_registros || []}
+                            dataKeys={['estudiantes', 'empresas']}
+                        />
                     </div>
                 </div>
                 <div className="lg:col-span-1">
                     <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm h-full">
-                        <ChartsSection title="Roles Distribution" type="pie" />
+                        <ChartsSection
+                            title={t('admin.roles_distribution')}
+                            type="pie"
+                            data={stats?.distribucion_roles || []}
+                        />
                     </div>
                 </div>
             </div>
 
             <section className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                <ChartsSection title="Monthly Active Participants (Companies vs Students)" type="bar" />
+                <ChartsSection
+                    title={t('admin.vacancies_by_area')}
+                    type="bar"
+                    data={stats?.vacantes_por_area || []}
+                    dataKeys={['count']}
+                    labelKey="area_trabajo__nombre"
+                />
             </section>
         </div>
     );

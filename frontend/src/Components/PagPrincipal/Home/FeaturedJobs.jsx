@@ -143,7 +143,7 @@ const FeaturedJobs = ({ jobs = [] }) => {
                             <CheckCircle2 size={64} className="mx-auto text-green-500 mb-4" />
                             <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">{t('featured_jobs.success_title')}</h3>
                             <p className="text-slate-500 font-medium text-sm">{t('featured_jobs.success_desc', { company: selectedJob.company })}</p>
-                            <button onClick={() => { setApplicationOpen(false); setSuccessMessage(false); }} className="mt-6 w-full py-3 bg-[#163a6d] hover:bg-slate-800 text-white font-bold rounded-xl transition-all">Continuar</button>
+                            <button onClick={() => { setApplicationOpen(false); setSuccessMessage(false); }} className="mt-6 w-full py-3 bg-[#163a6d] hover:bg-slate-800 text-white font-bold rounded-xl transition-all">{t('featured_jobs.continue')}</button>
                         </div>
                     ) : (
                         <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl max-w-md w-full relative shadow-2xl">
@@ -151,16 +151,16 @@ const FeaturedJobs = ({ jobs = [] }) => {
                                 <X size={24} />
                             </button>
                             <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">{t('featured_jobs.apply_modal_title')}</h3>
-                            <p className="text-slate-500 mb-6 font-medium text-sm">Vacante: <span className="font-bold text-[#163a6d] dark:text-[#b1b900]">{selectedJob.title}</span> en {selectedJob.company}</p>
+                            <p className="text-slate-500 mb-6 font-medium text-sm">{t('featured_jobs.vacancy_label')} <span className="font-bold text-[#163a6d] dark:text-[#b1b900]">{selectedJob.title}</span> en {selectedJob.company}</p>
 
                             <div className="space-y-4 mb-8">
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Tu perfil principal:</label>
+                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">{t('featured_jobs.your_profile')}</label>
                                     <input type="text" readOnly value={t('dashboard.student')} className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl p-3 text-slate-500 font-bold" />
                                 </div>
                             </div>
                             <div className="flex gap-4">
-                                <button onClick={() => setApplicationOpen(false)} className="flex-1 py-3 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-xl transition-colors">Cancelar</button>
+                                <button onClick={() => setApplicationOpen(false)} className="flex-1 py-3 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-xl transition-colors">{t('featured_jobs.cancel')}</button>
                                 <button onClick={handleConfirmApply} className="flex-1 py-3 bg-[#163a6d] hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg transition-colors">{t('featured_jobs.confirm_btn')}</button>
                             </div>
                         </div>

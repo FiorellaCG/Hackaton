@@ -1,27 +1,27 @@
 export const allJobs = [
     {
         id: 1,
-        title: "Fullstack Developer",
+        title: "Desarrollador Fullstack",
         company: "TechNova",
         location: "San José, Costa Rica",
         type: "Empleo",
         schedule: "Tiempo Completo",
         level: "Intermedio",
-        salary: "$1,500 - $2,500",
-        logo: "https://picsum.photos/seed/technova/100/100",
-        tags: ["React", "Node.js", "SQL"]
+        salary: "A convenir",
+        logo: "https://picsum.photos/seed/technova/200/200",
+        tags: ["React", "Node.js", "Base de Datos"]
     },
     {
         id: 2,
-        title: "UX/UI Designer",
+        title: "Diseñador UX/UI",
         company: "CreativeFlow",
         location: "Heredia, Costa Rica",
         type: "Empleo",
         schedule: "Remoto",
-        level: "Senior",
-        salary: "$2,000 - $3,500",
-        logo: "https://picsum.photos/seed/creative/100/100",
-        tags: ["Figma", "Design System", "UX Research"]
+        level: "Sénior",
+        salary: "A convenir",
+        logo: "https://picsum.photos/seed/creative/200/200",
+        tags: ["Figma", "Sistemas de Diseño", "Investigación UX"]
     },
     {
         id: 3,
@@ -31,9 +31,9 @@ export const allJobs = [
         type: "Pasantía",
         schedule: "Medio Tiempo",
         level: "Junior",
-        salary: "$600 - $800",
-        logo: "https://picsum.photos/seed/intel/100/100",
-        tags: ["Hardware", "Testing", "Python"]
+        salary: "Remunerado",
+        logo: "https://picsum.photos/seed/intel/200/200",
+        tags: ["Hardware", "Pruebas", "Python"]
     },
     {
         id: 4,
@@ -43,20 +43,20 @@ export const allJobs = [
         type: "Pasantía",
         schedule: "Híbrido",
         level: "Estudiante",
-        salary: "$700 - $900",
-        logo: "https://picsum.photos/seed/teradyne/100/100",
-        tags: ["C++", "Automation", "IA"]
+        salary: "Remunerado",
+        logo: "https://picsum.photos/seed/teradyne/200/200",
+        tags: ["C++", "Automatización", "IA"]
     },
     {
         id: 5,
-        title: "Marketing Specialist",
+        title: "Especialista en Marketing",
         company: "GlobalMarket",
         location: "Alajuela, Costa Rica",
         type: "Empleo",
         schedule: "Híbrido",
         level: "Junior",
-        salary: "$1,000 - $1,500",
-        logo: "https://picsum.photos/seed/market/100/100",
-        tags: ["SEO", "Content Marketing", "Analytics"]
+        salary: "A convenir",
+        logo: "https://picsum.photos/seed/market/200/200",
+        tags: ["SEO", "Marketing de Contenidos", "Analítica"]
     }
 ];

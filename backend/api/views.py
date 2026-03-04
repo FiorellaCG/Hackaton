@@ -55,6 +55,10 @@ class MiPerfilView(APIView):
                 "nombre_contacto": empresa.nombre_contacto,
                 "correo_contacto": empresa.correo_contacto,
                 "url_externa": empresa.url_externa,
+                "ubicacion": empresa.ubicacion,
+                "sector": empresa.sector,
+                "tamano_empresa": empresa.tamano_empresa,
+                "logo_url": request.build_absolute_uri(empresa.logo_url.url) if empresa.logo_url else None,
                 "perfil_completo": True,
                 "rol": "empresa"
             }, status=status.HTTP_200_OK)
@@ -327,6 +331,9 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def stats(self, request):
         from .models import Aspirante, Empresa, Vacante, Postulacion
+        from django.db.models.functions import TruncMonth
+        from django.utils import timezone
+        import datetime
         
         # Totales básicos
         total_estudiantes = Aspirante.objects.count()
@@ -345,9 +352,51 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         ).order_by('-count')
         
         # Tasa de colocación (simulada o real si tenemos el campo)
-        # Supongamos que estado_laboral 'empleado' significa colocado
         colocados = Aspirante.objects.filter(estado_laboral='empleado').count()
         tasa_colocacion = (colocados / total_estudiantes * 100) if total_estudiantes > 0 else 0
+
+        # Tendencias de registro (últimos 6 meses)
+        seis_meses_atras = timezone.now() - datetime.timedelta(days=180)
+        
+        est_trends = Aspirante.objects.filter(creado_en__gte=seis_meses_atras) \
+            .annotate(month=TruncMonth('creado_en')) \
+            .values('month') \
+            .annotate(count=Count('id')) \
+            .order_by('month')
+
+        emp_trends = Empresa.objects.filter(creado_en__gte=seis_meses_atras) \
+            .annotate(month=TruncMonth('creado_en')) \
+            .values('month') \
+            .annotate(count=Count('id')) \
+            .order_by('month')
+
+        # Combinar tendencias
+        tendencias = []
+        labels = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+        
+        # Simplificación para el dashboard (solo los últimos meses encontrados)
+        trends_map = {}
+        for item in est_trends:
+            m = item['month'].month
+            label = labels[m-1]
+            trends_map[label] = {"month": label, "estudiantes": item['count'], "empresas": 0}
+            
+        for item in emp_trends:
+            m = item['month'].month
+            label = labels[m-1]
+            if label in trends_map:
+                trends_map[label]["empresas"] = item['count']
+            else:
+                trends_map[label] = {"month": label, "estudiantes": 0, "empresas": item['count']}
+        
+        tendencias = sorted(trends_map.values(), key=lambda x: list(trends_map.keys()).index(x['month']))
+
+        # Distribución de roles
+        roles_dist = [
+            {"name": "Estudiantes", "value": total_estudiantes},
+            {"name": "Empresas", "value": total_empresas},
+            {"name": "Instituciones", "value": Usuario.objects.filter(rol='institucion').count()}
+        ]
 
         return Response({
             "total_estudiantes": total_estudiantes,
@@ -356,7 +405,9 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             "total_postulaciones": total_postulaciones,
             "vacantes_por_area": list(vacantes_por_area),
             "estudiantes_por_carrera": list(estudiantes_por_carrera),
-            "tasa_colocacion": round(tasa_colocacion, 2)
+            "tasa_colocacion": round(tasa_colocacion, 2),
+            "tendencia_registros": tendencias,
+            "distribucion_roles": roles_dist
         })
 
 

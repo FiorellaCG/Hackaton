@@ -272,6 +272,10 @@ class CrearPerfilEmpresaSerializer(serializers.Serializer):
     nombre_contacto = serializers.CharField()
     correo_contacto = serializers.EmailField()
     url_externa = serializers.CharField(required=False, allow_blank=True)
+    ubicacion = serializers.CharField(required=False, allow_blank=True)
+    sector = serializers.CharField(required=False, allow_blank=True)
+    tamano_empresa = serializers.CharField(required=False, allow_blank=True)
+    logo_url = serializers.ImageField(required=False, allow_null=True)
 
     def validate(self, data):
         try:
@@ -285,15 +289,24 @@ class CrearPerfilEmpresaSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         usuario = Usuario.objects.get(id=validated_data['usuario_id'])
+        
+        defaults={
+            'nombre': validated_data['nombre'],
+            'descripcion': validated_data.get('descripcion', ''),
+            'nombre_contacto': validated_data['nombre_contacto'],
+            'correo_contacto': validated_data['correo_contacto'],
+            'url_externa': validated_data.get('url_externa', ''),
+            'ubicacion': validated_data.get('ubicacion', ''),
+            'sector': validated_data.get('sector', ''),
+            'tamano_empresa': validated_data.get('tamano_empresa', ''),
+        }
+        
+        if validated_data.get('logo_url'):
+            defaults['logo_url'] = validated_data['logo_url']
+
         empresa, _ = Empresa.objects.update_or_create(
             usuario=usuario,
-            defaults={
-                'nombre': validated_data['nombre'],
-                'descripcion': validated_data.get('descripcion', ''),
-                'nombre_contacto': validated_data['nombre_contacto'],
-                'correo_contacto': validated_data['correo_contacto'],
-                'url_externa': validated_data.get('url_externa', '')
-            }
+            defaults=defaults
         )
         return empresa
 

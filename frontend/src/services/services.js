@@ -126,11 +126,17 @@ export const crearCarrera = async (data) => {
 };
 
 export const crearPerfilEmpresa = async (data) => {
-  const response = await fetch(`${API_URL}/crear-perfil-empresa/`, {
+  const isFormData = data instanceof FormData;
+  const options = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+    body: isFormData ? data : JSON.stringify(data),
+  };
+
+  if (!isFormData) {
+    options.headers = { "Content-Type": "application/json" };
+  }
+
+  const response = await fetch(`${API_URL}/crear-perfil-empresa/`, options);
 
   if (!response.ok) {
     const err = await response.json();

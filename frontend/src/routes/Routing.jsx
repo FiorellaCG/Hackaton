@@ -90,8 +90,6 @@ function Routing() {
         <Route path="content/programas" element={<ProgramasManagement />} />
         <Route path="content/practicas" element={<PracticasManagement />} />
 
-        {/* Reports */}
-        <Route path="reports" element={<ReportsDashboard />} />
       </Route>
     </Routes>
   );
