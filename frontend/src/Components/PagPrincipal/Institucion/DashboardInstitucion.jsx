@@ -247,7 +247,6 @@ const DashboardInstitucion = () => {
                                 <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-tight flex items-center gap-2">
                                     <Users className="text-[#163a6d] dark:text-blue-400 w-6 h-6" /> {t('dashboard_inst.student_list')}
                                 </h2>
-                                Gabri
 
                                 {estudiantes.length === 0 ? (
                                     <div className="text-center py-20 text-slate-500">

@@ -12,6 +12,7 @@ import {
 import { obtenerMiPerfil } from '../../services/services';
 import CVIAModal from './MiPerfil/CVIAModal';
 import FormAspirante from './MiPerfil/FormAspirante';
+import FormExperiencia from './MiPerfil/FormExperiencia';
 
 const DashboardAspirante = () => {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ const DashboardAspirante = () => {
     const [cargando, setCargando] = useState(true);
     const [mostrarCVIAModal, setMostrarCVIAModal] = useState(false);
     const [mostrarForm, setMostrarForm] = useState(false);
+    const [mostrarFormExp, setMostrarFormExp] = useState(false);
     const [formStep, setFormStep] = useState(1);
     const [isModalOnboardingOpen, setIsModalOnboardingOpen] = useState(false);
     const [skillInfo, setSkillInfo] = useState(null);
@@ -271,7 +273,7 @@ const DashboardAspirante = () => {
                                     <Briefcase size={18} className="text-green-600" /> {t('dashboard.experience')}
                                 </h3>
                                 <button
-                                    onClick={() => { setFormStep(2); setMostrarForm(true); }}
+                                    onClick={() => setMostrarFormExp(true)}
                                     className="text-[10px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest bg-green-50 dark:bg-green-900/20 px-4 py-1.5 rounded-full border border-green-100 dark:border-green-800/50 hover:bg-green-100 transition-colors"
                                 >
                                     {t('dashboard.add')}
@@ -337,6 +339,76 @@ const DashboardAspirante = () => {
                                             <Briefcase className="w-8 h-8 text-slate-200 dark:text-slate-600" />
                                         </div>
                                         <p className="text-xs text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">{t('dashboard.no_postulations')}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* SECCIÓN DE CAPACITACIONES INSCRITAS */}
+                        <div className="dashboard-card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+                            <div className="flex items-center justify-between mb-8 border-b border-slate-50 dark:border-slate-800 pb-4">
+                                <h3 className="flex items-center gap-2 text-slate-800 dark:text-white font-black uppercase tracking-wider text-sm !mb-0">
+                                    <BookOpen size={18} className="text-blue-600" /> Mis Capacitaciones
+                                </h3>
+                                <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">
+                                    {perfil.capacitaciones_inscritas?.length || 0} Cursos
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {perfil.capacitaciones_inscritas && perfil.capacitaciones_inscritas.length > 0 ? perfil.capacitaciones_inscritas.map(cap => (
+                                    <motion.div
+                                        key={cap.id}
+                                        whileHover={{ y: -3 }}
+                                        className="p-5 rounded-2xl border border-[var(--border-color)] hover:border-blue-200 dark:hover:border-blue-800 hover:bg-blue-50/20 dark:hover:bg-blue-900/10 transition-all group cursor-pointer shadow-sm hover:shadow-md bg-[var(--bg-card)]"
+                                    >
+                                        <div className="flex justify-between items-start mb-3">
+                                            <strong className="text-base font-black text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight uppercase tracking-tight">{cap.titulo}</strong>
+                                            <span className="badge badge-blue">Inscrito</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase border-t border-slate-50 dark:border-slate-800 pt-3 tracking-widest">
+                                            <span className="flex items-center gap-1.5"><Users size={12} className="text-slate-300 dark:text-slate-600" /> {cap.entidad}</span>
+                                            <span className="flex items-center gap-1.5"><Clock size={12} className="text-slate-300 dark:text-slate-600" /> {new Date(cap.fecha_inscripcion).toLocaleDateString()}</span>
+                                        </div>
+                                    </motion.div>
+                                )) : (
+                                    <div className="text-center py-12 col-span-full bg-slate-50 dark:bg-slate-800/30 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800">
+                                        <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-4 border border-slate-50 dark:border-slate-700">
+                                            <BookOpen className="w-8 h-8 text-slate-200 dark:text-slate-600" />
+                                        </div>
+                                        <p className="text-xs text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">No te has inscrito en capacitaciones aún.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* SECCIÓN DE FAVORITOS */}
+                        <div className="dashboard-card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+                            <div className="flex items-center justify-between mb-8 border-b border-slate-50 dark:border-slate-800 pb-4">
+                                <h3 className="flex items-center gap-2 text-slate-800 dark:text-white font-black uppercase tracking-wider text-sm !mb-0">
+                                    <Star size={18} className="text-yellow-500 fill-yellow-500" /> Mis Favoritos
+                                </h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {perfil.favoritos && perfil.favoritos.length > 0 ? perfil.favoritos.map(fav => (
+                                    <motion.div
+                                        key={fav.id}
+                                        whileHover={{ y: -3 }}
+                                        className="p-5 rounded-2xl border border-[var(--border-color)] hover:border-yellow-200 dark:hover:border-yellow-800 hover:bg-yellow-50/20 dark:hover:bg-yellow-900/10 transition-all group cursor-pointer shadow-sm hover:shadow-md bg-[var(--bg-card)]"
+                                    >
+                                        <div className="flex justify-between items-start mb-3">
+                                            <strong className="text-base font-black text-slate-800 dark:text-slate-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors leading-tight uppercase tracking-tight">{fav.titulo}</strong>
+                                            <span className={`text-[9px] font-black uppercase px-2 py-1 rounded-md ${fav.tipo === 'vacante' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                                                {fav.tipo}
+                                            </span>
+                                        </div>
+                                        <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">{fav.entidad}</p>
+                                    </motion.div>
+                                )) : (
+                                    <div className="text-center py-12 col-span-full bg-slate-50 dark:bg-slate-800/30 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800">
+                                        <Star size={40} className="mx-auto text-slate-200 dark:text-slate-700 mb-4" />
+                                        <p className="text-xs text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">Aún no tienes elementos guardados como favoritos.</p>
                                     </div>
                                 )}
                             </div>
@@ -441,7 +513,10 @@ const DashboardAspirante = () => {
                                                     {job.match}%
                                                 </div>
                                             </div>
-                                            <button className="w-full py-3 bg-[var(--bg-card)] text-slate-700 dark:text-slate-300 border border-[var(--border-color)] hover:bg-green-600 hover:text-white dark:hover:bg-green-600 dark:hover:text-white hover:border-green-600 font-black rounded-xl text-[10px] transition-all tracking-widest uppercase shadow-sm">
+                                            <button
+                                                onClick={() => navigate(`/empleos?q=${job.cargo}`)}
+                                                className="w-full py-3 bg-[var(--bg-card)] text-slate-700 dark:text-slate-300 border border-[var(--border-color)] hover:bg-green-600 hover:text-white dark:hover:bg-green-600 dark:hover:text-white hover:border-green-600 font-black rounded-xl text-[10px] transition-all tracking-widest uppercase shadow-sm"
+                                            >
                                                 Aplicar Ahora
                                             </button>
                                         </motion.div>
@@ -581,8 +656,18 @@ const DashboardAspirante = () => {
                 onClose={() => setMostrarCVIAModal(false)}
                 perfil={perfil}
             />
+
+            {perfil && (
+                <FormExperiencia
+                    isOpen={mostrarFormExp}
+                    onClose={() => setMostrarFormExp(false)}
+                    currentPerfil={perfil}
+                    onSuccess={cargarDatos}
+                />
+            )}
         </div>
     );
 };
+
 
 export default DashboardAspirante;

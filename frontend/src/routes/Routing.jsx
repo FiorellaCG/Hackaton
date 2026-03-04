@@ -14,6 +14,8 @@ import EntrevistaIA from "../Components/PagPrincipal/Home/EntrevistaIA/Entrevist
 import FormCarrera from "../Components/PagPrincipal/FormCarrera";
 import VisualizarCarreras from "../Components/PagPrincipal/VisualizarCarreras";
 import StatsPage from "../Pages/Home/StatsPage";
+import TalentMatchPage from "../Pages/Home/TalentMatchPage";
+import CapacitacionesPage from "../Pages/Home/CapacitacionesPage";
 
 // ADMIN
 import AdminLayout from "../Pages/admin/AdminLayout";
@@ -36,6 +38,7 @@ import EstadisticasEmpresa from "../Components/PagPrincipal/Empresa/Estadisticas
 import VacantesEmpresa from "../Components/PagPrincipal/Empresa/VacantesEmpresa";
 import MensajesEmpresa from "../Components/PagPrincipal/Empresa/MensajesEmpresa";
 import EmpresaHome from "../Components/PagPrincipal/Empresa/EmpresaHome";
+import CapacitacionesEmpresa from "../Components/PagPrincipal/Empresa/CapacitacionesEmpresa";
 
 function Routing() {
   return (
@@ -54,6 +57,8 @@ function Routing() {
       <Route path="/empresas" element={<CompaniesPage />} />
       <Route path="/estadisticas" element={<StatsPage />} />
       <Route path="/entrevista-ia" element={<EntrevistaIA />} />
+      <Route path="/talento-match" element={<TalentMatchPage />} />
+      <Route path="/capacitaciones" element={<CapacitacionesPage />} />
 
 
       {/* RUTAS EMPRESA */}
@@ -66,6 +71,7 @@ function Routing() {
           <Route path="estadisticas" element={<EstadisticasEmpresa />} />
           <Route path="vacantes" element={<VacantesEmpresa />} />
           <Route path="mensajes" element={<MensajesEmpresa />} />
+          <Route path="capacitaciones" element={<CapacitacionesEmpresa />} />
         </Route>
       </Route>
 

@@ -10,7 +10,7 @@ function DashboardEmpresaPage() {
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300">
             <Sidebar isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-            <main className="flex-1 w-full lg:ml-64 p-6 flex flex-col min-h-screen transition-all">
+            <main className="flex-1 w-full lg:ml-72 p-6 flex flex-col min-h-screen transition-all">
                 <div className="flex justify-between items-center mb-10 w-full pl-12 lg:pl-0">
                     <div>
                         <h1 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">Panel de Empresa</h1>

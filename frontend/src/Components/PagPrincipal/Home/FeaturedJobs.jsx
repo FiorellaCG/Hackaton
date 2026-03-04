@@ -64,8 +64,8 @@ const FeaturedJobs = ({ jobs = [] }) => {
                         <div key={job.id} className="bg-[var(--bg-card)] rounded-3xl p-6 shadow-sm border border-[var(--border-color)] hover:shadow-xl hover:border-green-100 dark:hover:border-green-900/40 transition-all cursor-pointer flex flex-col justify-between group">
                             <div>
                                 <div className="flex items-start gap-4 mb-6">
-                                    <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex-shrink-0 shadow-sm relative group-hover:scale-105 transition-transform">
-                                        <img src={job.logo} alt={job.company} className="w-full h-full object-cover" />
+                                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 flex-shrink-0 shadow-sm relative group-hover:scale-105 transition-transform bg-white dark:bg-slate-800 p-2 flex items-center justify-center">
+                                        <img src={job.logo} alt={job.company} className="w-full h-full object-contain" />
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1">

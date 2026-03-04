@@ -14,7 +14,7 @@
         "register": "Registrarse",
         "logout": "Cerrar Sesión",
         "interviews": "Entrevistas IA",
-        "ai_assistant": "Asistente IA",
+        "capacitaciones": "Capacitaciones",
         "full_time": "Tiempo Completo"
     },
     "hero": {
@@ -242,7 +242,7 @@
         "internships": "Prácticas y Pasantías",
         "interviews": "Evaluación IA",
         "stats": "Impacto y Métricas",
-        "ai_assistant": "Asistente Virtual",
+        "capacitaciones": "Capacitaciones",
         "my_profile": "Perfil de Empresa",
         "candidates": "Gestión de Aspirantes",
         "settings": "Configuración General"

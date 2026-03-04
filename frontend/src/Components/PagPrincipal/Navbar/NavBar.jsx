@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import logoImg from "../../../assents/logo.png";
+import logoImg from "../../../assents/Logo.png";
+import garnierLogo from "../../../assents/garnierlogo.svg";
 
 import { LoginModal } from "../Login/Login";
 import RegistroModal from "../../PagPrincipal/Login/Registrer";
@@ -45,9 +46,11 @@ const Navbar = () => {
               <img src={logoImg} alt="Logo" className="navbar-logo" />
             </div>
             <div className="brand">
-              <h1 className="text-xl font-black">{t('') || 'GreenTalent'}</h1>
+              <h1 className="text-xl font-black">{t('brand.name') || 'GreenTalent'}</h1>
               <span className="text-[10px] uppercase">{t('brand.location') || 'ZFL La Lima'}</span>
             </div>
+            <div className="h-8 w-[2px] bg-slate-200 mx-2"></div>
+            <img src={garnierLogo} alt="Garnier" className="h-8 object-contain opacity-80 hover:opacity-100 transition-opacity" />
           </Link>
         </div>
 

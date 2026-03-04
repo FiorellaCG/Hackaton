@@ -21,15 +21,20 @@ const AdminLayout = () => {
         localStorage.setItem("language", lng);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("usuario");
+        localStorage.removeItem("token");
+        window.location.href = "/";
+    };
+
     return (
         <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
             {/* Sidebar */}
             <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed inset-y-0 z-50 transition-colors">
                 <div className="p-8">
                     <Link to="/" className="flex flex-col items-center gap-5 no-underline group text-center">
-                        <div className="relative bg-[#1a8641] p-6 rounded-[2.5rem] shadow-2xl shadow-green-900/40 transition-all duration-500 group-hover:scale-105 group-hover:rotate-3">
-                            <img src={logoImg} alt="Logo" className="w-20 h-20 object-contain" />
-                            <div className="absolute -inset-4 bg-green-500/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="bg-[#1a8641] p-2 rounded-xl flex items-center justify-center shadow-lg shadow-green-900/20 transition-all duration-500 group-hover:scale-105 h-[50px] w-[100px]">
+                            <img src={logoImg} alt="Logo" className="h-full w-full object-contain" />
                         </div>
                         <div>
                             <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter m-0 uppercase leading-none">{t('admin.panel_title') || 'AdminPanel'}</h2>
@@ -75,7 +80,10 @@ const AdminLayout = () => {
                         </button>
                     </div>
 
-                    <button className="flex items-center gap-4 px-4 py-3.5 w-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-all font-black text-xs uppercase tracking-widest">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-4 px-4 py-3.5 w-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-all font-black text-xs uppercase tracking-widest"
+                    >
                         <LogOut size={18} />
                         {t('admin.logout')}
                     </button>
@@ -83,7 +91,7 @@ const AdminLayout = () => {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 ml-64 min-h-screen flex flex-col">
+            <main className="flex-1 lg:ml-72 min-h-screen flex flex-col transition-all duration-300">
                 <header className="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 flex items-center justify-between px-10 sticky top-0 z-40 transition-colors">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>

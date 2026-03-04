@@ -227,3 +227,48 @@ class Auditoria(models.Model):
 
     class Meta:
         db_table = 'auditoria'
+
+
+class Capacitacion(models.Model):
+    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, null=True, blank=True)
+    institucion = models.ForeignKey(Institucion, on_delete=models.CASCADE, null=True, blank=True)
+    titulo = models.CharField(max_length=200)
+    descripcion = models.TextField(null=True, blank=True)
+    modalidad = models.CharField(max_length=50) # Presencial, Virtual, Híbrida
+    duracion = models.CharField(max_length=100)
+    imagen_url = models.CharField(max_length=500, null=True, blank=True)
+    url_inscripcion = models.CharField(max_length=500, null=True, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    activo = models.BooleanField(default=True)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'capacitaciones'
+
+
+class InscripcionCapacitacion(models.Model):
+    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
+    aspirante = models.ForeignKey(Aspirante, on_delete=models.CASCADE)
+    capacitacion = models.ForeignKey(Capacitacion, on_delete=models.CASCADE)
+    fecha_inscripcion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'inscripciones_capacitacion'
+        unique_together = ('aspirante', 'capacitacion')
+
+
+class Favorito(models.Model):
+    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4)
+    aspirante = models.ForeignKey(Aspirante, on_delete=models.CASCADE)
+    vacante = models.ForeignKey(Vacante, on_delete=models.CASCADE, null=True, blank=True)
+    capacitacion = models.ForeignKey(Capacitacion, on_delete=models.CASCADE, null=True, blank=True)
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'favoritos'
+        # Un aspirante puede tener un favorito de una vacante O una capacitacion, pero no duplicados
+        # unique_together no funciona bien con campos nulos de forma sencilla para este caso,
+        # pero para simplicidad lo haremos así:
+        unique_together = [('aspirante', 'vacante'), ('aspirante', 'capacitacion')]

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { obtenerMiPerfil } from "../../../services/services";
 import FormAspirante from "./FormAspirante";
 import { User, Briefcase, MapPin, Phone, GraduationCap, Edit, CheckCircle2, ChevronRight, UploadCloud, FileText, Sparkles, Building2, Code, Database, Cpu, Globe, Users, MessageSquare, Clock, Shield, Star } from "lucide-react";
@@ -6,6 +7,7 @@ import FormEmpresa from "./FormEmpresa";
 import CVIAModal from "./CVIAModal";
 
 const MiPerfil = () => {
+  const navigate = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
   const rol = usuario?.rol;
 
@@ -205,7 +207,10 @@ const MiPerfil = () => {
                 ) : (
                   <div className="text-center py-6">
                     <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Aún no tienes postulaciones recientes.</p>
-                    <button className="mt-4 text-xs text-green-600 dark:text-green-400 font-black hover:underline uppercase tracking-widest">
+                    <button
+                      onClick={() => navigate("/empleos")}
+                      className="mt-4 text-xs text-green-600 dark:text-green-400 font-black hover:underline uppercase tracking-widest"
+                    >
                       Explorar vacantes
                     </button>
                   </div>
@@ -244,7 +249,10 @@ const MiPerfil = () => {
               </p>
 
               <div className="w-full mt-auto">
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 px-4 rounded-2xl transition-all text-xs shadow-lg shadow-blue-900/20 uppercase tracking-widest flex justify-center items-center gap-2">
+                <button
+                  onClick={() => navigate("/talento-match")}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 px-4 rounded-2xl transition-all text-xs shadow-lg shadow-blue-900/20 uppercase tracking-widest flex justify-center items-center gap-2"
+                >
                   <Cpu className="w-4 h-4" /> Analizar Perfil ahora
                 </button>
               </div>

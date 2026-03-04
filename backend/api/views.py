@@ -13,7 +13,8 @@ import uuid
 from .models import (
     Usuario, Persona, AreaTrabajo, Carrera, Institucion,
     Empresa, ProgramaFormacion, Aspirante, Vacante, Postulacion, Curriculo,
-    Practicante, Notificacion, Auditoria
+    Practicante, Notificacion, Auditoria, Capacitacion,
+    Favorito, InscripcionCapacitacion
 )
 
 from .serializers import (
@@ -21,8 +22,9 @@ from .serializers import (
     CarreraSerializer, InstitucionSerializer, EmpresaSerializer,
     ProgramaFormacionSerializer, AspiranteSerializer, VacanteSerializer,
     PostulacionSerializer, CurriculoSerializer, PracticanteSerializer,
-    NotificacionSerializer, AuditoriaSerializer,
-    CrearPerfilAspiranteSerializer, CrearPerfilEmpresaSerializer, LoginSerializer, MiPerfilSerializer
+    NotificacionSerializer, AuditoriaSerializer, CapacitacionSerializer,
+    CrearPerfilAspiranteSerializer, CrearPerfilEmpresaSerializer, LoginSerializer, MiPerfilSerializer,
+    FavoritoSerializer, InscripcionCapacitacionSerializer
 )
 
 # =====================================================
@@ -97,6 +99,7 @@ class MiPerfilView(APIView):
                 "id": p.id,
                 "cargo": p.vacante.titulo,
                 "empresa": p.vacante.empresa.nombre,
+                "tipo": p.vacante.get_tipo_vacante_display(),
                 "estado": p.estado,
                 "fecha": p.postulado_en.isoformat() if p.postulado_en else None
             })
@@ -126,9 +129,35 @@ class MiPerfilView(APIView):
             "experiencia": aspirante.experiencia,
             "practicante": hasattr(aspirante, 'practicante'),
             "postulaciones": postulaciones_data,
+            "favoritos": [],
+            "capacitaciones_inscritas": [],
             "preferencias": usuario.preferencias,
             "institucion_recomendadora": aspirante.institucion_origen.nombre if aspirante.institucion_origen else None
         }
+
+        # --- FAVORITOS ---
+        favoritos = Favorito.objects.filter(aspirante=aspirante).select_related('vacante', 'capacitacion', 'vacante__empresa', 'capacitacion__empresa')
+        for fav in favoritos:
+            item = {
+                "id": fav.id,
+                "tipo": "vacante" if fav.vacante else "capacitacion",
+                "obj_id": fav.vacante.id if fav.vacante else fav.capacitacion.id,
+                "titulo": fav.vacante.titulo if fav.vacante else fav.capacitacion.titulo,
+                "entidad": (fav.vacante.empresa.nombre if fav.vacante.empresa else "") if fav.vacante else (fav.capacitacion.empresa.nombre if fav.capacitacion.empresa else fav.capacitacion.institucion.nombre if fav.capacitacion.institucion else "")
+            }
+            data["favoritos"].append(item)
+
+        # --- CAPACITACIONES INSCRITAS ---
+        inscripciones = InscripcionCapacitacion.objects.filter(aspirante=aspirante).select_related('capacitacion', 'capacitacion__empresa', 'capacitacion__institucion')
+        for ins in inscripciones:
+            data["capacitaciones_inscritas"].append({
+                "id": ins.id,
+                "cap_id": ins.capacitacion.id,
+                "titulo": ins.capacitacion.titulo,
+                "entidad": ins.capacitacion.empresa.nombre if ins.capacitacion.empresa else ins.capacitacion.institucion.nombre if ins.capacitacion.institucion else "",
+                "fecha_inscripcion": ins.fecha_inscripcion.isoformat()
+            })
+
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -502,3 +531,40 @@ class NotificacionViewSet(viewsets.ModelViewSet):
 class AuditoriaViewSet(viewsets.ModelViewSet):
     queryset = Auditoria.objects.all()
     serializer_class = AuditoriaSerializer
+
+
+class CapacitacionViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = Capacitacion.objects.all().order_by('-creado_en')
+    serializer_class = CapacitacionSerializer
+
+
+class FavoritoViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = Favorito.objects.all()
+    serializer_class = FavoritoSerializer
+
+    @action(detail=False, methods=['post'])
+    def toggle(self, request):
+        aspirante_id = request.data.get('aspirante_id')
+        vacante_id = request.data.get('vacante_id')
+        capacitacion_id = request.data.get('capacitacion_id')
+
+        filtros = {'aspirante_id': aspirante_id}
+        if vacante_id: filtros['vacante_id'] = vacante_id
+        elif capacitacion_id: filtros['capacitacion_id'] = capacitacion_id
+        else: return Response({"error": "Falta vacante_id o capacitacion_id"}, status=400)
+
+        fav_exists = Favorito.objects.filter(**filtros).first()
+        if fav_exists:
+            fav_exists.delete()
+            return Response({"status": "removed"}, status=200)
+        else:
+            Favorito.objects.create(**filtros)
+            return Response({"status": "added"}, status=201)
+
+
+class InscripcionCapacitacionViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = InscripcionCapacitacion.objects.all()
+    serializer_class = InscripcionCapacitacionSerializer

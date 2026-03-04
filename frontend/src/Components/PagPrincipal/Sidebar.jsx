@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { obtenerMiPerfil } from "../../services/services";
 import logoImg from "../../assents/Logo.png";
+import garnierLogo from "../../assents/garnierlogo.svg";
 import {
     LayoutDashboard,
     Zap,
@@ -13,7 +14,8 @@ import {
     Bot,
     User,
     LogOut,
-    Menu
+    Menu,
+    BookOpen
 } from "lucide-react";
 
 const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
@@ -43,12 +45,13 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
 
     const navLinksAspirante = [
         { path: dashboardPath, icon: LayoutDashboard, label: t('sidebar.dashboard') },
-        { path: "#", icon: Zap, label: t('sidebar.talent_match'), badge: true },
-        { path: "#", icon: Briefcase, label: t('sidebar.jobs') },
-        { path: "#", icon: GraduationCap, label: t('sidebar.internships') },
+        { path: "/mi-perfil", icon: User, label: t('sidebar.my_profile') },
+        { path: "/talento-match", icon: Zap, label: t('sidebar.talent_match'), badge: true },
+        { path: "/empleos", icon: Briefcase, label: t('sidebar.jobs') },
+        { path: "/pasantias", icon: GraduationCap, label: t('sidebar.internships') },
         { path: "/entrevista-ia", icon: Video, label: t('sidebar.interviews') },
-        { path: "#", icon: BarChart3, label: t('sidebar.stats') },
-        { path: "#", icon: Bot, label: t('sidebar.ai_assistant') },
+        { path: "/estadisticas", icon: BarChart3, label: t('sidebar.stats') },
+        { path: "/capacitaciones", icon: BookOpen, label: t('sidebar.capacitaciones') },
     ];
 
     const navLinksEmpresa = [
@@ -57,6 +60,7 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         { path: "/empresa/dashboard/estadisticas", icon: BarChart3, label: t('sidebar.stats') },
         { path: "/empresa/dashboard/vacantes", icon: Briefcase, label: t('sidebar.jobs') },
         { path: "/empresa/dashboard/aspirantes", icon: Zap, label: t('sidebar.candidates') },
+        { path: "/empresa/dashboard/capacitaciones", icon: BookOpen, label: t('sidebar.capacitaciones') },
     ];
 
     const navLinks = isEmpresa ? navLinksEmpresa : navLinksAspirante;
@@ -85,9 +89,8 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
                 {/* Logo */}
                 <div className="p-8">
                     <Link to="/" className="flex items-center gap-4 no-underline group">
-                        <div className="relative group-hover:scale-110 transition-all duration-500 bg-[#1a8641] p-3 rounded-2xl shadow-xl shadow-green-900/30">
-                            <img src={logoImg} alt="Logo" className="w-11 h-11 object-contain" />
-                            <div className="absolute -inset-3 bg-green-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="bg-[#1a8641] p-2 rounded-xl flex items-center justify-center shadow-lg shadow-green-900/20 transition-all duration-500 group-hover:scale-105">
+                            <img src={logoImg} alt="Logo" className="h-[50px] w-[100px] object-contain" />
                         </div>
                         <div>
                             <h2 className="text-2xl font-black text-slate-800 dark:text-white leading-none tracking-tighter m-0 uppercase">GreenTalent</h2>
@@ -106,8 +109,8 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
                                 key={idx}
                                 onClick={() => link.path !== "#" && navigate(link.path)}
                                 className={`flex items-center gap-4 px-4 py-3.5 text-xs font-black uppercase tracking-[0.15em] rounded-2xl transition-all cursor-pointer group ${isActive
-                                        ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl"
-                                        : "text-slate-500 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
+                                    ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl"
+                                    : "text-slate-500 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
                                     }`}
                             >
                                 <Icon className={`w-5 h-5 ${isActive ? "text-green-400 dark:text-green-600" : "group-hover:text-green-500 transition-colors"}`} />
@@ -144,6 +147,11 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
                     >
                         <LogOut className="w-5 h-5" /> {t('navbar.logout')}
                     </button>
+
+                    <div className="mt-6 flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Strategic Alliance</span>
+                        <img src={garnierLogo} alt="Garnier" className="h-8 object-contain grayscale hover:grayscale-0 transition-all" />
+                    </div>
                 </div>
             </aside>
         </>

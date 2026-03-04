@@ -222,5 +222,17 @@
         "terms_desc_1": "In compliance with data protection laws, GreenTalent will treat your information confidentially and securely.",
         "terms_desc_2": "Your data will be used only to connect applicants with registered companies.",
         "terms_desc_3": "You can request the deletion of your data at any time."
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "talent_match": "TalentMatch (Beta)",
+        "jobs": "Job Opportunities",
+        "internships": "Internships",
+        "interviews": "AI Evaluation",
+        "stats": "Impact & Metrics",
+        "capacitaciones": "Trainings",
+        "my_profile": "Company Profile",
+        "candidates": "Candidate Management",
+        "settings": "General Settings"
     }
 }

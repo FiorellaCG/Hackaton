@@ -2,6 +2,7 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "luc
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logoImg from "../../../assents/Logo.png";
+import garnierLogo from "../../../assents/garnierlogo.svg";
 
 const Footer = () => {
     const { t } = useTranslation();
@@ -12,9 +13,8 @@ const Footer = () => {
                 {/* Brand Section */}
                 <div className="col-span-1 md:col-span-1 flex flex-col items-start gap-6">
                     <div className="flex items-center gap-5 group">
-                        <div className="relative group-hover:scale-110 transition-all duration-500 bg-[#1a8641] p-4 rounded-2xl shadow-2xl shadow-green-900/40">
-                            <img src={logoImg} alt="Logo" className="w-12 h-12 object-contain brightness-110 contrast-125" />
-                            <div className="absolute -inset-2 bg-green-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="bg-[#1a8641] p-2 rounded-xl flex items-center justify-center shadow-lg shadow-green-900/20 transition-all duration-500 group-hover:scale-105">
+                            <img src={logoImg} alt="Logo" className="h-[50px] w-[100px] object-contain" />
                         </div>
                         <div>
                             <h2 className="text-2xl font-black text-white leading-none tracking-tighter uppercase m-0">{t('brand.name')}</h2>
@@ -29,6 +29,10 @@ const Footer = () => {
                         <Twitter className="w-5 h-5 text-slate-500 hover:text-green-500 cursor-pointer transition-colors" />
                         <Instagram className="w-5 h-5 text-slate-500 hover:text-green-500 cursor-pointer transition-colors" />
                         <Linkedin className="w-5 h-5 text-slate-500 hover:text-green-500 cursor-pointer transition-colors" />
+                    </div>
+                    <div className="mt-4 pt-6 border-t border-slate-800 w-full">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-4 italic">Alianza Estratégica</p>
+                        <img src={garnierLogo} alt="Garnier" className="h-8 object-contain grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all" />
                     </div>
                 </div>
 

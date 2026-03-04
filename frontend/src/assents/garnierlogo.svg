@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 120">
+    <g transform="translate(60, 60)">
+        <!-- Outer arc -->
+        <path d="M 24,-30 A 38,38 0 1,0 38,12" fill="none" stroke="#bcd316" stroke-width="15" stroke-linecap="butt" />
+        <!-- Inner arc + horizontal line -->
+        <path d="M 11,-15 A 18,18 0 1,0 18,12 L 38,12" fill="none" stroke="#bcd316" stroke-width="14" stroke-linecap="butt" stroke-linejoin="miter" />
+    </g>
+    <!-- Text -->
+    <text x="120" y="65" font-family="'Montserrat', 'Century Gothic', 'Proxima Nova', 'Helvetica Neue', Arial, sans-serif" font-size="52" font-weight="900" fill="#525252" letter-spacing="1">GARNIER</text>
+    <text x="125" y="88" font-family="'Montserrat', 'Century Gothic', 'Proxima Nova', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#666666" letter-spacing="4">ENHANCING LAND</text>
+</svg>

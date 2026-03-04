@@ -12,7 +12,7 @@ function DashboardAspirantePage() {
             <Sidebar isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
 
             {/* Contenido Principal */}
-            <main className="flex-1 w-full lg:ml-64 p-4 lg:p-8 flex flex-col min-h-screen transition-all">
+            <main className="flex-1 w-full lg:ml-72 p-6 lg:p-10 flex flex-col min-h-screen transition-all duration-300">
                 {/* Cabecera superior del Dashboard */}
                 <div className="flex justify-between items-center mb-8 lg:mb-10 w-full pl-12 lg:pl-0">
                     <div>

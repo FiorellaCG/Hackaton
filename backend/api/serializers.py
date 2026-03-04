@@ -4,7 +4,8 @@ from django.contrib.auth.hashers import check_password, make_password
 from .models import (
     Usuario, Persona, AreaTrabajo, Carrera, Institucion,
     Empresa, Aspirante, Vacante, Postulacion, Curriculo,
-    Practicante, Notificacion, Auditoria, ProgramaFormacion
+    Practicante, Notificacion, Auditoria, ProgramaFormacion,
+    Capacitacion, Favorito, InscripcionCapacitacion
 )
 
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -98,6 +99,15 @@ class PostulacionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CapacitacionSerializer(serializers.ModelSerializer):
+    nombre_empresa = serializers.ReadOnlyField(source='empresa.nombre')
+    nombre_institucion = serializers.ReadOnlyField(source='institucion.nombre')
+
+    class Meta:
+        model = Capacitacion
+        fields = '__all__'
+
+
 class CurriculoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Curriculo
@@ -121,11 +131,29 @@ class AuditoriaSerializer(serializers.ModelSerializer):
         model = Auditoria
         fields = '__all__'
 
+
+class FavoritoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorito
+        fields = '__all__'
+
+
+class InscripcionCapacitacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InscripcionCapacitacion
+        fields = '__all__'
+
 class MiPerfilSerializer(serializers.Serializer):
     usuario = UsuarioSerializer()
     persona = PersonaSerializer()
     aspirante = AspiranteSerializer()
     postulaciones = serializers.ListField(
+        child=serializers.DictField(), required=False
+    )
+    favoritos = serializers.ListField(
+        child=serializers.DictField(), required=False
+    )
+    capacitaciones_inscritas = serializers.ListField(
         child=serializers.DictField(), required=False
     )
 
@@ -254,16 +282,21 @@ class LoginSerializer(serializers.Serializer):
     contrasena = serializers.CharField()
 
     def validate(self, data):
-        try:
-            usuario = Usuario.objects.get(correo=data['correo'])
-        except Usuario.DoesNotExist:
+        usuario_qs = Usuario.objects.filter(correo=data['correo']).order_by('-creado_en')
+        if not usuario_qs.exists():
             raise serializers.ValidationError("Credenciales inválidas")
-
-        if not check_password(data['contrasena'], usuario.contrasena_hash):
+        
+        usuario_valido = None
+        for usuario in usuario_qs:
+            if check_password(data['contrasena'], usuario.contrasena_hash):
+                usuario_valido = usuario
+                break
+                
+        if not usuario_valido:
             raise serializers.ValidationError("Credenciales inválidas")
-
+        
         return {
-            "id": usuario.id,
-            "correo": usuario.correo,
-            "rol": usuario.rol
+            "id": usuario_valido.id,
+            "correo": usuario_valido.correo,
+            "rol": usuario_valido.rol
         }
