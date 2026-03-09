@@ -153,7 +153,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
-    BASE_DIR.parent / "dist" / "assets"
+    BASE_DIR.parent / "dist"
 ]
 
 MEDIA_URL = '/media/'
