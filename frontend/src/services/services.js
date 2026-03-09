@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? "http://127.0.0.1:8000/api" : "/api");
 
 export const obtenerEmpresas = async () => {
   const response = await fetch(`${API_URL}/empresas/`);

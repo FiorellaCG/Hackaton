@@ -11,7 +11,7 @@ i18n
     fallbackLng: 'es',
     supportedLngs: ['en', 'es', 'fr', 'de', 'zh', 'ja'], // agrega más si quieres
     backend: {
-      loadPath: '/locales/{{lng}}.json', // o tu API de traducciones
+      loadPath: import.meta.env.MODE === 'development' ? '/locales/{{lng}}.json' : '/static/locales/{{lng}}.json',
     },
     interpolation: {
       escapeValue: false,
