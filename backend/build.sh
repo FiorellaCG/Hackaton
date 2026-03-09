@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
-# exit on error
-set -o errexit
 
-# The Build Command for Render
+echo "Installing Python dependencies..."
 pip install -r requirements.txt
-python manage.py collectstatic --no-input
+
+echo "Installing frontend dependencies..."
+cd ../frontend
+npm install
+
+echo "Building frontend..."
+npm run build
+
+cd ../backend
+
+echo "Running migrations..."
 python manage.py migrate
+
+echo "Collecting static files..."
+python manage.py collectstatic --noinput

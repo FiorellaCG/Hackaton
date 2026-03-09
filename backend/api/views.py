@@ -29,6 +29,11 @@ from .serializers import (
     FavoritoSerializer, InscripcionCapacitacionSerializer, EntrevistaSerializer
 )
 
+from django.views.generic import TemplateView
+
+class FrontendAppView(TemplateView):
+    template_name = "index.html"
+
 # =====================================================
 # ENVIAR CREDENCIALES AL ASPIRANTE (EMAIL)
 # =====================================================
