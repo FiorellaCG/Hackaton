@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { BarChart3, Users, Building2, Briefcase, LogOut } from 'lucide-react';
-import logoImg from '../../assents/Logo.png';
+import logoImg from '../../assents/logo.png';
 
 const AdminSidebar = ({ handleLogout }) => {
     const location = useLocation();

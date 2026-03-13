@@ -2,7 +2,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { obtenerMiPerfil } from "../../../services/services";
-import logoImg from "../../../assents/Logo.png";
+import logoImg from "../../../assents/logo.png";
 import garnierLogo from "../../../assents/garnierlogo.svg";
 import {
     LayoutDashboard,
