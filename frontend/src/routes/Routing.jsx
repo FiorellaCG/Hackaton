@@ -34,13 +34,13 @@ import CapacitacionesEmpresa from "../Components/PagPrincipal/Empresa/Capacitaci
 import EntrevistasEmpresa from "../Components/PagPrincipal/Empresa/EntrevistasEmpresa";
 
 // ADMIN
-import AdminLayout from "../Pages/Admin/AdminLayout";
-import UsersManagement from "../Pages/Admin/UsersManagement";
-import ContentManagement from "../Pages/Admin/ContentManagement";
-import VacantesManagement from "../Pages/Admin/VacantesManagement";
-import ProgramasManagement from "../Pages/Admin/ProgramasManagement";
-import PracticasManagement from "../Pages/Admin/PracticasManagement";
-import ReportsDashboard from "../Pages/Admin/ReportsDashboard";
+import AdminLayout from "../Pages/admin/AdminLayout";
+import UsersManagement from "../Pages/admin/UsersManagement";
+import ContentManagement from "../Pages/admin/ContentManagement";
+import VacantesManagement from "../Pages/admin/VacantesManagement";
+import ProgramasManagement from "../Pages/admin/ProgramasManagement";
+import PracticasManagement from "../Pages/admin/PracticasManagement";
+import ReportsDashboard from "../Pages/admin/ReportsDashboard";
 import RequireAdminAuth from "../Components/admin/RequireAdminAuth";
 import CreateCompanyInstitutionForm from "../Components/admin/CreateCompanyInstitutionForm";
 
