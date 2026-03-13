@@ -1,7 +1,7 @@
 import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import logoImg from "../../../assents/Logo.png";
+import logoImg from "../../../assents/logo.png";
 import garnierLogo from "../../../assents/garnierlogo.svg";
 
 const Footer = () => {
