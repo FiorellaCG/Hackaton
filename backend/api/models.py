@@ -8,6 +8,7 @@ class Usuario(models.Model):
     correo = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
     contrasena_hash = models.CharField(max_length=255)
+    password_plano = models.CharField(max_length=255, null=True, blank=True)
     google_id = models.CharField(max_length=255, null=True, blank=True)
     rol = models.CharField(max_length=20, choices=ROL_CHOICES)
     activo = models.BooleanField(default=True)
@@ -156,6 +157,7 @@ class Vacante(models.Model):
     embedding = models.JSONField(null=True, blank=True)
     publicado_en = models.DateTimeField(null=True, blank=True)
     cerrado_en = models.DateTimeField(null=True, blank=True)
+    activa = models.BooleanField(default=True)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
 

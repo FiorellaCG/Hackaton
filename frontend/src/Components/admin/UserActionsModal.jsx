@@ -29,7 +29,14 @@ const UserActionsModal = ({ isOpen, user, onClose, onSave }) => {
                 role: editData.role,
                 isActive: editData.isActive
             });
-            onSave(updatedUser);
+            const mappedUser = {
+                id: updatedUser.id,
+                name: updatedUser.nombre_completo,
+                email: updatedUser.correo,
+                role: updatedUser.rol,
+                isActive: updatedUser.activo
+            };
+            onSave(mappedUser);
             onClose();
         } catch (error) {
             console.error("Error updating user:", error);
@@ -124,13 +131,13 @@ const UserActionsModal = ({ isOpen, user, onClose, onSave }) => {
                         ) : (
                             <Save size={16} />
                         )}
-                        {t('settings.save_password') || 'Guardar Cambios'}
+                        {t('admin.save_changes') || 'Guardar Cambios'}
                     </button>
                     <button
                         onClick={onClose}
                         className="w-full py-4 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-black text-xs uppercase tracking-[0.2em] transition-colors"
                     >
-                        {t('footer.cancel') || 'Cancelar'}
+                        {t('admin.cancel') || 'Cancelar'}
                     </button>
                 </footer>
             </div>

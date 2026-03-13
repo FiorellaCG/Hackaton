@@ -3,7 +3,7 @@ import Navbar from "../../Components/PagPrincipal/Navbar/NavBar";
 import Footer from "../../Components/PagPrincipal/Home/Footer";
 import { obtenerEmpresas } from "../../services/services";
 import { Building2, Search, ExternalLink, Globe, MapPin, Users } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const CompaniesPage = () => {
     const [empresas, setEmpresas] = useState([]);

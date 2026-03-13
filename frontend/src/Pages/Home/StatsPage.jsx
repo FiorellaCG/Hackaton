@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import {
     Users,
     Building2,
@@ -156,14 +156,14 @@ const StatsPage = () => {
                             <div className="growth-metric">
                                 <TrendingUp className="growth-icon" />
                                 <div>
-                                    <h4>+15%</h4>
+                                    <h4>+{stats?.crecimiento_mensual || "12"}%</h4>
                                     <p>Crecimiento mensual</p>
                                 </div>
                             </div>
                             <div className="growth-metric">
                                 <Target className="growth-icon" />
                                 <div>
-                                    <h4>98%</h4>
+                                    <h4>{stats?.satisfaccion_empresas || "95"}%</h4>
                                     <p>Satisfacción de empresas</p>
                                 </div>
                             </div>

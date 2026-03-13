@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.db.models import Count
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -11,6 +12,9 @@ from rest_framework.permissions import AllowAny
 from django.utils import timezone
 import openpyxl
 import uuid
+import random
+import string
+from django.contrib.auth.hashers import make_password
 
 from .models import (
     Usuario, Persona, AreaTrabajo, Carrera, Institucion,
@@ -25,7 +29,7 @@ from .serializers import (
     ProgramaFormacionSerializer, AspiranteSerializer, VacanteSerializer,
     PostulacionSerializer, CurriculoSerializer, PracticanteSerializer,
     NotificacionSerializer, AuditoriaSerializer, CapacitacionSerializer,
-    CrearPerfilAspiranteSerializer, CrearPerfilEmpresaSerializer, LoginSerializer, MiPerfilSerializer,
+    CrearPerfilAspiranteSerializer, CrearPerfilEmpresaSerializer, CrearPerfilInstitucionSerializer, LoginSerializer, MiPerfilSerializer,
     FavoritoSerializer, InscripcionCapacitacionSerializer, EntrevistaSerializer
 )
 
@@ -141,10 +145,16 @@ class EnviarCredencialesAspiranteView(APIView):
 class MiPerfilView(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request, usuario_id):
+    def get(self, request, usuario_id=None):
+        uid = usuario_id or request.query_params.get('usuario_id')
+        if not uid:
+            return Response({"error": "Falta usuario_id"}, status=status.HTTP_400_BAD_REQUEST)
+            
         try:
-            usuario = Usuario.objects.get(id=usuario_id)
-        except Usuario.DoesNotExist:
+            usuario = Usuario.objects.get(id=uid)
+        except (Usuario.DoesNotExist, ValueError):
+            # Si el ID no existe pero tal vez es un usuario eliminado del navegador, 
+            # podríamos intentar buscar otro usuario con el mismo ID en el futuro o manejarlo mejor.
             return Response(
                 {"error": "Usuario no existe"},
                 status=status.HTTP_404_NOT_FOUND
@@ -153,10 +163,17 @@ class MiPerfilView(APIView):
         if usuario.rol == 'empresa':
             empresa = usuario.empresa_set.first()
             if not empresa:
-                return Response({"usuario_id": usuario.id, "perfil_completo": False}, status=status.HTTP_200_OK)
+                # Recuperar de otro usuario con el mismo correo
+                otro_u = Usuario.objects.filter(correo__iexact=usuario.correo, rol='empresa').exclude(id=usuario.id).first()
+                if otro_u:
+                    empresa = otro_u.empresa_set.first()
+            
+            if not empresa:
+                return Response({"usuario_id": str(usuario.id), "perfil_completo": False, "rol": "empresa"}, status=status.HTTP_200_OK)
+            
             return Response({
-                "usuario_id": usuario.id,
-                "empresa_id": empresa.id,
+                "usuario_id": str(usuario.id),
+                "empresa_id": str(empresa.id),
                 "nombre": empresa.nombre,
                 "descripcion": empresa.descripcion,
                 "nombre_contacto": empresa.nombre_contacto,
@@ -172,6 +189,12 @@ class MiPerfilView(APIView):
 
         if usuario.rol == 'institucion':
             institucion = usuario.institucion_set.first()
+            if not institucion:
+                # Recuperar de otro usuario con el mismo correo
+                otro_u = Usuario.objects.filter(correo__iexact=usuario.correo, rol='institucion').exclude(id=usuario.id).first()
+                if otro_u:
+                    institucion = otro_u.institucion_set.first()
+
             if not institucion:
                 return Response({"usuario_id": str(usuario.id), "perfil_completo": False, "rol": "institucion"}, status=status.HTTP_200_OK)
 
@@ -216,125 +239,186 @@ class MiPerfilView(APIView):
                 "rol": "institucion"
             }, status=status.HTTP_200_OK)
 
-        try:
-            persona = usuario.persona
-            aspirante = usuario.aspirante
-        except (Persona.DoesNotExist, Aspirante.DoesNotExist):
-            # Perfil incompleto: devolver 200 con datos seguros y banderas para que el frontend no estalle con 404
+        if usuario.rol == 'admin':
             return Response({
-                "usuario_id": usuario.id,
-                "persona_id": None,
-                "aspirante_id": None,
-                "nombre": "Usuario",
-                "apellidos": "Registrado",
-                "cedula": "",
-                "foto_url": None,
-                "sobre_mi": "Aún no has completado tu perfil.",
-                "carrera": "No definida",
-                "carrera_id": None,
-                "nivel_educativo": "",
-                "estado_laboral": "",
-                "telefono": usuario.telefono,
-                "provincia": "",
-                "canton": "",
-                "genero": "",
-                "nacionalidad": "",
-                "fecha_nacimiento": None,
-                "habilidades_tecnicas": [],
-                "habilidades_blandas": [],
-                "experiencia": [],
-                "practicante": False,
-                "postulaciones": [],
-                "preferencias": usuario.preferencias,
-                "perfil_completo": False
+                "usuario_id": str(usuario.id),
+                "nombre": "Administrador",
+                "apellidos": "Sistema",
+                "correo": usuario.correo,
+                "rol": "admin",
+                "perfil_completo": True,
+                "preferencias": usuario.preferencias
             }, status=status.HTTP_200_OK)
 
-        postulaciones = Postulacion.objects.filter(aspirante=aspirante).select_related('vacante', 'vacante__empresa')
-        postulaciones_data = []
-        for p in postulaciones:
-            postulaciones_data.append({
-                "id": p.id,
-                "cargo": p.vacante.titulo,
-                "empresa": p.vacante.empresa.nombre,
-                "tipo": p.vacante.tipo_vacante,
-                "estado": p.estado,
-                "fecha": p.postulado_en.isoformat() if p.postulado_en else None
-            })
+        # Si el rol es aspirante, buscamos Persona + Aspirante
+        if usuario.rol == 'aspirante':
+            persona = getattr(usuario, 'persona', None)
+            aspirante = getattr(usuario, 'aspirante', None)
 
-        # Aplanamos la respuesta para que sea más fácil de usar en el frontend
-        data = {
-            "usuario_id": usuario.id,
-            "persona_id": persona.id,
-            "aspirante_id": aspirante.id,
-            "nombre": persona.nombre,
-            "apellidos": persona.apellidos,
-            "cedula": persona.cedula,
-            "foto_url": request.build_absolute_uri(aspirante.foto_url.url) if aspirante.foto_url else None,
-            "sobre_mi": aspirante.sobre_mi,
-            "carrera": aspirante.carrera.nombre if aspirante.carrera else "Estudiante",
-            "carrera_id": aspirante.carrera.id if aspirante.carrera else None,
-            "nivel_educativo": aspirante.nivel_educativo,
-            "estado_laboral": aspirante.estado_laboral,
-            "telefono": persona.telefono,
-            "provincia": persona.provincia,
-            "canton": persona.canton,
-            "genero": persona.genero,
-            "nacionalidad": persona.nacionalidad,
-            "fecha_nacimiento": persona.fecha_nacimiento.isoformat() if persona.fecha_nacimiento else None,
-            "habilidades_tecnicas": aspirante.habilidades_tecnicas,
-            "habilidades_blandas": aspirante.habilidades_blandas,
-            "experiencia": aspirante.experiencia,
-            "practicante": hasattr(aspirante, 'practicante_set') and aspirante.practicante_set.exists(),
-            "postulaciones": postulaciones_data,
-            "favoritos": [],
-            "capacitaciones_inscritas": [],
-            "preferencias": usuario.preferencias,
-            "institucion_origen": None,
-        }
+            if not persona or not aspirante:
+                # INTENTO DE RECUPERACIÓN: Si hay otro usuario con el mismo correo que SÍ tenga perfil
+                # Buscamos una Persona que tenga Aspirante y cuyo usuario tenga el mismo correo
+                otra_persona = Persona.objects.filter(usuario__correo__iexact=usuario.correo).exclude(usuario=usuario).filter(aspirante__isnull=False).first()
+                
+                if otra_persona:
+                    persona = otra_persona
+                    aspirante = otra_persona.aspirante
+                    # Usamos el correo del usuario actual pero los datos de la otra persona
+                else:
+                    # Perfil realmente incompleto: devolver un objeto seguro para el frontend
+                    return Response({
+                        "usuario_id": str(usuario.id),
+                        "persona_id": None,
+                        "aspirante_id": None,
+                        "nombre": "Usuario",
+                        "apellidos": "Registrado",
+                        "cedula": "",
+                        "correo": usuario.correo,
+                        "foto_url": None,
+                        "sobre_mi": "",
+                        "carrera": "Estudiante",
+                        "carrera_id": None,
+                        "nivel_educativo": "",
+                        "estado_laboral": "",
+                        "telefono": "",
+                        "provincia": "",
+                        "canton": "",
+                        "genero": "",
+                        "nacionalidad": "Costarricense",
+                        "fecha_nacimiento": None,
+                        "habilidades_tecnicas": [],
+                        "habilidades_blandas": [],
+                        "experiencia": [],
+                        "practicante": False,
+                        "postulaciones": [],
+                        "favoritos": [],
+                        "capacitaciones_inscritas": [],
+                        "entrevistas": [],
+                        "preferencias": usuario.preferencias,
+                        "institucion_origen": None,
+                        "perfil_completo": False,
+                        "rol": "aspirante"
+                    }, status=status.HTTP_200_OK)
 
-        # --- FAVORITOS ---
-        favoritos = Favorito.objects.filter(aspirante=aspirante).select_related('vacante', 'capacitacion', 'vacante__empresa', 'capacitacion__empresa')
-        for fav in favoritos:
-            item = {
-                "id": fav.id,
-                "tipo": "vacante" if fav.vacante else "capacitacion",
-                "obj_id": fav.vacante.id if fav.vacante else fav.capacitacion.id,
-                "titulo": fav.vacante.titulo if fav.vacante else fav.capacitacion.titulo,
-                "entidad": (fav.vacante.empresa.nombre if fav.vacante.empresa else "") if fav.vacante else (fav.capacitacion.empresa.nombre if fav.capacitacion.empresa else fav.capacitacion.institucion.nombre if fav.capacitacion.institucion else "")
+            postulaciones = Postulacion.objects.filter(aspirante=aspirante).select_related('vacante', 'vacante__empresa')
+            postulaciones_data = []
+            for p in postulaciones:
+                postulaciones_data.append({
+                    "id": p.id,
+                    "cargo": p.vacante.titulo,
+                    "empresa": p.vacante.empresa.nombre,
+                    "tipo": p.vacante.tipo_vacante,
+                    "estado": p.estado,
+                    "fecha": p.postulado_en.isoformat() if p.postulado_en else None
+                })
+
+            # Aplanamos la respuesta para que sea más fácil de usar en el frontend
+            data = {
+                "usuario_id": str(usuario.id),
+                "persona_id": str(persona.id),
+                "aspirante_id": str(aspirante.id),
+                "nombre": persona.nombre,
+                "apellidos": persona.apellidos,
+                "cedula": persona.cedula,
+                "correo": usuario.correo,
+                "foto_url": request.build_absolute_uri(aspirante.foto_url.url) if aspirante.foto_url else None,
+                "sobre_mi": aspirante.sobre_mi,
+                "carrera": aspirante.carrera.nombre if aspirante.carrera else "Estudiante",
+                "carrera_id": aspirante.carrera.id if aspirante.carrera else None,
+                "nivel_educativo": aspirante.nivel_educativo,
+                "estado_laboral": aspirante.estado_laboral,
+                "telefono": persona.telefono,
+                "provincia": persona.provincia,
+                "canton": persona.canton,
+                "genero": persona.genero,
+                "nacionalidad": persona.nacionalidad,
+                "fecha_nacimiento": persona.fecha_nacimiento.isoformat() if persona.fecha_nacimiento else None,
+                "habilidades_tecnicas": aspirante.habilidades_tecnicas,
+                "habilidades_blandas": aspirante.habilidades_blandas,
+                "experiencia": aspirante.experiencia,
+                "practicante": hasattr(aspirante, 'practicante_set') and aspirante.practicante_set.exists(),
+                "postulaciones": postulaciones_data,
+                "favoritos": [],
+                "capacitaciones_inscritas": [],
+                "entrevistas": [],
+                "preferencias": usuario.preferencias,
+                "password_plano": usuario.password_plano,
+                "institucion_origen": {
+                    "id": str(aspirante.institucion_origen.id),
+                    "nombre": aspirante.institucion_origen.nombre
+                } if aspirante.institucion_origen else None,
+                "perfil_completo": True,
+                "rol": "aspirante"
             }
-            data["favoritos"].append(item)
 
-        # --- CAPACITACIONES INSCRITAS ---
-        inscripciones = InscripcionCapacitacion.objects.filter(aspirante=aspirante).select_related('capacitacion', 'capacitacion__empresa', 'capacitacion__institucion')
-        for ins in inscripciones:
-            data["capacitaciones_inscritas"].append({
-                "id": ins.id,
-                "cap_id": ins.capacitacion.id,
-                "titulo": ins.capacitacion.titulo,
-                "entidad": ins.capacitacion.empresa.nombre if ins.capacitacion.empresa else ins.capacitacion.institucion.nombre if ins.capacitacion.institucion else "",
-                "fecha_inscripcion": ins.fecha_inscripcion.isoformat()
-            })
+            # --- FAVORITOS ---
+            favoritos = Favorito.objects.filter(aspirante=aspirante).select_related(
+                'vacante', 'capacitacion', 'vacante__empresa', 'capacitacion__empresa', 'capacitacion__institucion'
+            )
+            for fav in favoritos:
+                entidad = "N/A"
+                if fav.vacante and fav.vacante.empresa:
+                    entidad = fav.vacante.empresa.nombre
+                elif fav.capacitacion:
+                    entidad = fav.capacitacion.empresa.nombre if fav.capacitacion.empresa else (fav.capacitacion.institucion.nombre if fav.capacitacion.institucion else "N/A")
+                
+                data["favoritos"].append({
+                    "id": fav.id,
+                    "tipo": "vacante" if fav.vacante else "capacitacion",
+                    "obj_id": fav.vacante.id if fav.vacante else fav.capacitacion.id,
+                    "titulo": fav.vacante.titulo if fav.vacante else fav.capacitacion.titulo,
+                    "entidad": entidad
+                })
 
-        # --- INSTITUCIÓN DE ORIGEN (via Practicante) ---
-        practicante_obj = aspirante.practicante_set.select_related('institucion').first()
-        if practicante_obj and practicante_obj.institucion:
-            inst = practicante_obj.institucion
-            data["institucion_origen"] = {
-                "id": str(inst.id),
-                "nombre": inst.nombre,
-                "titulo": inst.titulo,
-                "tipo": inst.tipo,
-                "nombre_contacto": inst.nombre_contacto,
-                "correo_contacto": inst.correo_contacto,
-                "programa": practicante_obj.nombre_programa,
-                "nivel_academico": practicante_obj.nivel_academico,
-                "horas_requeridas": practicante_obj.horas_requeridas,
-                "estado_pasantia": practicante_obj.estado_pasantia,
-                "fecha_inicio": practicante_obj.fecha_inicio.isoformat() if practicante_obj.fecha_inicio else None,
-                "fecha_fin": practicante_obj.fecha_fin.isoformat() if practicante_obj.fecha_fin else None,
-            }
+            # --- CAPACITACIONES INSCRITAS ---
+            inscripciones = InscripcionCapacitacion.objects.filter(aspirante=aspirante).select_related(
+                'capacitacion', 'capacitacion__empresa', 'capacitacion__institucion'
+            )
+            for ins in inscripciones:
+                entidad = ins.capacitacion.empresa.nombre if ins.capacitacion.empresa else (ins.capacitacion.institucion.nombre if ins.capacitacion.institucion else "N/A")
+                data["capacitaciones_inscritas"].append({
+                    "id": ins.id,
+                    "cap_id": ins.capacitacion.id,
+                    "titulo": ins.capacitacion.titulo,
+                    "entidad": entidad,
+                    "fecha_inscripcion": ins.fecha_inscripcion.isoformat()
+                })
 
-        return Response(data, status=status.HTTP_200_OK)
+            # --- INSTITUCIÓN DE ORIGEN (via Practicante) ---
+            practicante_obj = aspirante.practicante_set.select_related('institucion').first()
+            if practicante_obj and practicante_obj.institucion:
+                inst = practicante_obj.institucion
+                data["institucion_origen"] = {
+                    "id": str(inst.id),
+                    "nombre": inst.nombre,
+                    "titulo": inst.titulo,
+                    "tipo": inst.tipo,
+                    "nombre_contacto": inst.nombre_contacto,
+                    "correo_contacto": inst.correo_contacto,
+                    "programa": practicante_obj.nombre_programa,
+                    "nivel_academico": practicante_obj.nivel_academico,
+                    "horas_requeridas": practicante_obj.horas_requeridas,
+                    "estado_pasantia": practicante_obj.estado_pasantia,
+                    "fecha_inicio": practicante_obj.fecha_inicio.isoformat() if practicante_obj.fecha_inicio else None,
+                    "fecha_fin": practicante_obj.fecha_fin.isoformat() if practicante_obj.fecha_fin else None,
+                }
+
+            # --- ENTREVISTAS ---
+            entrevistas = Entrevista.objects.filter(aspirante=aspirante).select_related('postulacion__vacante', 'empresa')
+            for ent in entrevistas:
+                data["entrevistas"].append({
+                    "id": str(ent.id),
+                    "cargo": ent.postulacion.vacante.titulo if ent.postulacion and ent.postulacion.vacante else "N/A",
+                    "empresa": ent.empresa.nombre if ent.empresa else "Empresa",
+                    "fecha": ent.fecha.isoformat(),
+                    "hora": ent.hora.strftime("%H:%M") if ent.hora else "N/A",
+                    "meet_url": ent.meet_url,
+                    "estado": ent.estado
+                })
+
+            return Response(data, status=status.HTTP_200_OK)
+
+        return Response({"error": "Rol no reconocido"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # =====================================================
@@ -414,6 +498,16 @@ class CrearPerfilEmpresaView(APIView):
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CrearPerfilInstitucionView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = CrearPerfilInstitucionSerializer(data=request.data)
+        if serializer.is_valid():
+            inst = serializer.save()
+            return Response({"mensaje": "Perfil de institución creado", "id": inst.id}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # =====================================================
 # CONFIGURACIÓN Y AJUSTES
 # =====================================================
@@ -444,6 +538,7 @@ class CambiarPasswordView(APIView):
                 return Response({"error": "La contraseña actual es incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
 
             usuario.contrasena_hash = make_password(new_password)
+            usuario.password_plano = None
             usuario.save()
             return Response({"mensaje": "Contraseña actualizada correctamente"}, status=status.HTTP_200_OK)
         except Usuario.DoesNotExist:
@@ -602,7 +697,7 @@ class InstitucionViewSet(viewsets.ModelViewSet):
     serializer_class = InstitucionSerializer
 
     @action(detail=True, methods=['get'])
-    def plantilla_excel(self, request, pk=None):
+    def descargar_plantilla(self, request, pk=None):
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Estudiantes"
@@ -629,21 +724,33 @@ class InstitucionViewSet(viewsets.ModelViewSet):
             created_count = 0
             errors = []
             
-            headers = [cell.value for cell in ws[1]]
+            headers = [str(cell.value).strip() if cell.value else "" for cell in ws[1]]
             required = ['Nombre', 'Apellidos', 'Cedula', 'Correo', 'Telefono', 'Nivel Educativo']
-            if not all(req in headers for req in required):
-                 return Response({"error": f"Missing required columns. Expected: {required}"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Buscamos columnas ignorando mayúsculas/minúsculas y espacios extras
+            def clean_str(s):
+                return s.replace(" ", "").lower()
+            
+            header_map = {clean_str(h): idx for idx, h in enumerate(headers)}
+            missing = [req for req in required if clean_str(req) not in header_map]
+            
+            if missing:
+                 return Response({"error": f"Faltan columnas requeridas o tienen nombres incorrectos: {missing}"}, status=status.HTTP_400_BAD_REQUEST)
 
             for row_idx, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
                 if not row[0]: continue
                 try:
                     nombre, apellidos, cedula, correo, telefono, nivel_educativo, carrera_id = row[:7]
                     
+                    # Generar contraseña aleatoria
+                    password_temp = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(8))
+                    
                     usuario = Usuario.objects.create(
                         correo=correo,
                         telefono=telefono,
                         rol='aspirante',
-                        contrasena_hash='default_temp_hash'
+                        contrasena_hash=make_password(password_temp),
+                        password_plano=password_temp
                     )
                     
                     persona = Persona.objects.create(
@@ -652,10 +759,10 @@ class InstitucionViewSet(viewsets.ModelViewSet):
                         apellidos=apellidos,
                         cedula=cedula,
                         telefono=telefono,
-                        nacionalidad='Costarricense',
+                        nacionalidad='Honduras',
                         genero='No especificado',
-                        provincia='San Jose',
-                        canton='San Jose'
+                        provincia='N/A',
+                        canton='N/A'
                     )
                     
                     carrera = None
@@ -701,6 +808,23 @@ class InstitucionViewSet(viewsets.ModelViewSet):
         return Response({
             "demanda_laboral": list(demand)
         })
+
+    @action(detail=True, methods=['get'])
+    def estudiantes(self, request, pk=None):
+        institucion = self.get_object()
+        aspirantes = Aspirante.objects.filter(institucion_origen=institucion).select_related('usuario', 'persona')
+        serializer = AspiranteSerializer(aspirantes, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def entrevistas(self, request, pk=None):
+        institucion = self.get_object()
+        entrevistas = Entrevista.objects.filter(
+            aspirante__institucion_origen=institucion
+        ).select_related('empresa', 'aspirante', 'aspirante__persona')
+        
+        serializer = EntrevistaSerializer(entrevistas, many=True)
+        return Response(serializer.data)
 
 
 class EmpresaViewSet(viewsets.ModelViewSet):
@@ -847,9 +971,23 @@ class EntrevistaViewSet(viewsets.ModelViewSet):
         rol = self.request.query_params.get('rol')
         
         if usuario_id and rol:
-            if rol == 'empresa':
-                queryset = queryset.filter(empresa__usuario__id=usuario_id)
-            elif rol == 'aspirante':
-                queryset = queryset.filter(aspirante__usuario__id=usuario_id)
+            try:
+                import uuid
+                # Validar que sea un UUID válido antes de buscar
+                uid_obj = uuid.UUID(usuario_id)
+                usr = Usuario.objects.get(id=uid_obj)
+                email = usr.correo
+                
+                if rol == 'empresa':
+                    queryset = queryset.filter(empresa__usuario__correo__iexact=email)
+                elif rol == 'aspirante':
+                    queryset = queryset.filter(aspirante__usuario__correo__iexact=email)
+            except (Usuario.DoesNotExist, ValueError):
+                # Fallback: intentar filtrar por ID de todos modos por si es un ID legacy que aún existe
+                # (aunque ya pusimos validación arriba, el except ValueError capturará ids mal formateados)
+                if rol == 'empresa':
+                    queryset = queryset.filter(empresa__usuario__id=usuario_id)
+                elif rol == 'aspirante':
+                    queryset = queryset.filter(aspirante__usuario__id=usuario_id)
         
         return queryset.order_by('fecha', 'hora')

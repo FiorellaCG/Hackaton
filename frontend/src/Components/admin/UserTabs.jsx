@@ -5,8 +5,9 @@ const UserTabs = ({ activeTab, onTabSelect }) => {
     const { t } = useTranslation();
     const tabs = [
         { id: 'All Users', label: t('admin.all_users') },
-        { id: 'Companies', label: t('admin.companies_tab') },
-        { id: 'Institutions', label: t('admin.institutions_tab') }
+        { id: 'Aspirantes', label: t('admin.estudiantes_tab') },
+        { id: 'Companies', label: t('admin.empresas_tab') },
+        { id: 'Institutions', label: t('admin.instituciones_tab') }
     ];
 
     return (

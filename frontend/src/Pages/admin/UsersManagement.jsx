@@ -4,7 +4,7 @@ import UserTable from '../../Components/admin/UserTable';
 import UserActionsModal from '../../Components/admin/UserActionsModal';
 import { useTranslation } from "react-i18next";
 import { Users as UsersIcon } from 'lucide-react';
-import { obtenerUsuarios } from '../../services/services';
+import { obtenerUsuarios, actualizarEstadoUsuario } from '../../services/services';
 
 const UsersManagement = () => {
     const { t } = useTranslation();
@@ -43,19 +43,42 @@ const UsersManagement = () => {
     }, [activeTab, allUsers]);
 
     const applyFilter = (data, tab) => {
+        // We generally don't want to list other admins in this view for security,
+        // but we want to show Everyone Else (Companies, Institutions, Aspirantes)
+        const nonAdmins = data.filter(user => user.role?.toLowerCase() !== 'admin');
+
         if (tab === 'All Users') {
-            setFilteredUsers(data.filter(user => user.role?.toLowerCase() !== 'aspirante'));
+            setFilteredUsers(nonAdmins);
         } else {
             const roleMap = {
                 'Companies': 'empresa',
-                'Institutions': 'institucion'
+                'Institutions': 'institucion',
+                'Aspirantes': 'aspirante'
             };
             const role = roleMap[tab];
-            setFilteredUsers(data.filter(user => user.role?.toLowerCase() === role));
+            setFilteredUsers(nonAdmins.filter(user => user.role?.toLowerCase() === role));
         }
     };
 
-    const handleActionClick = (user) => {
+    const handleActionClick = async (user) => {
+        if (user.quickToggle) {
+            try {
+                const updatedUser = await actualizarEstadoUsuario(user.id, {
+                    isActive: !user.isActive
+                });
+                const mappedUser = {
+                    id: updatedUser.id,
+                    name: updatedUser.nombre_completo,
+                    email: updatedUser.correo,
+                    role: updatedUser.rol,
+                    isActive: updatedUser.activo
+                };
+                setAllUsers(prev => prev.map(u => u.id === mappedUser.id ? mappedUser : u));
+            } catch (error) {
+                console.error("Error toggling user status:", error);
+            }
+            return;
+        }
         setSelectedUser(user);
         setIsModalOpen(true);
     };

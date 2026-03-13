@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Briefcase, Calendar, FileText, Check, Loader2 } from 'lucide-react';
 import { crearPerfilAspirante } from '../../../services/services';
+import { useModal } from '../../../ModalContext';
 
 const FormExperiencia = ({ isOpen, onClose, currentPerfil, onSuccess }) => {
+    const { showError } = useModal();
     const [cargando, setCargando] = useState(false);
     const [form, setForm] = useState({
         puesto: '',
@@ -58,7 +60,7 @@ const FormExperiencia = ({ isOpen, onClose, currentPerfil, onSuccess }) => {
             setForm({ puesto: '', empresa: '', periodo: '', descripcion: '' });
         } catch (error) {
             console.error("Error al guardar experiencia:", error);
-            alert("Hubo un error al guardar la experiencia.");
+            showError("Hubo un error al guardar la experiencia.");
         } finally {
             setCargando(false);
         }

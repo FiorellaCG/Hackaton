@@ -52,29 +52,47 @@ const UserTable = ({ users, onEditRow, onActionClick }) => {
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                         {displayedUsers.length > 0 ? (
                             displayedUsers.map((user) => (
-                                <tr key={user.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                    <td className="px-6 py-4">
-                                        <div className="font-bold text-slate-800 dark:text-slate-200">{user.name}</div>
+                                <tr key={user.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                                    <td className="px-6 py-5">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] font-black text-slate-400">
+                                                {user.name?.charAt(0) || 'U'}
+                                            </div>
+                                            <div className="font-bold text-slate-800 dark:text-slate-200">{user.name}</div>
+                                        </div>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">{user.email}</td>
-                                    <td className="px-6 py-4">
-                                        <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-lg border border-indigo-100 dark:border-indigo-800/50">
-                                            {user.role}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className={`px-3 py-1 text-xs font-bold rounded-full ${user.isActive
-                                            ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50'
-                                            : 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800/50'
+                                    <td className="px-6 py-5 text-sm text-slate-500 dark:text-slate-400 font-medium">{user.email}</td>
+                                    <td className="px-6 py-5">
+                                        <div className="flex">
+                                            <span className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg border shadow-sm ${
+                                                user.role === 'admin' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                                                user.role === 'empresa' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                                                user.role === 'institucion' ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                                                'bg-green-50 text-green-600 border-green-100'
                                             }`}>
-                                            {user.isActive ? t('admin.active') : t('admin.inactive')}
-                                        </span>
+                                                {user.role}
+                                            </span>
+                                        </div>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
+                                    <td className="px-6 py-5">
+                                        <button 
+                                            onClick={() => onActionClick({ ...user, quickToggle: true })}
+                                            className="flex items-center gap-2 group/toggle"
+                                        >
+                                            <div className={`w-10 h-5 rounded-full relative transition-colors duration-300 ${user.isActive ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                                                <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all duration-300 ${user.isActive ? 'left-6' : 'left-1'}`}></div>
+                                            </div>
+                                            <span className={`text-[10px] font-black uppercase tracking-widest ${user.isActive ? 'text-emerald-500' : 'text-slate-400'}`}>
+                                                {user.isActive ? t('admin.active') : t('admin.inactive')}
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td className="px-6 py-5 text-right">
                                         <button
                                             onClick={() => onActionClick(user)}
-                                            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-indigo-100 dark:shadow-none"
+                                            className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-black uppercase tracking-widest rounded-xl transition-all"
                                         >
+                                            <Edit2 className="w-3 h-3" />
                                             {t('admin.manage')}
                                         </button>
                                     </td>

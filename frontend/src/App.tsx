@@ -4,6 +4,7 @@ import Routing from './routes/Routing';
 import CookieBanner from './Components/PagPrincipal/Home/CookieBanner';
 import './assents/i18n';
 import { obtenerMiPerfil } from './services/services';
+import { ModalProvider } from './ModalContext';
 
 function App() {
   useEffect(() => {
@@ -33,8 +34,10 @@ function App() {
 
   return (
     <Router>
-      <Routing />
-      <CookieBanner />
+      <ModalProvider>
+        <Routing />
+        <CookieBanner />
+      </ModalProvider>
     </Router>
   );
 }

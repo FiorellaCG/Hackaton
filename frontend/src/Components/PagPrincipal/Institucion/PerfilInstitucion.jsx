@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import {
     Building2, Mail, Phone, User, Users, Award, BookOpen, CheckCircle,
     GraduationCap, Clock, Calendar, Edit2, MapPin, Briefcase, XCircle,
     CheckCircle2, ChevronRight, Sparkles, Shield, Plus
 } from "lucide-react";
 import { obtenerMiPerfil } from "../../../services/services";
-import Sidebar from "../Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 
 const ESTADO_COLOR = {
     activo: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",

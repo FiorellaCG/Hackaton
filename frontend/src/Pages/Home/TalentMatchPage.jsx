@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { useTranslation } from "react-i18next";
 import MatchCard from '../../Components/PagPrincipal/TalentMatch/MatchCard';
-import Sidebar from '../../Components/PagPrincipal/Sidebar';
+import Sidebar from '../../Components/PagPrincipal/Sidebar/Sidebar';
 import { RefreshCcw, Heart, X, Sparkles, Info, CheckCircle } from 'lucide-react';
 import { obtenerVacantesAdmin, toggleFavorito } from '../../services/services';
 

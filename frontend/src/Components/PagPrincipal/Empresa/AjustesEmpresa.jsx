@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Save, AlertCircle } from 'lucide-react';
+import { useModal } from '../../../ModalContext';
 import './AjustesEmpresa.css';
 
 const AjustesEmpresa = () => {
+    const { showSuccess } = useModal();
     const [cargando, setCargando] = useState(false);
 
     const handleSave = (e) => {
@@ -10,7 +12,7 @@ const AjustesEmpresa = () => {
         setCargando(true);
         setTimeout(() => {
             setCargando(false);
-            alert("Ajustes guardados (mock)");
+            showSuccess("Ajustes guardados (mock)");
         }, 1000);
     };
 

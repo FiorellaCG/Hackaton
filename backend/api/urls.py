@@ -8,7 +8,7 @@ from .views import (
     PostulacionViewSet, CurriculoViewSet, PracticanteViewSet,
     NotificacionViewSet, AuditoriaViewSet, CapacitacionViewSet,
     FavoritoViewSet, InscripcionCapacitacionViewSet, EntrevistaViewSet,
-    LoginView, CrearPerfilAspiranteView, MiPerfilView, CrearPerfilEmpresaView,
+    LoginView, CrearPerfilAspiranteView, MiPerfilView, CrearPerfilEmpresaView, CrearPerfilInstitucionView,
     UpdatePreferenciasView, CambiarPasswordView, EliminarCuentaView, EnviarCredencialesAspiranteView
 )
 

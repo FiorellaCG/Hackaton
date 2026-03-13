@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { obtenerCapacitaciones, crearCapacitacion, obtenerMiPerfil } from '../../../services/services';
+import { useModal } from '../../../ModalContext';
 import { BookOpen, Plus, Trash2, Edit, Save, X, Calendar, Clock, Globe, MapPin, CheckCircle2 } from 'lucide-react';
 
 const CapacitacionesEmpresa = () => {
@@ -10,6 +11,7 @@ const CapacitacionesEmpresa = () => {
 
     const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
     const [empresaId, setEmpresaId] = useState(null);
+    const { showError } = useModal();
 
     const [formData, setFormData] = useState({
         titulo: '',
@@ -66,7 +68,7 @@ const CapacitacionesEmpresa = () => {
             loadCapacitaciones();
         } catch (error) {
             console.error(error);
-            alert("Error al crear capacitación");
+            showError("Error al crear capacitación");
         }
     };
 
