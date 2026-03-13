@@ -1,0 +1,7 @@
+﻿frontend/src/Components/PagPrincipal/DashboardAspirante/DashboardAspirante.css
+frontend/src/Components/PagPrincipal/DashboardAspirante/DashboardAspirante.jsx
+frontend/src/Components/PagPrincipal/DashboardEmpresa/DashboardEmpresa.jsx
+frontend/src/Components/PagPrincipal/Empresa/DashboardEmpresaLayout.jsx
+frontend/src/Components/PagPrincipal/FormCarrera/FormCarrera.jsx
+frontend/src/Components/PagPrincipal/Sidebar/Sidebar.jsx
+frontend/src/Components/PagPrincipal/VisualizarCarreras/VisualizarCarreras.jsx
