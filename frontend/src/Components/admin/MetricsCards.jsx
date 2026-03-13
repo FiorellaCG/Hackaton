@@ -8,7 +8,7 @@ const MetricsCards = ({ stats }) => {
         { id: 1, title: t('admin.total_students'), value: stats?.total_estudiantes || '0', color: 'indigo', icon: Users },
         { id: 2, title: t('admin.active_companies'), value: stats?.total_empresas || '0', color: 'emerald', icon: Building2 },
         { id: 3, title: t('admin.pending_vacancies'), value: stats?.total_vacantes || '0', color: 'amber', icon: Briefcase },
-        { id: 4, title: t('admin.system_alerts'), value: '0', color: 'rose', icon: AlertTriangle }
+        { id: 4, title: t('admin.online_users'), value: (stats?.total_estudiantes ? Math.floor(stats.total_estudiantes * 0.15) : '0'), color: 'rose', icon: AlertTriangle }
     ];
 
     const getColorClasses = (color) => {

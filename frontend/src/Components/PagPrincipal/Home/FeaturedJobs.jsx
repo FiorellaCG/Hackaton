@@ -49,23 +49,9 @@ const FeaturedJobs = ({ jobs = [] }) => {
         try {
             const user = JSON.parse(localStorage.getItem("usuario") || "{}");
 
-            // Send Application to API if it is a real Job (has UUID)
-            if (selectedJob.id && typeof selectedJob.id === 'string' && selectedJob.id.includes('-') && !selectedJob.id.includes('local')) {
+            if (selectedJob.id && typeof selectedJob.id === 'string' && selectedJob.id.includes('-')) {
                 await postularVacante(user.id, selectedJob.id);
             }
-
-            // Keep local version for mocks / local
-            const postulaciones = JSON.parse(localStorage.getItem('postulaciones_empresa') || '[]');
-            const nuevaPostulacion = {
-                id: Date.now(),
-                jobId: selectedJob.id,
-                jobTitle: selectedJob.title,
-                candidatoName: user.nombre ? `${user.nombre} ${user.apellidos || ''}` : user.correo,
-                match: Math.floor(Math.random() * 30) + 70, // Random match 70-99
-                status: 'Pendiente'
-            };
-
-            localStorage.setItem('postulaciones_empresa', JSON.stringify([...postulaciones, nuevaPostulacion]));
         } catch (e) {
             console.error("Error saving postulation", e);
         }
@@ -132,7 +118,7 @@ const FeaturedJobs = ({ jobs = [] }) => {
                                 </div>
 
                                 <div className="flex flex-wrap gap-2 mb-8">
-                                    {job.tags.map((tag, idx) => (
+                                    {(job.tags || []).map((tag, idx) => (
                                         <span key={idx} className="px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-[10px] font-black uppercase tracking-wider rounded-lg border border-green-100 dark:border-green-900/30">
                                             {tag}
                                         </span>

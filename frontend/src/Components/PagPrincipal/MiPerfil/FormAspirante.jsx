@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { crearPerfilAspirante } from "../../../services/services";
+import { crearPerfilAspirante, obtenerCarreras } from "../../../services/services";
 import {
   User, Briefcase, MapPin, Flag, FileText, Calendar, Loader2,
   ArrowRight, ArrowLeft, Check, AlertCircle, Info, Star, Cpu,
@@ -15,6 +15,7 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData, initialStep = 1 }) =
   const [cargando, setCargando] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [tooltipActive, setTooltipActive] = useState(null);
+  const [carreras, setCarreras] = useState([]);
 
   const [form, setForm] = useState({
     nombre: currentData?.nombre || "",
@@ -27,7 +28,7 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData, initialStep = 1 }) =
     telefono_alterno: currentData?.telefono_alterno || "",
     provincia: currentData?.provincia || "",
     canton: currentData?.canton || "",
-    carrera_id: currentData?.carrera_id || "ea9e54af-9a82-45d0-9d32-32feaa2d5eb5",
+    carrera_id: currentData?.carrera_id || "",
     nivel_educativo: currentData?.nivel_educativo || "secundaria",
     estado_laboral: currentData?.estado_laboral || "buscando",
     sobre_mi: currentData?.sobre_mi || "",
@@ -36,6 +37,15 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData, initialStep = 1 }) =
     habilidades_blandas: currentData?.habilidades_blandas || [],
     experiencia: currentData?.experiencia || [],
   });
+
+  useEffect(() => {
+    obtenerCarreras().then(data => {
+      setCarreras(data);
+      if (!form.carrera_id && data.length > 0) {
+        setForm(prev => ({ ...prev, carrera_id: data[0].id }));
+      }
+    });
+  }, []);
 
   const techSkillsList = [
     { icon: 'Code', name: 'Frontend', desc: 'Creación de interfaces interactivas con React/Vue' },
@@ -263,8 +273,11 @@ const FormAspirante = ({ usuarioId, onSuccess, currentData, initialStep = 1 }) =
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('candidate_profile.pro.career')}</label>
-                <select required name="carrera_id" value={form.carrera_id} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white text-slate-700">
-                  <option value="ea9e54af-9a82-45d0-9d32-32feaa2d5eb5">Ingeniería en Sistemas de Información</option>
+                <select required name="carrera_id" value={form.carrera_id} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all bg-slate-50 focus:bg-white dark:bg-slate-800 dark:text-slate-200 text-slate-700">
+                  <option value="" disabled>Seleccione su cargo o carrera</option>
+                  {carreras.map(c => (
+                    <option key={c.id} value={c.id}>{c.nombre}</option>
+                  ))}
                 </select>
               </div>
               <div className="space-y-2">

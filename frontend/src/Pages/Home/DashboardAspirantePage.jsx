@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DashboardAspirante from "@/src/Components/PagPrincipal/DashboardAspirante";
-import Sidebar from "@/src/Components/PagPrincipal/Sidebar";
+import DashboardAspirante from "@/src/Components/PagPrincipal/DashboardAspirante/DashboardAspirante";
+import Sidebar from "@/src/Components/PagPrincipal/Sidebar/Sidebar";
 import { Bell } from "lucide-react";
 
 function DashboardAspirantePage() {

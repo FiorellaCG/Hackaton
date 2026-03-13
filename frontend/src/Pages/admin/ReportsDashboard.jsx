@@ -3,6 +3,8 @@ import MetricsCards from '../../Components/admin/MetricsCards';
 import ChartsSection from '../../Components/admin/ChartsSection';
 import FiltersBar from '../../Components/admin/FiltersBar';
 import ReportsExport from '../../Components/admin/ReportsExport';
+import RecentActivity from '../../Components/admin/RecentActivity';
+import QuickActions from '../../Components/admin/QuickActions';
 import { BarChart3 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { obtenerEstadisticasGeneral } from '../../services/services';
@@ -52,9 +54,9 @@ const ReportsDashboard = () => {
                 <MetricsCards stats={stats} />
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+                <div className="lg:col-span-3 space-y-6">
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
                         <ChartsSection
                             title={t('admin.registration_trends')}
                             type="line"
@@ -62,27 +64,32 @@ const ReportsDashboard = () => {
                             dataKeys={['estudiantes', 'empresas']}
                         />
                     </div>
-                </div>
-                <div className="lg:col-span-1">
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm h-full">
-                        <ChartsSection
-                            title={t('admin.roles_distribution')}
-                            type="pie"
-                            data={stats?.distribucion_roles || []}
-                        />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                            <ChartsSection
+                                title={t('admin.roles_distribution')}
+                                type="pie"
+                                data={stats?.distribucion_roles || []}
+                            />
+                        </div>
+                        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                            <ChartsSection
+                                title={t('admin.vacancies_by_area')}
+                                type="bar"
+                                data={stats?.vacantes_por_area || []}
+                                dataKeys={['count']}
+                                labelKey="area_trabajo__nombre"
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <section className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                <ChartsSection
-                    title={t('admin.vacancies_by_area')}
-                    type="bar"
-                    data={stats?.vacantes_por_area || []}
-                    dataKeys={['count']}
-                    labelKey="area_trabajo__nombre"
-                />
-            </section>
+                <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-32">
+                    <QuickActions />
+                    <RecentActivity />
+                </div>
+            </div>
         </div>
     );
 };

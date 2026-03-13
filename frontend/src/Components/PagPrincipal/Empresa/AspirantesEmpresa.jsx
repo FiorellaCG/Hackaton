@@ -3,9 +3,11 @@ import { Users, Search, Check, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import './AspirantesEmpresa.css';
 import { obtenerPostulacionesEmpresa, actualizarEstadoPostulacion } from '../../../services/services';
+import { useModal } from '../../../ModalContext';
 
 const AspirantesEmpresa = () => {
     const { t } = useTranslation();
+    const { showError } = useModal();
     const [searchTerm, setSearchTerm] = useState('');
     const [aspirantes, setAspirantes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ const AspirantesEmpresa = () => {
             await actualizarEstadoPostulacion(id, newStatus);
             fetchData();
         } catch (error) {
-            alert("Error al actualizar el estado");
+            showError("Error al actualizar el estado");
         }
     };
 
@@ -87,7 +89,15 @@ const AspirantesEmpresa = () => {
                                     <td className="aspirantes-td">
                                         <div className="aspirantes-candidate-info">
                                             <div className="aspirantes-candidate-avatar">{(asp.aspirante_obj?.nombre || 'U').charAt(0)}</div>
-                                            {asp.aspirante_obj?.nombre} {asp.aspirante_obj?.apellidos}
+                                            <div>
+                                                <div className="font-bold">{asp.aspirante_obj?.nombre} {asp.aspirante_obj?.apellidos}</div>
+                                                {asp.aspirante_obj?.nombre_institucion && (
+                                                    <div className="text-[10px] text-[#7a8000] font-black uppercase tracking-tight flex items-center gap-1 mt-0.5">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-[#b1b900]"></span>
+                                                        Recomendado por: {asp.aspirante_obj.nombre_institucion}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </td>
                                     <td className="aspirantes-td font-medium">{asp.vacante_obj?.titulo}</td>

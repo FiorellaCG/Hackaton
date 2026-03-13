@@ -9,7 +9,7 @@ from .models import (
 )
 
 class UsuarioSerializer(serializers.ModelSerializer):
-    contrasena = serializers.CharField(write_only=True, required=True)
+    contrasena = serializers.CharField(write_only=True, required=False)
     nombre_completo = serializers.SerializerMethodField()
 
     class Meta:
@@ -22,9 +22,10 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'rol',
             'activo',
             'consentimiento',
-            'nombre_completo'
+            'nombre_completo',
+            'password_plano'
         ]
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'password_plano']
 
     def get_nombre_completo(self, obj):
         if obj.rol == 'aspirante' or obj.rol == 'admin':
@@ -61,7 +62,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             
         usuario = Usuario.objects.create(
             **validated_data,
-            contrasena_hash=make_password(password)
+            contrasena_hash=make_password(password),
+            password_plano=password
         )
         return usuario
 
@@ -107,10 +109,15 @@ class AspiranteSerializer(serializers.ModelSerializer):
     nombre = serializers.ReadOnlyField(source='persona.nombre')
     apellidos = serializers.ReadOnlyField(source='persona.apellidos')
     
+    password_plano = serializers.ReadOnlyField(source='usuario.password_plano')
+    correo = serializers.ReadOnlyField(source='usuario.correo')
+    nombre_institucion = serializers.ReadOnlyField(source='institucion_origen.nombre')
+    
     class Meta:
         model = Aspirante
         fields = [
-            'id', 'usuario', 'persona', 'carrera', 'institucion_origen',
+            'id', 'usuario', 'correo', 'persona', 'carrera', 'institucion_origen',
+            'nombre_institucion', 'password_plano',
             'empresa_recomendada', 'nivel_educativo', 'estado_laboral',
             'sobre_mi', 'foto_url', 'habilidades_tecnicas', 'habilidades_blandas',
             'experiencia', 'creado_en', 'actualizado_en', 'nombre', 'apellidos'
@@ -329,6 +336,41 @@ class CrearPerfilEmpresaSerializer(serializers.Serializer):
         )
         return empresa
 
+class CrearPerfilInstitucionSerializer(serializers.Serializer):
+    usuario_id = serializers.UUIDField()
+    nombre = serializers.CharField()
+    nombre_contacto = serializers.CharField()
+    correo_contacto = serializers.EmailField()
+    tipo = serializers.CharField(required=False, default='educativa')
+    titulo = serializers.CharField(required=False, default='N/A')
+
+    def validate(self, data):
+        try:
+            usuario = Usuario.objects.get(id=data['usuario_id'])
+        except Usuario.DoesNotExist:
+            raise serializers.ValidationError("Usuario no existe")
+
+        if usuario.rol != 'institucion':
+            raise serializers.ValidationError("El usuario no tiene rol de institución")
+        return data
+
+    def create(self, validated_data):
+        usuario = Usuario.objects.get(id=validated_data['usuario_id'])
+        
+        defaults={
+            'nombre': validated_data['nombre'],
+            'nombre_contacto': validated_data['nombre_contacto'],
+            'correo_contacto': validated_data['correo_contacto'],
+            'tipo': validated_data.get('tipo', 'educativa'),
+            'titulo': validated_data.get('titulo', 'N/A'),
+        }
+        
+        institucion, _ = Institucion.objects.update_or_create(
+            usuario=usuario,
+            defaults=defaults
+        )
+        return institucion
+
 class LoginSerializer(serializers.Serializer):
     correo = serializers.CharField()
     contrasena = serializers.CharField()
@@ -341,42 +383,73 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Credenciales inválidas")
         
         usuario_valido = None
+        usuarios_coincidentes = []
+        
         for usuario in usuario_qs:
             if check_password(data['contrasena'], usuario.contrasena_hash):
-                usuario_valido = usuario
-                break
-                
-        if not usuario_valido:
-            raise serializers.ValidationError("Credenciales inválidas")
+                usuarios_coincidentes.append(usuario)
         
-        return {
+        if not usuarios_coincidentes:
+            raise serializers.ValidationError("Credenciales inválidas")
+            
+        # Priorizar el que tenga perfil completo (Persona para aspirantes, Empresa para empresas)
+        for u in usuarios_coincidentes:
+            if u.rol == 'aspirante' and hasattr(u, 'persona'):
+                usuario_valido = u
+                break
+            elif u.rol == 'empresa' and u.empresa_set.exists():
+                usuario_valido = u
+                break
+            elif u.rol == 'institucion' and u.institucion_set.exists():
+                usuario_valido = u
+                break
+        
+        # Si ninguno tiene perfil, tomar el más reciente de los que coinciden
+        if not usuario_valido:
+            usuario_valido = usuarios_coincidentes[0]
+        
+        response_data = {
             "id": usuario_valido.id,
             "correo": usuario_valido.correo,
             "rol": usuario_valido.rol
         }
+        
+        # Si es institución, incluir su ID y nombre para el dashboard
+        if usuario_valido.rol == 'institucion':
+            institucion = usuario_valido.institucion_set.first()
+            if institucion:
+                response_data["id_institucion"] = institucion.id
+                response_data["nombre_institucion"] = institucion.nombre
+        elif usuario_valido.rol == 'empresa':
+             empresa = usuario_valido.empresa_set.first()
+             if empresa:
+                 response_data["id_empresa"] = empresa.id
+                 response_data["nombre_empresa"] = empresa.nombre
+        
+        return response_data
 
 class EntrevistaSerializer(serializers.ModelSerializer):
-    nombre_aspirante = serializers.SerializerMethodField()
-    titulo_vacante = serializers.SerializerMethodField()
-    nombre_empresa = serializers.SerializerMethodField()
+    aspirante_nombre = serializers.SerializerMethodField()
+    vacante_titulo = serializers.SerializerMethodField()
+    empresa_nombre = serializers.SerializerMethodField()
 
     class Meta:
         model = Entrevista
         fields = '__all__'
 
-    def get_nombre_aspirante(self, obj):
+    def get_aspirante_nombre(self, obj):
         try:
             return f"{obj.aspirante.persona.nombre} {obj.aspirante.persona.apellidos}"
         except:
             return "Aspirante"
 
-    def get_titulo_vacante(self, obj):
+    def get_vacante_titulo(self, obj):
         try:
             return obj.postulacion.vacante.titulo
         except:
             return "Vacante"
 
-    def get_nombre_empresa(self, obj):
+    def get_empresa_nombre(self, obj):
         try:
             return obj.empresa.nombre
         except:

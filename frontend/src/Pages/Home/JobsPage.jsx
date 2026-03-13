@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import Navbar from "../../Components/PagPrincipal/Navbar/NavBar";
 import Footer from "../../Components/PagPrincipal/Home/Footer";
 import FeaturedJobs from "../../Components/PagPrincipal/Home/FeaturedJobs";
-import { allJobs } from "../../data/mockJobs";
 import { Search, Briefcase, GraduationCap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { obtenerVacantesAdmin } from "../../services/services";
@@ -15,7 +14,7 @@ function JobsPage({ tipo }) {
 
     const [searchTerm, setSearchTerm] = useState(initialQuery);
     const [inputValue, setInputValue] = useState(initialQuery);
-    const [allJobsCombined, setAllJobsCombined] = useState([...allJobs]);
+    const [allJobsCombined, setAllJobsCombined] = useState([]);
 
     // Sync state if URL changes
     useEffect(() => {
@@ -32,57 +31,30 @@ function JobsPage({ tipo }) {
                 let remoteJobs = [];
                 try {
                     const data = await obtenerVacantesAdmin();
-                    remoteJobs = data.map(v => ({
-                        id: v.id, // REAL UUID
-                        title: v.titulo,
-                        company: v.nombre_empresa || "Empresa Confidencial",
-                        location: v.ubicacion || "Remoto",
-                        type: v.tipo_vacante === 'empleo' ? 'Empleo' : 'Pasantía',
-                        schedule: v.modalidad || "Tiempo Completo",
-                        level: "Profesional",
-                        salary: v.salario_maximo ? `$${v.salario_maximo}` : "A convenir",
-                        logo: `https://ui-avatars.com/api/?name=${encodeURIComponent(v.nombre_empresa || "Empresa")}&background=163a6d&color=fff`,
-                        tags: [v.modalidad, v.tipo_vacante]
-                    }));
+                    if (Array.isArray(data)) {
+                        remoteJobs = data.map(v => ({
+                            id: v.id || Math.random().toString(36).substr(2, 9),
+                            title: v.titulo || "Sin título",
+                            company: v.nombre_empresa || "Empresa Confidencial",
+                            location: v.ubicacion || "Remoto",
+                            type: v.tipo_vacante === 'pasantia' ? 'Pasantía' : 'Empleo',
+                            schedule: v.modalidad || "Tiempo Completo",
+                            level: "Profesional",
+                            salary: v.salario_maximo ? `$${v.salario_maximo}` : "A convenir",
+                            logo: `https://ui-avatars.com/api/?name=${encodeURIComponent(v.nombre_empresa || "Empresa")}&background=163a6d&color=fff`,
+                            tags: v.tags || [v.modalidad, v.tipo_vacante].filter(Boolean)
+                        }));
+                    }
                 } catch (apiErr) {
                     console.error("Backend no disponible para vacantes", apiErr);
                 }
 
-                // Handle local storage mocks if any
-                let localJobs = [];
-                const stored = localStorage.getItem('vacantes_empresa');
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    let companyName = "Empresa Confidencial";
-                    let companyLogo = `https://ui-avatars.com/api/?name=Empresa&background=163a6d&color=fff`;
-
-                    const currentUser = localStorage.getItem('usuario');
-                    if (currentUser) {
-                        const u = JSON.parse(currentUser);
-                        if (u.empresa?.nombre) {
-                            companyName = u.empresa.nombre;
-                        }
-                    }
-
-                    localJobs = parsed.map(v => ({
-                        id: `local-${v.id}`,
-                        title: v.titulo,
-                        company: companyName,
-                        location: v.ubicacion,
-                        type: v.tipo || "Empleo",
-                        schedule: v.horario || v.modalidad,
-                        level: "Profesional",
-                        salary: "A convenir",
-                        logo: companyLogo,
-                        tags: [v.modalidad, ...(v.requisitos ? v.requisitos.split(',').map(r => r.trim()) : [])]
-                    }));
-                }
-
-                // Merge with mock
-                setAllJobsCombined([...remoteJobs, ...localJobs, ...allJobs]);
+                // Update state with real data
+                setAllJobsCombined(remoteJobs);
 
             } catch (e) {
                 console.error("Error cargando vacantes:", e);
+                setAllJobsCombined([]);
             }
         };
         fetchRemoteJobs();
@@ -111,7 +83,7 @@ function JobsPage({ tipo }) {
         const normalizedFilterType = filterType.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
         const isMatchingType = normalizedJobType === normalizedFilterType;
-        if (!isMatchingType && tipo !== 'todos') return false;
+        if (tipo !== 'todos' && !isMatchingType) return false;
 
         // If there's no search term, return all jobs of this type
         if (!searchTerm) return true;

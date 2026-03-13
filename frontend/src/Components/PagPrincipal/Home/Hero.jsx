@@ -35,7 +35,8 @@ const Hero = ({ onSearch }) => {
             onSearch(searchValue, activeCategory);
         } else {
             // Navigate to specific page with query parameter
-            let route = activeCategory === 'pasantías' ? '/pasantias' : '/empleos';
+            let route = activeCategory === 'pasantías' ? '/pasantias' :
+                activeCategory === 'empleos' ? '/empleos' : '/explorar';
             navigate(`${route}?q=${encodeURIComponent(searchValue)}`);
         }
     };

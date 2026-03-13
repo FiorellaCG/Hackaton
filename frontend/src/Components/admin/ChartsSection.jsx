@@ -26,8 +26,8 @@ const ChartsSection = ({ title, type, data, dataKeys = [], labelKey = "month" })
 
     const formatName = (key) => {
         const translations = {
-            'estudiantes': t('admin.students_tab'),
-            'empresas': t('admin.companies_tab'),
+            'estudiantes': t('admin.estudiantes_tab'),
+            'empresas': t('admin.empresas_tab'),
             'count': t('admin.applicants_count')
         };
         return translations[key] || key.charAt(0).toUpperCase() + key.slice(1);

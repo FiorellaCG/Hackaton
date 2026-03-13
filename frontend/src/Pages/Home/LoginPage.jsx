@@ -1,5 +1,5 @@
-import { LoginModal } from "@/src/Components/PagPrincipal/Login/Login";
-import Navbar from "@/src/Components/PagPrincipal/Navbar/NavBar";
+import { LoginModal } from "../../Components/PagPrincipal/Login/Login";
+import Navbar from "../../Components/PagPrincipal/Navbar/NavBar";
 
 function LoginPage() {
   return (

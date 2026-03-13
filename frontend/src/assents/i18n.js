@@ -9,13 +9,19 @@ i18n
   .init({
     lng: 'es', // Set Spanish as default
     fallbackLng: 'es',
-    supportedLngs: ['en', 'es', 'fr', 'de', 'zh', 'ja'], // agrega más si quieres
+    supportedLngs: ['en', 'es'],
     backend: {
-      loadPath: import.meta.env.MODE === 'development' ? '/locales/{{lng}}.json' : '/static/locales/{{lng}}.json',
+      loadPath: (import.meta.env.MODE === 'production' 
+        ? (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '/static') : '/static')
+        : '') + '/locales/{{lng}}.json',
     },
     interpolation: {
       escapeValue: false,
     },
+    react: {
+      useSuspense: false,
+    },
+    initImmediate: false,
   });
 
 export default i18n;

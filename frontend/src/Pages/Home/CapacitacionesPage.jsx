@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Footer from "../../Components/PagPrincipal/Home/Footer";
-import Sidebar from "../../Components/PagPrincipal/Sidebar";
+import Sidebar from "../../Components/PagPrincipal/Sidebar/Sidebar";
 import { Search, BookOpen, Clock, Calendar, ExternalLink, Sparkles, Heart, CheckCircle } from "lucide-react";
 import { obtenerCapacitaciones, toggleFavorito, inscribirCapacitacion } from "../../services/services";
 import { LoginModal } from "../../Components/PagPrincipal/Login/Login";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 const CapacitacionesPage = () => {
     const [capacitaciones, setCapacitaciones] = useState([]);

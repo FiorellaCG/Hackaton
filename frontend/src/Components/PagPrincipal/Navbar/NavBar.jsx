@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import logoImg from "../../../assents/logo.png";
 import garnierLogo from "../../../assents/garnierlogo.svg";
 
 import { LoginModal } from "../Login/Login";
-import RegistroModal from "../../PagPrincipal/Login/Registrer";
+import RegistroModal from "../Register/Register";
 
 import "./Navbar.css";
 

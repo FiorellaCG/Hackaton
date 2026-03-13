@@ -3,12 +3,13 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { registerUser } from "../../../services/services";
-import { motion, AnimatePresence } from "framer-motion";
-import "./Register.css";
+import { motion, AnimatePresence } from "motion/react";
+import { useModal } from "../../../ModalContext";
 
 export default function RegisterModal({ isOpen, onClose }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { showSuccess } = useModal();
 
   const [form, setForm] = useState({
     correo: "",
@@ -46,7 +47,7 @@ export default function RegisterModal({ isOpen, onClose }) {
       setLoading(true);
       setError("");
       await registerUser(form);
-      alert("Registro exitoso");
+      showSuccess("Registro exitoso");
       onClose();
       navigate("/login");
     } catch (err) {
